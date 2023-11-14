@@ -117,7 +117,7 @@
             </div>
             <div class="col-lg-2 col-md-2 ml-5 mt-3 mr-5" ; id="partialview">
             </div>
-            <div id="selected-cards-container" style="display:none;">
+            <div id="selected-cards-container" style="display:none; margin-left:60px;">
                 <div id="selected-items">
                     <ul id="selected-popcorn-list"></ul>
                 </div>
@@ -131,7 +131,7 @@
             function updateSelectedCardsDisplay() {
                 if (selectedCards.length > 0) {
                     selectedCardsContainer.style.display = 'block';
-                    selectedCardsContainer.style.border = 'none';
+                    selectedCardsContainer.style.border = '1px solid black';
                 } else {
                     selectedCardsContainer.style.display = 'none';
                     selectedCardsContainer.style.border = 'none';
@@ -151,17 +151,13 @@
                             selectedCards.splice(selectedCardIndex, 1);
                         }
                     }
-
                     updateSelectedCardsDisplay();
                     renderSelectedCards();
                 });
             });
 
             function renderSelectedCards() {
-                // Clear existing content
                 selectedCardsContainer.innerHTML = '';
-
-                // Render selected cards
                 selectedCards.forEach(selectedCard => {
                     const cardDiv = document.createElement('div');
                     cardDiv.className = 'selected-card';
@@ -169,8 +165,6 @@
                     selectedCardsContainer.appendChild(cardDiv);
                 });
             }
-
-
         </script>
 
         <div class="position-fixed bottom-0 end-0 mr-3 mb-3">
@@ -184,5 +178,3 @@
         </script>
     }
 </body>
-
-
