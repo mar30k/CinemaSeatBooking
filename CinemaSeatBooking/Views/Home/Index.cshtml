@@ -1,0 +1,252 @@
+﻿@{
+    ViewData["Title"] = "Movies List";
+}
+@{
+    string formattedDate = DateTime.Now.ToString("MMM-d h.mmtt");
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/CinemaSeatBooking.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="css/Style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <div class="d-flex justify-content-between align-items-center w-100 ml-5">
+                    @{
+                        DateTime today = DateTime.Today;
+                        string minDate = today.ToString("yyyy-MM-dd");
+                    }
+
+                    <div class="calendar">
+                        @Html.TextBox("DateOfWatching", null, new { @class = "form-control", @type = "date", @min = minDate })
+                    </div>
+
+                    <div>
+                        <div class="food-and-drink " style="display: inline-block;">
+                            <a class="custom-btn btn btn-primary" asp-controller="Popcorn" asp-action="PopcornView" role="button">Food and Drink</a>
+                        </div>
+                        <div class="today-date" style="display: inline-block;">
+                            <p>@formattedDate</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="custom-container">
+        <div class="row">
+            <div class=" col mb-2 mt-2 ">
+                <a asp-controller="Seat" asp-action="SeatView">
+                    <div class="card">
+                        <div class="poster"><img src=Assets/poster.jpg></div>
+                        <div class="details">
+                            <h2>Saw X (2023)<br><span>Directed by Bill Condon</span></h2>
+                            <div class="rating">
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa-o fa-star-o" aria-hidden="true"></i>
+                                <span>4/5</span>
+                            </div>
+                            <div class="tags">
+                                <span class="fantasy">Fantasy</span>
+                                <span class="action">Action</span>
+                                <span class="thriller">thriller</span>
+                            </div>
+                            <div class="star">
+                                <h4>Cast</h4>
+                                <ul>
+                                    <li><img src="Assets/cast1.jpg"></li>
+                                    <li><img src="Assets/cast2.jpg"></li>
+                                    <li><img src="Assets/cast3.jpg"></li>
+                                    <li><img src="Assets/cast4.jpg"></li>
+                                    <li><img src="Assets/cast5.jpg"></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col mb-2 mt-2">
+                <a asp-controller="Seat" asp-action="SeatView">
+                    <div class="card">
+                        <div class="poster"><img src=Assets/poster4.jpg></div>
+                        <div class="details">
+                            <h2>It's A wonderful night<br><span>James Stewart and Donna Breed</span></h2>
+                            <div class="rating">
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa-o fa-star-o" aria-hidden="true"></i>
+                                <span>4/5</span>
+                            </div>
+                            <div class="tags">
+                                <span class="fantasy">Fantasy</span>
+                                <span class="action">Action</span>
+                                <span class="thriller">thriller</span>
+                            </div>
+
+                            <div class="star">
+                                <h4>Cast</h4>
+                                <ul>
+                                    <li><img src="Assets/cast1.jpg"></li>
+                                    <li><img src="Assets/cast2.jpg"></li>
+                                    <li><img src="Assets/cast3.jpg"></li>
+                                    <li><img src="Assets/cast4.jpg"></li>
+                                    <li><img src="Assets/cast5.jpg"></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col mb-2 mt-2">
+                <a asp-controller="Seat" asp-action="SeatView">
+                    <div class="card">
+                        <div class="poster"><img src=Assets/poster3.jpg></div>
+                        <div class="details">
+                            <h2>Astar is born (2023)<br><span>Directed by Bill Condon</span></h2>
+                            <div class="rating">
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa-o fa-star-o" aria-hidden="true"></i>
+                                <span>4/5</span>
+                            </div>
+                            <div class="tags">
+                                <span class="fantasy">Fantasy</span>
+                                <span class="action">Action</span>
+                                <span class="thriller">thriller</span>
+                            </div>
+
+                            <div class="star">
+                                <h4>Cast</h4>
+                                <ul>
+                                    <li><img src="Assets/cast1.jpg"></li>
+                                    <li><img src="Assets/cast2.jpg"></li>
+                                    <li><img src="Assets/cast3.jpg"></li>
+                                    <li><img src="Assets/cast4.jpg"></li>
+                                    <li><img src="Assets/cast5.jpg"></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </a> 
+            </div>
+            <div class="col mb-2 mt-2">
+                <a asp-controller="Seat" asp-action="SeatView">
+                    <div class="card">
+                        <div class="poster"><img src=Assets/poster2.jpg></div>
+                        <div class="details">
+                            <h2>Adam Project (2023)<br><span>Directed by Bill Condon</span></h2>
+                            <div class="rating">
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa-o fa-star-o" aria-hidden="true"></i>
+                                <span>4/5</span>
+                            </div>
+                            <div class="tags">
+                                <span class="fantasy">Fantasy</span>
+                                <span class="action">Action</span>
+                                <span class="thriller">thriller</span>
+                            </div>
+
+                            <div class="star">
+                                <h4>Cast</h4>
+                                <ul>
+                                    <li><img src="Assets/cast1.jpg"></li>
+                                    <li><img src="Assets/cast2.jpg"></li>
+                                    <li><img src="Assets/cast3.jpg"></li>
+                                    <li><img src="Assets/cast4.jpg"></li>
+                                    <li><img src="Assets/cast5.jpg"></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col mb-2 mt-2">
+                <a asp-controller="Seat" asp-action="SeatView">
+                    <div class="card">
+                        <div class="poster"><img src=Assets/poster6.jpg></div>
+                        <div class="details">
+                            <h2>Mission Imposible (2019)<br><span>Directed by Bill Condon</span></h2>
+                            <div class="rating">
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa-o fa-star-o" aria-hidden="true"></i>
+                                <span>4/5</span>
+                            </div>
+                            <div class="tags">
+                                <span class="fantasy">Fantasy</span>
+                                <span class="action">Action</span>
+                                <span class="thriller">thriller</span>
+                            </div>
+
+                            <div class="star">
+                                <h4>Cast</h4>
+                                <ul>
+                                    <li><img src="Assets/cast1.jpg"></li>
+                                    <li><img src="Assets/cast2.jpg"></li>
+                                    <li><img src="Assets/cast3.jpg"></li>
+                                    <li><img src="Assets/cast4.jpg"></li>
+                                    <li><img src="Assets/cast5.jpg"></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col mb-2 mt-2">
+                <a asp-controller="Seat" asp-action="SeatView">
+                    <div class="card">
+                        <div class="poster"><img src=Assets/poster5.jpg></div>
+                        <div class="details">
+                            <h2>Barbie (2023)<br><span>Directed by Bill Condon</span></h2>
+                            <div class="rating">
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa-o fa-star-o" aria-hidden="true"></i>
+                                <span>4/5</span>
+                            </div>
+                            <div class="tags">
+                                <span class="action">Action</span>
+                                <span class="thriller">thriller</span>
+                            </div>
+
+                            <div class="star">
+                                <h4>Cast</h4>
+                                <ul>
+                                    <li><img src="Assets/cast1.jpg"></li>
+                                    <li><img src="Assets/cast2.jpg"></li>
+                                    <li><img src="Assets/cast3.jpg"></li>
+                                    <li><img src="Assets/cast4.jpg"></li>
+                                    <li><img src="Assets/cast5.jpg"></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

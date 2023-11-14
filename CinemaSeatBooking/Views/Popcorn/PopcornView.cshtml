@@ -1,0 +1,188 @@
+﻿@{
+    ViewData["Title"] = "PopcornView";
+}
+@{
+    string formattedDate = DateTime.Now.ToString("MMM-d h.mmtt");
+}
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>Burger list</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/styles.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="../lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/CinemaSeatBooking.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <div class="d-flex justify-content-between align-items-center w-100 ml-5">
+                    <div class="Popcorn ">
+                        <h4>Popcorn</h4>
+                    </div>
+                    <div>
+                        <div class="food-and-drink" style="display: inline-block; margin-right: 10px;">
+                            <a class="custom-btn btn btn-primary" asp-controller="Home" asp-action="Index" role="button">Movies</a>
+                        </div><div class="today-date" style="display: inline-block;">
+                            <p>@formattedDate</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <style>
+        .selectable-card.selected {
+            border: 2px solid lightgreen;
+            padding: 2px;
+        }
+    </style>
+    <div class="custom-container" style="position: relative" ;>
+        <div class="row with-sahdow">
+            <div class="col-9 ml-5 mb-3 mt-3 m-5 ">
+                <div class="row">
+                    <div class="colu col-9 col-lg-3 col-md-4 col-sm-6 mb-3">
+                        <a>
+                            <div class="card selectable-card">
+                                <img src="../Assets/Popcorn/pop1.jpg" class="card-img-top">
+                                <div class="card-body">
+                                    <h5 class="card-title">Sweet PopCorn</h5>
+                                    <p class="card-text">70 Birr</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="colu col-9 col-lg-3 col-md-4 col-sm-6 mb-3">
+                        <a>
+                            <div class="card selectable-card">
+                                <img src="../Assets/Popcorn/pop3.jpg" class="card-img-top">
+                                <div class="card-body">
+                                    <h5 class="card-title">Toffe Popcorn</h5>
+                                    <p class="card-text">80 Birr</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="colu col-9 col-lg-3 col-md-4 col-sm-6 mb-3">
+                        <a>
+                            <div class="card selectable-card">
+                                <img src="../Assets/Popcorn/pop4.jpg" class="card-img-top">
+                                <div class="card-body">
+                                    <h5 class="card-title">Nacho Popcorn</h5>
+                                    <p class="card-text">90 Birr</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="colu col-9 col-lg-3 col-md-4 col-sm-6 mb-3">
+                        <a>
+                            <div class="card selectable-card">
+                                <img src="../Assets/Popcorn/pop2.jpg" class="card-img-top">
+                                <div class="card-body">
+                                    <h5 class="card-title">Ranch PopCorn</h5>
+                                    <p class="card-text">80 Birr</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="colu col-9 col-lg-3 col-md-4 col-sm-6 mb-3">
+                        <a>
+                            <div class="card selectable-card">
+                                <img src="../Assets/Popcorn/pop5.jpg" class="card-img-top">
+                                <div class="card-body">
+                                    <h5 class="card-title">Tex-Mex Popcorn</h5>
+                                    <p class="card-text">75 Birr </p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="colu col-9 col-lg-3 col-md-4 col-sm-6 mb-3">
+                        <a>
+                            <div class="card selectable-card">
+                                <img src="../Assets/Popcorn/pop6.jpg" class="card-img-top">
+                                <div class="card-body">
+                                    <h5 class="card-title">Peppermint Popcorn</h5>
+                                    <p class="card-text">100 Birr</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 ml-5 mt-3 mr-5" ; id="partialview">
+            </div>
+            <div id="selected-cards-container" style="display:none;">
+                <div id="selected-items">
+                    <ul id="selected-popcorn-list"></ul>
+                </div>
+            </div>
+        </div>
+        <script>
+            const selectableCards = document.querySelectorAll('.selectable-card');
+            const selectedCardsContainer = document.getElementById('selected-cards-container');
+            const selectedCards = [];
+
+            function updateSelectedCardsDisplay() {
+                if (selectedCards.length > 0) {
+                    selectedCardsContainer.style.display = 'block';
+                    selectedCardsContainer.style.border = 'none';
+                } else {
+                    selectedCardsContainer.style.display = 'none';
+                    selectedCardsContainer.style.border = 'none';
+                }
+            }
+
+            selectableCards.forEach((card, index) => {
+                card.addEventListener('click', () => {
+                    card.classList.toggle('selected');
+                    if (card.classList.contains('selected')) {
+                        const cardTitle = card.querySelector('.card-title').textContent;
+                        const cardPrice = card.querySelector('.card-text').textContent;
+                        selectedCards.push({ title: cardTitle, price: cardPrice, index });
+                    } else {
+                        const selectedCardIndex = selectedCards.findIndex(selectedCard => selectedCard.index === index);
+                        if (selectedCardIndex !== -1) {
+                            selectedCards.splice(selectedCardIndex, 1);
+                        }
+                    }
+
+                    updateSelectedCardsDisplay();
+                    renderSelectedCards();
+                });
+            });
+
+            function renderSelectedCards() {
+                // Clear existing content
+                selectedCardsContainer.innerHTML = '';
+
+                // Render selected cards
+                selectedCards.forEach(selectedCard => {
+                    const cardDiv = document.createElement('div');
+                    cardDiv.className = 'selected-card';
+                    cardDiv.textContent = `${selectedCard.title} - ${selectedCard.price}`;
+                    selectedCardsContainer.appendChild(cardDiv);
+                });
+            }
+
+
+        </script>
+
+        <div class="position-fixed bottom-0 end-0 mr-3 mb-3">
+            <a class="btn btn-primary" asp-controller="Seat" asp-action="SeatView" type="button">Back</a>
+            <a class="btn btn-primary ml-2" asp-controller="Beverage" asp-action="BeverageView" type="button">Next</a>
+        </div>
+    </div>
+    @section Scripts {
+        <script>
+            $('#partialview').load("/Popcorn/BiilPartial")
+        </script>
+    }
+</body>
+
+

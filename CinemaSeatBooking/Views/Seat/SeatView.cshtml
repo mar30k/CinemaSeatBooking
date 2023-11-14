@@ -1,0 +1,147 @@
+﻿@model List<CinemaSeatBooking.Models.Seat>
+@{
+    string formattedDate = DateTime.Now.ToString("MMM-d h.mmtt");
+}
+@{
+    ViewData["Title"] = "Seat Selection";
+}
+<!DOCTYPE html>
+<html>
+<head>
+        <meta charset="UTF-8">
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/styles.css" rel="stylesheet">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>@ViewData["Title"]</title>
+        <link rel="stylesheet" href="../lib/bootstrap/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="../css/site.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/CinemaSeatBooking.styles.css" asp-append-version="true" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+        <link rel="stylesheet" href="../css/SeatStyle.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <div class="d-flex justify-content-between align-items-center w-100 ml-5">
+                    <div class="Popcorn ">
+                        <h4>Seats</h4>
+                    </div>
+                    <div>
+                        <div class="food-and-drink" style="display: inline-block; margin-right: 10px;">
+                            <a class="custom-btn btn btn-primary" asp-controller="Home" asp-action="Index" role="button">Movies</a>
+                        </div><div class="today-date" style="display: inline-block;">
+                            <p>@formattedDate</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="custom-container" style="position: relative" ;>
+        <div class="row">
+            <div class="col-9 ml-5 mb-3 mt-3 mr-5 ">
+                <div class="container border-bottom border-right" style="margin-top: 10px;">
+                    <h4>Cinema Seat Booking System</h4>
+                    <div class="row" style="margin-top: 30px; margin-left:130px; margin-bottom: 18px;">
+                        <div class="col-12">
+                            <div class="seat-layout">
+                                @for (int row = 1; row <= 4; row++)
+                                {
+                                    <div class="row">
+                                        @for (int column = 1; column <= 6; column++)
+                                        {
+                                            var seat = Model.FirstOrDefault(s => s.SeatNumber == (row - 1) * 6 + column);
+                                            <div class="col-2 col-md-1 col-lg-1">
+                                                @if (seat != null)
+                                                {
+                                                    <button class="btn btn-sm seat @(seat.IsSold ? "sold" : (seat.IsBooked ? "booked" : "available")) seat-button d-flex justify-content-center"
+                                                            id="@("seat-" + seat.SeatNumber)"
+                                                            onclick="toggleSeatStatus('@seat.SeatNumber', this)"
+                                                    @(seat.IsSold ? "disabled" : "")>
+                                                        @seat.SeatNumber
+                                                    </button>
+                                                }
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 ml-5 mt-3 mr-5" ;" id="partialview">
+                
+            </div>
+        </div>
+    </div>
+    <div id="alertMessage" class="alert alert-info alert-dismissible fade show" role="alert"
+    style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; display: none; ">
+        You can't select more than <span id="maxSelectedSeats"></span> seats
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close" onclick="closeAlert()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+<script>
+    var selectedSeats = [];
+    var maxSelectedSeats = 3 ; // Maximum allowed selected seats
+    var seatPrice = 110;
+
+    function toggleSeatStatus(seatNumber, button) {
+    if ($(button).hasClass("booked")) {
+        $(button).removeClass("booked");
+        $(button).addClass("available");
+        var index = selectedSeats.indexOf(seatNumber);
+        if (index !== -1) {
+            selectedSeats.splice(index, 1);
+        }
+    } else if ($(button).hasClass("available")) {
+        if (selectedSeats.length < maxSelectedSeats) {
+            $(button).removeClass("available");
+            $(button).addClass("booked");
+            selectedSeats.push(seatNumber);
+        } else {
+            $("#alertMessage").show();
+            $("#maxSelectedSeats").text(maxSelectedSeats);
+            setTimeout(function () {
+                $("#alertMessage").hide();
+            }, 3000);
+        }
+    }
+    updateSelectedSeatCount();
+}
+
+        function closeAlert() {
+            $("#alertMessage").hide();
+        }
+
+    function updateSelectedSeatCount() {
+        var seatCountContainer = document.getElementById('selectedSeatCount');
+        if (seatCountContainer) {
+            seatCountContainer.innerText = selectedSeats.length;
+        }
+
+        var totalPriceContainer = document.getElementById('totalPrice');
+        if (totalPriceContainer) {
+            var totalPrice = selectedSeats.length * seatPrice;
+            totalPriceContainer.innerText = '$' + totalPrice.toFixed(2);
+        }
+
+        var seatCountContainers = document.getElementById('selectedSeatName');
+        if (seatCountContainers) {
+            seatCountContainers.innerText = selectedSeats.join(',');
+        }
+    }
+</script>
+@section Scripts {
+    <script>
+            $('#partialview').load("/Seat/BiilPartial")
+    </script>
+}
+<div class="position-fixed bottom-0 end-0 mr-3 mb-3">
+    <a class="btn btn-primary" asp-controller="Home" asp-action="Index" type="button">Back</a>
+    <a class="btn btn-primary ml-2" asp-controller="Popcorn" asp-action="PopcornView" type="button">Next</a>
+</div>
+</body>
+</html>

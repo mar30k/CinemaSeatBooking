@@ -1,0 +1,74 @@
+﻿@model List<CinemaSeatBooking.Models.Seat>
+@{
+    string formattedDate = DateTime.Now.ToString("MMM-d h.mmtt");
+}
+<div class="row ">
+    <div class="col-6">
+        <div class="row">
+            <div class="col-6 custom-bordered-col "><span>Name</span></div>
+            <div class="col-6 custom-bordered-col"><span>Qty</span></div>
+        </div>
+    </div>
+    <div class="col-6 custom-bordered-col">Price</div>
+</div>
+<div class="row mb-3 ">
+    <div class="col-6">
+        <div class="row">
+            <div class="col-6 custom-bordered-col"><span id="selectedSeatName"></span></div>
+            <div class="col-6 custom-bordered-col"><span id="selectedSeatCount">0</span></div>
+        </div>
+    </div>
+    <div class="col-6 custom-bordered-col"><span id="totalPrice">$0.00</span></div>
+</div>
+<div class="row ">
+    <div class="col-6 custom-bordered-col">
+        Total Price
+    </div>
+    <div class="col-6 custom-bordered-col">
+    </div>
+</div>
+<div class="row ">
+    <div class="col-6 custom-bordered-col">
+        (0%)
+    </div>
+    <div class="col-6 custom-bordered-col">
+    </div>
+</div>
+<div class="row  ">
+    <div class="col-6 custom-bordered-col">
+        Discount(0%)
+    </div>
+    <div class="col-6 custom-bordered-col">
+    </div>
+</div>
+<div class="row ">
+    <div class="col-6 custom-bordered-col">
+        Tax
+    </div>
+    <div class="col-6 custom-bordered-col">
+    </div>
+</div>
+<div class="row ">
+    <div class="col-6 custom-bordered-col">
+        Grand Total
+    </div>
+    <div class="col-6 custom-bordered-col">
+    </div>
+</div>
+<div class="row  ">
+    <div class="col-6 custom-bordered-col">
+        Cash
+    </div>
+    <div class="col-6 custom-bordered-col">
+        <input type="text" id="cash">
+    </div>
+</div>
+<div class="row">
+    <div class="col-6 custom-bordered-col">
+        Change
+    </div>
+    <div class="col-6 custom-bordered-col">
+    </div>
+</div>
+
+

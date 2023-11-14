@@ -1,0 +1,306 @@
+﻿
+@{
+    ViewData["Title"] = "Beverage";
+}
+@{
+    string formattedDate = DateTime.Now.ToString("MMM-d h.mmtt");
+}
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>Burger list</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/styles.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="../lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/CinemaSeatBooking.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <div class="d-flex justify-content-between align-items-center w-100 ml-5">
+                    <div class="Popcorn ">
+                            <h4>Beverage</h4>
+                    </div>
+                    <div class="food-and-drink d-flex">
+                        <a class="btn btn-primary" asp-controller="Home" asp-action="Index" role="button">Movies</a>
+                        <div class="today-date ml-2">
+                            <p>@formattedDate</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <style>
+        .selectable-card.selected {
+            border: 2px solid lightgreen;
+            padding: 2px;
+        }
+    </style>
+    <div class="custom-container" style="position: relative";>
+        <div class="row with-sahdow">
+            <div class="col-9 ml-5 mb-3 mt-3 m-5 ml-0 ">
+                <div class="row">
+                    <div class="colu col-9 col-lg-3 col-md-4 col-sm-6 mb-3">
+                        <a>
+                            <div class="card selectable-card">
+                                <img src="../Assets/Beverage/pop1.jpg" class="card-img-top">
+                                <div class="card-body">
+                                    <h5 class="card-title">0.5 Liter</h5>
+                                    <p class="card-text">30 Birr</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="colu col-9 col-lg-3 col-md-4 col-sm-6 mb-3">
+                        <a>
+                            <div class="card selectable-card">
+                                <img src="../Assets/Beverage/pop3.jpg" class="card-img-top">
+                                <div class="card-body">
+                                    <h5 class="card-title">Coke</h5>
+                                    <p class="card-text">50 BIrr</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="colu col-9 col-lg-3 col-md-4 col-sm-6 mb-3">
+                        <a>
+                            <div class="card selectable-card">
+                                <img src="../Assets/Beverage/pop10.jpg" class="card-img-top">
+                                <div class="card-body">
+                                    <h5 class="card-title">Tea</h5>
+                                    <p class="card-text">30</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="colu col-9 col-lg-3 col-md-4 col-sm-6 mb-3">
+                        <a>
+                            <div class="card selectable-card">
+                                <img src="../Assets/Beverage/pop4.jpg" class="card-img-top">
+                                <div class="card-body">
+                                    <h5 class="card-title">Machiatto</h5>
+                                    <p class="card-text"></p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="colu col-9 col-lg-3 col-md-4 col-sm-6 mb-3">
+                        <a>
+                            <div class="card selectable-card">
+                                <img src="../Assets/Beverage/pop2.jpg" class="card-img-top">
+                                <div class="card-body">
+                                    <h5 class="card-title">Iced Tea</h5>
+                                    <p class="card-text">80 Birr</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="colu col-9 col-lg-3 col-md-4 col-sm-6 mb-3">
+                        <a>
+                            <div class="card selectable-card">
+                                <img src="../Assets/Beverage/pop12.jpg" class="card-img-top">
+                                <div class="card-body">
+                                    <h5 class="card-title">Coffee</h5>
+                                    <p class="card-text">40 BIrr</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="colu col-9 col-lg-3 col-md-4 col-sm-6 mb-3">
+                        <a>
+                            <div class="card selectable-card">
+                                <img src="../Assets/Beverage/pop5.jpg" class="card-img-top">
+                                <div class="card-body">
+                                    <h5 class="card-title">Sprite</h5>
+                                    <p class="card-text">50 Birr</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="colu col-9 col-lg-3 col-md-4 col-sm-6 mb-3">
+                        <a>
+                            <div class="card selectable-card">
+                                <img src="../Assets/Beverage/pop11.jpg" class="card-img-top">
+                                <div class="card-body">
+                                    <h5 class="card-title">Cappuccino</h5>
+                                    <p class="card-text">70 BIrr</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="colu col-9 col-lg-3 col-md-4 col-sm-6 mb-3">
+                        <a>
+                            <div class="card selectable-card">
+                                <img src="../Assets/Beverage/pop7.jpg" class="card-img-top">
+                                <div class="card-body">
+                                    <h5 class="card-title">Milk</h5>
+                                    <p class="card-text">55 Birr</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="colu col-9 col-lg-3 col-md-4 col-sm-6 mb-3">
+                        <a>
+                            <div class="card selectable-card">
+                                <img src="../Assets/Beverage/pop8.jpg" class="card-img-top">
+                                <div class="card-body">
+                                    <h5 class="card-title">Smoothie</h5>
+                                    <p class="card-text">180 Birr</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="colu col-9 col-lg-3 col-md-4 col-sm-6 mb-3">
+                        <a>
+                            <div class="card selectable-card">
+                                <img src="../Assets/Beverage/pop9.jpg" class="card-img-top">
+                                <div class="card-body">
+                                    <h5 class="card-title">Ambo Water</h5>
+                                    <p class="card-text">50 Birr</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 ml-5 mt-3 mr-5" ;">
+                <div class="row ">
+                    <div class="col-6">
+                        <div class="row">
+                            <div class="col-6 custom-bordered-col "><span>Name</span></div>
+                            <div class="col-6 custom-bordered-col"><span>Qty</span></div>
+                        </div>
+                    </div>
+                    <div class="col-6 custom-bordered-col">Price</div>
+                </div>
+                <div class="row mb-3 ">
+                    <div class="col-6">
+                        <div class="row">
+                            <div class="col-6 custom-bordered-col "><span>B5</span></div>
+                            <div class="col-6 custom-bordered-col"><span>1</span></div>
+                        </div>
+                    </div>
+                    <div class="col-6 custom-bordered-col">526</div>
+                </div>
+                <div class="row ">
+                    <div class="col-6 custom-bordered-col">
+                        TOtal price
+                    </div>
+                    <div class="col-6 custom-bordered-col">
+                        
+                    </div>
+                </div>
+                <div class="row ">
+                    <div class="col-6 custom-bordered-col">
+                        (0%)
+                 </div>
+                <div class="col-6 custom-bordered-col">
+                        
+                    </div>
+                </div>
+                <div class="row  ">
+                    <div class="col-6 custom-bordered-col">
+                        Discount(0%)
+                    </div>
+                    <div class="col-6 custom-bordered-col">
+                        
+                    </div>
+                </div>
+                <div class="row ">
+                    <div class="col-6 custom-bordered-col">
+                        Tax
+                    </div>
+                    <div class="col-6 custom-bordered-col">
+                        
+                    </div>
+                </div>
+                <div class="row ">
+                    <div class="col-6 custom-bordered-col">
+                        Grand Total
+                    </div>
+                    <div class="col-6 custom-bordered-col">
+                        
+                    </div>
+                </div>
+                <div class="row  ">
+                    <div class="col-6 custom-bordered-col">
+                        Cash
+                    </div>
+                    <div class="col-6 custom-bordered-col">
+                        <input type="text" id="cash" >
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6 custom-bordered-col">
+                        Change
+                    </div>
+                    <div class="col-6 custom-bordered-col">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="position-fixed bottom-0 end-0 mr-3 mb-3">
+            <a class="btn btn-primary" asp-controller="Popcorn" asp-action="PopcornView" type="button">Back</a>
+            <a class="btn btn-primary ml-2" asp-controller="Burgers" asp-action="BurgerView" type="button">Next</a>
+        </div>
+        <div id="selected-cards-container" style="display:none;">
+            <div id="selected-items">
+                <ul id="selected-popcorn-list"></ul>
+            </div>
+        </div>
+<script>
+        const selectableCards = document.querySelectorAll('.selectable-card');
+        const selectedCardsContainer = document.getElementById('selected-cards-container');
+        const selectedCards = [];
+
+        function updateSelectedCardsDisplay() {
+            if (selectedCards.length > 0) {
+                selectedCardsContainer.style.display = 'block';
+                selectedCardsContainer.style.border = 'none';
+            } else {
+                selectedCardsContainer.style.display = 'none';
+                selectedCardsContainer.style.border = 'none';
+            }
+        }
+
+        selectableCards.forEach((card, index) => {
+            card.addEventListener('click', () => {
+                card.classList.toggle('selected');
+                if (card.classList.contains('selected')) {
+                    const cardTitle = card.querySelector('.card-title').textContent;
+                    const cardPrice = card.querySelector('.card-text').textContent;
+                    selectedCards.push({ title: cardTitle, price: cardPrice, index });
+                } else {
+                    const selectedCardIndex = selectedCards.findIndex(selectedCard => selectedCard.index === index);
+                    if (selectedCardIndex !== -1) {
+                        selectedCards.splice(selectedCardIndex, 1);
+                    }
+                }
+
+                updateSelectedCardsDisplay();
+                renderSelectedCards();
+            });
+        });
+
+        function renderSelectedCards() {
+            // Clear existing content
+            selectedCardsContainer.innerHTML = '';
+
+            // Render selected cards
+            selectedCards.forEach(selectedCard => {
+                const cardDiv = document.createElement('div');
+                cardDiv.className = 'selected-card';
+                cardDiv.textContent = `${selectedCard.title} - ${selectedCard.price}`;
+                selectedCardsContainer.appendChild(cardDiv);
+            });
+        }
+</script>
+    </div>
+</body>

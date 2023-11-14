@@ -1,0 +1,193 @@
+﻿
+@{
+    ViewData["Title"] = "BurgerView";
+}
+@{
+    string formattedDate = DateTime.Now.ToString("MMM-d h.mmtt");
+}
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>Burger list</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/styles.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="../lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/CinemaSeatBooking.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <div class="d-flex justify-content-between align-items-center w-100 ml-5">
+                    <div class="Popcorn ">
+                            <h4>Burger And Sandwitch</h4>
+                    </div>
+                    <div class="food-and-drink d-flex">
+                        <a class="btn btn-primary" asp-controller="Home" asp-action="Index" role="button">Movies</a>
+                        <div class="today-date ml-2">
+                            <p>@formattedDate</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="custom-container" style="position: relative";>
+        <div class="row with-sahdow">
+            <div class="col-9 ml-5 mb-3 mt-3 mr-5 ">
+                <div class="row">
+                    <div class="colu col-9 col-lg-3 col-md-4 col-sm-6 mb-3">
+                        <div class="card">
+                            <img src="../Assets/Burger/burger.jpg" class="card-img-top">
+                            <div class="card-body">
+                                <h5 class="card-title">Cheese Burger</h5>
+                                <p class="card-text">450</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="colu col-9 col-lg-3 col-md-4 col-sm-6 mb-3">
+                        <div class="card">
+                            <img src="../Assets/Burger/burger9.jpg" class="card-img-top">
+                            <div class="card-body">
+                                <h5 class="card-title">Special burger</h5>
+                                <p class="card-text">550 Birr</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="colu col-9 col-lg-3 col-md-4 col-sm-6 mb-3">
+                        <div class="card">
+                            <img src="../Assets/Burger/burger8.jpg" class="card-img-top">
+                            <div class="card-body">
+                                <h5 class="card-title">French Fires </h5>
+                                <p class="card-text">150 Birr</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="colu col-9 col-lg-3 col-md-4 col-sm-6 mb-3">
+                        <div class="card">
+                            <img src="../Assets/BUrger/burger10.jpg" class="card-img-top">
+                            <div class="card-body">
+                                <h5 class="card-title">Club Sandwitch</h5>
+                                <p class="card-text">320 Birr</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="colu col-9 col-lg-3 col-md-4 col-sm-6 mb-3">
+                        <div class="card">
+                            <img src="../Assets/Burger/burger5.jpg" class="card-img-top">
+                            <div class="card-body">
+                                <h5 class="card-title">Double Burger</h5>
+                                <p class="card-text">280 Birr</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="colu col-9 col-lg-3 col-md-4 col-sm-6 mb-3">
+                        <div class="card">
+                            <img src="../Assets/Burger/burger6.jpg" class="card-img-top">
+                            <div class="card-body">
+                                <h5 class="card-title">Beef burger</h5>
+                                <p class="card-text">350 Birr</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="colu col-9 col-lg-3 col-md-4 col-sm-6 mb-3">
+                        <div class="card">
+                            <img src="../Assets/Burger/burger11.jpg" class="card-img-top">
+                            <div class="card-body">
+                                <h5 class="card-title">Double Cheese Burger</h5>
+                                <p class="card-text">420 Birr</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 ml-5 mt-3 mr-5" ;">
+                <div class="row ">
+                    <div class="col-6">
+                        <div class="row">
+                            <div class="col-6 custom-bordered-col "><span>Name</span></div>
+                            <div class="col-6 custom-bordered-col"><span>Qty</span></div>
+                        </div>
+                    </div>
+                    <div class="col-6 custom-bordered-col">Price</div>
+                </div>
+                <div class="row mb-3 ">
+                    <div class="col-6">
+                        <div class="row">
+                            <div class="col-6 custom-bordered-col "><span>B5</span></div>
+                            <div class="col-6 custom-bordered-col"><span>1</span></div>
+                        </div>
+                    </div>
+                    <div class="col-6 custom-bordered-col">526</div>
+                </div>
+                <div class="row ">
+                    <div class="col-6 custom-bordered-col">
+                        TOtal price
+                    </div>
+                    <div class="col-6 custom-bordered-col">
+                        
+                    </div>
+                </div>
+                <div class="row ">
+                    <div class="col-6 custom-bordered-col">
+                        (0%)
+                 </div>
+                <div class="col-6 custom-bordered-col">
+                        
+                    </div>
+                </div>
+                <div class="row  ">
+                    <div class="col-6 custom-bordered-col">
+                        Discount(0%)
+                    </div>
+                    <div class="col-6 custom-bordered-col">
+                        
+                    </div>
+                </div>
+                <div class="row ">
+                    <div class="col-6 custom-bordered-col">
+                        Tax
+                    </div>
+                    <div class="col-6 custom-bordered-col">
+                        
+                    </div>
+                </div>
+                <div class="row ">
+                    <div class="col-6 custom-bordered-col">
+                        Grand Total
+                    </div>
+                    <div class="col-6 custom-bordered-col">
+                        
+                    </div>
+                </div>
+                <div class="row  ">
+                    <div class="col-6 custom-bordered-col">
+                        Cash
+                    </div>
+                    <div class="col-6 custom-bordered-col">
+                        <input type="text" id="cash" >
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6 custom-bordered-col">
+                        Change
+                    </div>
+                    <div class="col-6 custom-bordered-col">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="position-fixed bottom-0 end-0 mr-3 mb-3">
+            <a class="btn btn-primary" asp-controller="Beverage" asp-action="BeverageView" type="button">Back</a>
+            <a class="btn btn-primary ml-2" asp-controller="Burgers" asp-action="BurgerView" type="button">Next</a>
+        </div>
+    </div>
+</body>
+
+
+
