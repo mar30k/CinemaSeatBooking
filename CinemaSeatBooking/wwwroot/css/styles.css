@@ -57,5 +57,8 @@
     padding: 1px;
     max-width: 400px;
     border: none;
-    margin-left:30px;
+}
+.selectable-card.selected {
+    border: 2px solid lightgreen;
+    padding: 2px;
 }
