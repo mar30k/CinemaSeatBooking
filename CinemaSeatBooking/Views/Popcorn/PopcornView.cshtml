@@ -23,8 +23,8 @@
             <div class="container-fluid">
                 <div class="d-flex justify-content-between align-items-center w-100 ml-5">
                     <div class="Popcorn d-inline-flex">
-                        <h4 style="margin-right: 20px;">Popcorn</h4>
-                        <a class="nav-link text-dark" asp-controller="Burgers" asp-action="BurgerView" style="margin-right: 20px;">Burger and Sandwich</a>
+                        <h4 style="margin-right: 20px; margin-top: 3px;">Popcorn</h4>
+                        <a class="nav-link text-dark" asp-controller="Burgers" asp-action="BurgerView" style="margin-right: 10px;">Burger and Sandwich</a>
                         <a class="nav-link text-dark" asp-controller="Beverage" asp-action="BeverageView">Beverage</a>
                     </div>
                     <div>
@@ -164,9 +164,4 @@
             <a class="btn btn-primary" style="margin-right: 20px; margin-bottom: 20px;" asp-controller="Beverage" asp-action="BeverageView" type="button">Next</a>
         </div>
     </div>
-    @section Scripts {
-        <script>
-            $('#partialview').load("/Popcorn/BiilPartial")
-        </script>
-    }
 </body>
