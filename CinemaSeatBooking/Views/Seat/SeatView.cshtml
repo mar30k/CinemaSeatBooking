@@ -28,10 +28,11 @@
                         <h4>Seats</h4>
                     </div>
                     <div>
-                        <div class="food-and-drink" style="display: inline-block; margin-right: 10px;">
+                        <div class="food-and-drink" style="display: inline-block; ">
                             <a class="custom-btn btn btn-primary" asp-controller="Home" asp-action="Index" role="button">Movies</a>
-                        </div><div class="today-date" style="display: inline-block;">
-                            <p>@formattedDate</p>
+                        </div>
+                        <div class="today-date" style="display: inline-block; margin-top: 10px; margin-right: 10px;">
+                            <p style="margin-left:10px;">@formattedDate</p>
                         </div>
                     </div>
                 </div>
@@ -139,9 +140,9 @@
             $('#partialview').load("/Seat/BiilPartial")
     </script>
 }
-<div class="position-fixed bottom-0 end-0 mr-3 mb-3">
-    <a class="btn btn-primary" asp-controller="Home" asp-action="Index" type="button">Back</a>
-    <a class="btn btn-primary ml-2" asp-controller="Popcorn" asp-action="PopcornView" type="button">Next</a>
-</div>
+    <div class="position-fixed bottom-0 end-0 mr-3 mb-3 d-inline-flex">
+        <a class="btn btn-primary" style="margin-right: 5px; margin-bottom: 20px;" asp-controller="Home" asp-action="Index" type="button">Back</a>
+        <a class="btn btn-primary" style="margin-right: 20px; margin-bottom: 20px;" asp-controller="Popcorn" asp-action="PopcornView" type="button">Next</a>
+    </div>
 </body>
 </html>
