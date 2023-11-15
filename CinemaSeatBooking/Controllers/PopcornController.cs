@@ -8,9 +8,5 @@ namespace CinemaSeatBooking.Controllers
         {
             return View();
         }
-        public IActionResult BiilPartial()
-        {
-            return PartialView("_Bill");
-        }
     }
 }
