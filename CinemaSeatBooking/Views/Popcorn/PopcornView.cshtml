@@ -156,76 +156,57 @@
                     const cardDiv = document.createElement('div');
                     cardDiv.className = 'selected-card';
 
-                    // Display card details
                     const cardDetails = document.createElement('div');
 
-                    // Set the price to zero if the quantity is less than or equal to zero
                     let updatedCalculatedPrice = selectedCard.quantity > 0 ? selectedCard.price * selectedCard.quantity : 0;
 
                     cardDetails.textContent = `${selectedCard.title} - ${updatedCalculatedPrice} Birr`;
 
-                    // Quantity input
                     const quantityInput = document.createElement('input');
                     quantityInput.type = 'number';
                     quantityInput.value = selectedCard.quantity;
 
-                    // Add an input event listener to update the displayed price when the quantity changes
                     quantityInput.addEventListener('input', () => {
                         let newQuantity = parseInt(quantityInput.value, 10);
 
-                        // Ensure the quantity is a positive integer
                         newQuantity = Math.max(newQuantity, 0);
 
                         selectedCard.quantity = newQuantity;
 
-                        // Set the price to zero if the quantity is less than or equal to zero
                         updatedCalculatedPrice = selectedCard.quantity > 0 ? selectedCard.price * selectedCard.quantity : 0;
 
                         cardDetails.textContent = `${selectedCard.title} - ${updatedCalculatedPrice} Birr`;
 
-                        // Update the total price dynamically
                         updateTotalPrice();
                     });
 
-                    // Add a 'keydown' event listener to prevent entering non-numeric or negative values
                     quantityInput.addEventListener('keydown', (event) => {
                         if (!/^\d+$/.test(event.key) || event.key === '-') {
                             event.preventDefault();
                         }
                     });
 
-                    // Create a container for card details and quantity input
                     const cardContainer = document.createElement('div');
                     cardContainer.className = 'card-container';
 
-                    // Append elements to the container
                     cardContainer.appendChild(cardDetails);
                     cardContainer.appendChild(quantityInput);
 
-                    // Append the container to the selected cards container
                     cardDiv.appendChild(cardContainer);
                     selectedCardsContainer.appendChild(cardDiv);
 
-                    // Accumulate the total price
                     totalPrice += updatedCalculatedPrice;
                 });
-
-                // Display the total price dynamically
                 const totalDiv = document.createElement('div');
                 totalDiv.className = 'total-price';
                 totalDiv.textContent = `Total Price: ${totalPrice} Birr`;
                 selectedCardsContainer.appendChild(totalDiv);
             }
-
-
-
             function updateTotalPrice() {
                 let totalPrice = 0;
                 selectedCards.forEach(selectedCard => {
                     totalPrice += selectedCard.price * selectedCard.quantity;
                 });
-
-                // Find and update the total price display dynamically
                 const totalDiv = selectedCardsContainer.querySelector('.total-price');
                 if (totalDiv) {
                     totalDiv.textContent = `Total Price: ${totalPrice} Birr`;
