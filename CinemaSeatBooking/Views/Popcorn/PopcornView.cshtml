@@ -141,10 +141,12 @@
 
                 const taxDisplay = document.querySelector('.tax-display');
                 const grandTotalDisplay = document.querySelector('.grand-total-display');
+                const totalPriceDisplay = document.querySelector('.total-price-display');
 
-                if (taxDisplay && grandTotalDisplay) {
+                if (taxDisplay && grandTotalDisplay && totalPriceDisplay) {
                     taxDisplay.textContent = `${tax.toFixed(2)} Birr`;
                     grandTotalDisplay.textContent = `${grandTotal.toFixed(2)} Birr`;
+                    totalPriceDisplay.textContent = `${totalPrice.toFixed(2)} Birr`;
                 }
             }
 
@@ -181,7 +183,7 @@
 
                     let updatedCalculatedPrice = selectedCard.quantity > 0 ? selectedCard.price * selectedCard.quantity : 0;
 
-                    cardDetails.textContent = `${selectedCard.title} - ${updatedCalculatedPrice} Birr`;
+                    cardDetails.textContent = `${selectedCard.title} - ${updatedCalculatedPrice.toFixed(2)} Birr`;
 
                     const quantityInput = document.createElement('input');
                     quantityInput.type = 'number';
@@ -201,7 +203,7 @@
                         cardDetails.textContent = `${selectedCard.title} - ${updatedCalculatedPrice.toFixed(2)} Birr`;
 
                         updateTotalPrice();
-                    })
+                    });
 
                     quantityInput.addEventListener('keydown', (event) => {
                         if (!/^\d+$/.test(event.key) || event.key === '-') {
@@ -220,10 +222,6 @@
 
                     totalPrice += updatedCalculatedPrice;
                 });
-                const totalDiv = document.createElement('div');
-                totalDiv.className = 'total-price';
-                totalDiv.textContent = `Total Price: ${totalPrice} Birr`;
-                selectedCardsContainer.appendChild(totalDiv);
 
                 // Update tax and grand total when rendering selected cards
                 updateTaxAndGrandTotal();
@@ -234,9 +232,9 @@
                 selectedCards.forEach(selectedCard => {
                     totalPrice += selectedCard.price * selectedCard.quantity;
                 });
-                const totalDiv = selectedCardsContainer.querySelector('.total-price');
-                if (totalDiv) {
-                    totalDiv.textContent = `Total Price: ${totalPrice} Birr`;
+                const totalPriceDisplay = document.querySelector('.total-price-display');
+                if (totalPriceDisplay) {
+                    totalPriceDisplay.textContent = `${totalPrice.toFixed(2)} Birr`;
                     updateTaxAndGrandTotal();
                 }
             }
