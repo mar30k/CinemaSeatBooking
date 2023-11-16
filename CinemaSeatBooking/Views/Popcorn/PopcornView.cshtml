@@ -130,6 +130,26 @@
                 }
             }
 
+            function updateTaxAndGrandTotal() {
+                let totalPrice = 0;
+                selectedCards.forEach(selectedCard => {
+                    totalPrice += selectedCard.price * selectedCard.quantity;
+                });
+
+                // Calculate tax and grand total
+                const tax = 0.15 * totalPrice;
+                const grandTotal = totalPrice + tax;
+
+                // Display tax and grand total with two decimal places
+                const taxDisplay = document.querySelector('.tax-display');
+                const grandTotalDisplay = document.querySelector('.grand-total-display');
+
+                if (taxDisplay && grandTotalDisplay) {
+                    taxDisplay.textContent = `${tax.toFixed(2)} Birr`;
+                    grandTotalDisplay.textContent = `${grandTotal.toFixed(2)} Birr`;
+                }
+            }
+
             selectableCards.forEach((card, index) => {
                 card.addEventListener('click', () => {
                     card.classList.toggle('selected');
@@ -146,6 +166,9 @@
                     }
                     updateSelectedCardsDisplay();
                     renderSelectedCards();
+
+                    // Update tax and grand total when a card is selected or unselected
+                    updateTaxAndGrandTotal();
                 });
             });
 
@@ -201,7 +224,11 @@
                 totalDiv.className = 'total-price';
                 totalDiv.textContent = `Total Price: ${totalPrice} Birr`;
                 selectedCardsContainer.appendChild(totalDiv);
+
+                // Update tax and grand total when rendering selected cards
+                updateTaxAndGrandTotal();
             }
+
             function updateTotalPrice() {
                 let totalPrice = 0;
                 selectedCards.forEach(selectedCard => {
@@ -210,6 +237,7 @@
                 const totalDiv = selectedCardsContainer.querySelector('.total-price');
                 if (totalDiv) {
                     totalDiv.textContent = `Total Price: ${totalPrice} Birr`;
+                    updateTaxAndGrandTotal();
                 }
             }
         </script>
