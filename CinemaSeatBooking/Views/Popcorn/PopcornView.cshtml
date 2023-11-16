@@ -39,11 +39,11 @@
             </div>
         </nav>
     </header>
-    <div class="custom-container" style="position: relative" ;>
-        <div class="row with-sahdow">
-            <div class="col-9 ml-5 mb-3 mt-3 m-5 ">
-                <div class="row">
-                    <div class="colu col-9 col-lg-3 col-md-4 col-sm-6 mb-3">
+    <div class="custom-container" style="position: relative";>
+        <div class="row">
+            <div class="col-9 ml-5 mb-3 mt-3 m-5 with-shadow">
+                <div class="row mt-3">
+                    <div class="colu col-9 col-lg-2 col-md-4 col-sm-6 mb-3">
                         <a>
                             <div class="card selectable-card">
                                 <img src="../Assets/Popcorn/pop1.jpg" class="card-img-top">
@@ -54,7 +54,18 @@
                             </div>
                         </a>
                     </div>
-                    <div class="colu col-9 col-lg-3 col-md-4 col-sm-6 mb-3">
+                    <div class="colu col-9 col-lg-2 col-md-4 col-sm-6 mb-3">
+                        <a>
+                            <div class="card selectable-card">
+                                <img src="../Assets/Popcorn/pop6.jpg" class="card-img-top">
+                                <div class="card-body">
+                                    <h5 class="card-title">Popcorn</h5>
+                                    <p class="card-text">120 Birr</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="colu col-9 col-lg-2 col-md-4 col-sm-6 mb-3">
                         <a>
                             <div class="card selectable-card">
                                 <img src="../Assets/Popcorn/pop3.jpg" class="card-img-top">
@@ -65,7 +76,8 @@
                             </div>
                         </a>
                     </div>
-                    <div class="colu col-9 col-lg-3 col-md-4 col-sm-6 mb-3">
+
+                    <div class="colu col-9 col-lg-2 col-md-4 col-sm-6 mb-3">
                         <a>
                             <div class="card selectable-card">
                                 <img src="../Assets/Popcorn/pop4.jpg" class="card-img-top">
@@ -76,7 +88,7 @@
                             </div>
                         </a>
                     </div>
-                    <div class="colu col-9 col-lg-3 col-md-4 col-sm-6 mb-3">
+                    <div class="colu col-9 col-lg-2 col-md-4 col-sm-6 mb-3">
                         <a>
                             <div class="card selectable-card">
                                 <img src="../Assets/Popcorn/pop2.jpg" class="card-img-top">
@@ -87,7 +99,7 @@
                             </div>
                         </a>
                     </div>
-                    <div class="colu col-9 col-lg-3 col-md-4 col-sm-6 mb-3">
+                    <div class="colu col-9 col-lg-2 col-md-4 col-sm-6 mb-3">
                         <a>
                             <div class="card selectable-card">
                                 <img src="../Assets/Popcorn/pop5.jpg" class="card-img-top">
@@ -98,7 +110,7 @@
                             </div>
                         </a>
                     </div>
-                    <div class="colu col-9 col-lg-3 col-md-4 col-sm-6 mb-3">
+                    <div class="colu col-9 col-lg-2 col-md-4 col-sm-6 mb-3">
                         <a>
                             <div class="card selectable-card">
                                 <img src="../Assets/Popcorn/pop6.jpg" class="card-img-top">
@@ -111,7 +123,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-2 col-md-2 ml-5 mt-3 mr-5">
+            <div class="col-lg-2 col-md-2 ml-5 mt-3 mr-5 with-shadow">
                 <partial name="_Bill" />
             </div>
         </div>
@@ -175,21 +187,28 @@
             function renderSelectedCards() {
                 selectedCardsContainer.innerHTML = '';
                 let totalPrice = 0;
+
                 selectedCards.forEach(selectedCard => {
                     const cardDiv = document.createElement('div');
                     cardDiv.className = 'selected-card';
 
                     const cardDetails = document.createElement('div');
+                    cardDetails.style.display = 'flex';
+                    cardDetails.style.alignItems = 'center';
 
-                    let updatedCalculatedPrice = selectedCard.quantity > 0 ? selectedCard.price * selectedCard.quantity : 0;
+                    // Create a span for the title
+                    const titleSpan = document.createElement('span');
+                    titleSpan.textContent = selectedCard.title;
+                    titleSpan.style.flex = '1'; // Allow the title to take up available space
+                    cardDetails.appendChild(titleSpan);
 
-                    cardDetails.textContent = `${selectedCard.title} - ${updatedCalculatedPrice.toFixed(2)} Birr`;
-
+                    // Create the existing quantity input
                     const quantityInput = document.createElement('input');
                     quantityInput.type = 'number';
                     quantityInput.value = selectedCard.quantity;
                     quantityInput.min = '1';
                     quantityInput.setAttribute('oninput', 'validity.valid||(value="");');
+                    quantityInput.style.margin = '0 10px'; // Add some margin between elements
 
                     quantityInput.addEventListener('input', () => {
                         let newQuantity = parseInt(quantityInput.value, 10);
@@ -197,10 +216,6 @@
                         newQuantity = Math.max(newQuantity, 0);
 
                         selectedCard.quantity = newQuantity;
-
-                        updatedCalculatedPrice = selectedCard.quantity > 0 ? selectedCard.price * selectedCard.quantity : 0;
-
-                        cardDetails.textContent = `${selectedCard.title} - ${updatedCalculatedPrice.toFixed(2)} Birr`;
 
                         updateTotalPrice();
                     });
@@ -211,11 +226,21 @@
                         }
                     });
 
+                    cardDetails.appendChild(quantityInput);
+
+                    // Create a span for the calculated price
+                    const priceSpan = document.createElement('span');
+
+                    // Update the calculated price when the quantity changes
+                    let updatedCalculatedPrice = selectedCard.quantity > 0 ? selectedCard.price * selectedCard.quantity : 0;
+                    priceSpan.textContent = `${updatedCalculatedPrice.toFixed(2)} Birr`;
+
+                    cardDetails.appendChild(priceSpan);
+
                     const cardContainer = document.createElement('div');
                     cardContainer.className = 'card-container';
 
                     cardContainer.appendChild(cardDetails);
-                    cardContainer.appendChild(quantityInput);
 
                     cardDiv.appendChild(cardContainer);
                     selectedCardsContainer.appendChild(cardDiv);
@@ -243,5 +268,6 @@
             <a class="btn btn-primary" style="margin-right: 5px; margin-bottom: 20px;" asp-controller="Seat" asp-action="SeatView" type="button">Back</a>
             <a class="btn btn-primary" style="margin-right: 20px; margin-bottom: 20px;" asp-controller="Beverage" asp-action="BeverageView" type="button">Next</a>
         </div>
+
     </div>
 </body>

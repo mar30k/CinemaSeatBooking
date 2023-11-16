@@ -1,8 +1,7 @@
-﻿@model List<CinemaSeatBooking.Models.Seat>
-@{
+﻿@{
     string formattedDate = DateTime.Now.ToString("MMM-d h.mmtt");
 }
-<div class="row ">
+<div class="row m-1 mt-3 mb-0">
     <div class="col-6">
         <div class="row">
             <div class="col-6 custom-bordered-col "><span>Name</span></div>
@@ -11,7 +10,7 @@
     </div>
     <div class="col-6 custom-bordered-col">Price</div>
 </div>
-<div class="row mb-3 ">
+<div class="row m-1 mb-3 ">
     <div class="col-6">
         <div class="row">
             <div class="col-6 custom-bordered-col"><span id="selectedSeatName"></span></div>
@@ -20,14 +19,14 @@
     </div>
     <div class="col-6 custom-bordered-col"><span id="totalPrice">$0.00</span></div>
 </div>
-<div class="row mb-3">
+<div class="row m-1 mb-3">
     <div class="col" id="selected-cards-container" style="display:none;">
         <div id="selected-items">
             <ul id="selected-popcorn-list"></ul>
         </div>
     </div>
 </div>
-<div class="row">
+<div class="row m-1">
     <div class="col-6 custom-bordered-col">
         Total Price
     </div>
@@ -35,21 +34,21 @@
         0.00 Birr
     </div>
 </div>
-<div class="row">
+<div class="row m-1">
     <div class="col-6 custom-bordered-col">
         (0%)
     </div>
     <div class="col-6 custom-bordered-col">
     </div>
 </div>
-<div class="row">
+<div class="row m-1">
     <div class="col-6 custom-bordered-col">
         Discount(0%)
     </div>
     <div class="col-6 custom-bordered-col">
     </div>
 </div>
-<div class="row">
+<div class="row m-1">
     <div class="col-6 custom-bordered-col">
         Tax
     </div>
@@ -57,7 +56,7 @@
         0.00 Birr
     </div>
 </div>
-<div class="row">
+<div class="row m-1">
     <div class="col-6 custom-bordered-col">
         Grand Total
     </div>
@@ -65,7 +64,7 @@
         0.00 Birr
     </div>
 </div>
-<div class="row">
+<div class="row m-1">
     <div class="col-6 custom-bordered-col">
         Cash
     </div>
@@ -73,7 +72,7 @@
         <input type="text" name="test_name" oninput="removeLeadingZeros(this);" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
     </div>
 </div>
-<div class="row">
+<div class="row m-1">
     <div class="col-6 custom-bordered-col">
         Change
     </div>
