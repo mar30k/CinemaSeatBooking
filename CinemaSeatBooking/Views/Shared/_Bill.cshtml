@@ -31,8 +31,8 @@
     <div class="col-6 custom-bordered-col">
         Total Price
     </div>
-    <div class="col-6 custom-bordered-col total-price-container">
-        <!-- This is where the total price will be displayed -->
+    <div class="col-6 custom-bordered-col total-price-display">
+        0.00 Birr
     </div>
 </div>
 <div class="row">
@@ -70,7 +70,7 @@
         Cash
     </div>
     <div class="col-6 custom-bordered-col">
-        <input type="text" id="cash">
+        <input type="text" name="test_name" oninput="removeLeadingZeros(this);" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
     </div>
 </div>
 <div class="row">
@@ -80,3 +80,8 @@
     <div class="col-6 custom-bordered-col">
     </div>
 </div>
+<script>
+    function removeLeadingZeros(input) {
+        input.value = input.value.replace(/^0+/, '');
+    }
+</script>
