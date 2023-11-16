@@ -60,7 +60,7 @@
                                 <img src="../Assets/Popcorn/pop3.jpg" class="card-img-top">
                                 <div class="card-body">
                                     <h5 class="card-title">Toffe Popcorn</h5>
-                                    <p class="card-text">80 Birr</p>
+                                    <p class="card-text">100 Birr</p>
                                 </div>
                             </div>
                         </a>
@@ -136,11 +136,9 @@
                     totalPrice += selectedCard.price * selectedCard.quantity;
                 });
 
-                // Calculate tax and grand total
                 const tax = 0.15 * totalPrice;
                 const grandTotal = totalPrice + tax;
 
-                // Display tax and grand total with two decimal places
                 const taxDisplay = document.querySelector('.tax-display');
                 const grandTotalDisplay = document.querySelector('.grand-total-display');
 
@@ -188,6 +186,8 @@
                     const quantityInput = document.createElement('input');
                     quantityInput.type = 'number';
                     quantityInput.value = selectedCard.quantity;
+                    quantityInput.min = '1';
+                    quantityInput.setAttribute('oninput', 'validity.valid||(value="");');
 
                     quantityInput.addEventListener('input', () => {
                         let newQuantity = parseInt(quantityInput.value, 10);
@@ -198,10 +198,10 @@
 
                         updatedCalculatedPrice = selectedCard.quantity > 0 ? selectedCard.price * selectedCard.quantity : 0;
 
-                        cardDetails.textContent = `${selectedCard.title} - ${updatedCalculatedPrice} Birr`;
+                        cardDetails.textContent = `${selectedCard.title} - ${updatedCalculatedPrice.toFixed(2)} Birr`;
 
                         updateTotalPrice();
-                    });
+                    })
 
                     quantityInput.addEventListener('keydown', (event) => {
                         if (!/^\d+$/.test(event.key) || event.key === '-') {
