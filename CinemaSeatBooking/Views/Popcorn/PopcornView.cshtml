@@ -179,7 +179,6 @@
                     updateSelectedCardsDisplay();
                     renderSelectedCards();
 
-                    // Update tax and grand total when a card is selected or unselected
                     updateTaxAndGrandTotal();
                 });
             });
@@ -196,19 +195,17 @@
                     cardDetails.style.display = 'flex';
                     cardDetails.style.alignItems = 'center';
 
-                    // Create a span for the title
                     const titleSpan = document.createElement('span');
                     titleSpan.textContent = selectedCard.title;
-                    titleSpan.style.flex = '1'; // Allow the title to take up available space
+                    titleSpan.style.flex = '1';
                     cardDetails.appendChild(titleSpan);
 
-                    // Create the existing quantity input
                     const quantityInput = document.createElement('input');
                     quantityInput.type = 'number';
                     quantityInput.value = selectedCard.quantity;
                     quantityInput.min = '1';
                     quantityInput.setAttribute('oninput', 'validity.valid||(value="");');
-                    quantityInput.style.margin = '0 10px'; // Add some margin between elements
+                    quantityInput.style.margin = '0 10px';  
 
                     quantityInput.addEventListener('input', () => {
                         let newQuantity = parseInt(quantityInput.value, 10);
@@ -228,10 +225,8 @@
 
                     cardDetails.appendChild(quantityInput);
 
-                    // Create a span for the calculated price
                     const priceSpan = document.createElement('span');
 
-                    // Update the calculated price when the quantity changes
                     let updatedCalculatedPrice = selectedCard.quantity > 0 ? selectedCard.price * selectedCard.quantity : 0;
                     priceSpan.textContent = `${updatedCalculatedPrice.toFixed(2)} Birr`;
 
@@ -248,7 +243,6 @@
                     totalPrice += updatedCalculatedPrice;
                 });
 
-                // Update tax and grand total when rendering selected cards
                 updateTaxAndGrandTotal();
             }
 
