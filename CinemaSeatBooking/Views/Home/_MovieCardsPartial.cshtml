@@ -1,0 +1,31 @@
+﻿@model List<MovieModel>
+<div class="row" id="movieCardsContainer">
+    @{
+        var groupedMovies = Model.GroupBy(m => m.MovieName);
+        var delay = 0.1; // Initial delay in seconds
+
+        foreach (var group in groupedMovies)
+        {
+            var movie = group.First();
+            var companyNames = group.Select(m => m.CompanyName).ToList();
+
+            <div class="col mb-2 mt-2 movie-card" style="animation-delay: @(delay)s;">
+                <div class="card position-relative">
+                    <img src="" alt="Poster Image" class="img-fluid">
+                    <div class="button-container">
+                        @foreach (var companyName in companyNames)
+                        {
+                            <button class="button">@companyName</button>
+                        }
+                    </div>
+                    <div class="card-title">
+                        @movie.MovieName (@movie.ReleaseYear)
+                    </div>
+                </div>
+            </div>
+
+            delay += 0.1; // Increase delay for the next card
+        }
+    }
+</div>
+
