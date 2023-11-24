@@ -39,8 +39,6 @@ namespace CinemaSeatBooking.Controllers
                         if (movieDetails.results.Count > 0)
                         {
                             var posterUrl = "https://image.tmdb.org/t/p/w500" + movieDetails.results[0].poster_path;
-                            movie.Overview = movieDetails.results[0].overview;
-                            movie.GenreId = movieDetails.results[0].genre_ids;
                             movie.PosterUrl = posterUrl;
                             moviesWithPosterUrls.Add(movie);
                         }
