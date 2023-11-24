@@ -15,5 +15,7 @@
         public string? PosterUrl {  get; set; }
         public string? Overview { get; set; }
         public List<int>? GenreId { get; set; }
+        public int? MovieId { get; set; }
+        public List<string>? Genre {  get; set; }   
     }
 }
