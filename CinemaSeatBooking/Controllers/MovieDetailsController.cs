@@ -8,7 +8,8 @@ namespace CinemaSeatBooking.Controllers
     public class MovieDetailsController : Controller
     {
         [HttpPost]
-        public IActionResult Details(string movieCode, string companyName, string overview, string posterUrl, string movieName)
+        public IActionResult Details(string movieCode, string companyName, string overview,
+            string posterUrl, string movieName, int movieId)
         {
             // Your logic to handle the movie details
             // You can use the received parameters to fetch additional data or perform any necessary operations.
@@ -20,11 +21,13 @@ namespace CinemaSeatBooking.Controllers
                 companyName = companyName,
                 overview = overview,
                 posterUrl = posterUrl,
-                movieName = movieName   
+                movieName = movieName,
+                movieId = movieId,
             });
         }
 
-        public IActionResult DetailsViewPage(string movieCode, string companyName, string overview, string posterUrl, string movieName)
+        public IActionResult DetailsViewPage(string movieCode, string companyName, string overview,
+            string posterUrl, string movieName, int movieId)
         {
             // Your logic to fetch additional data or process the received values
             var model = new MovieModel
@@ -33,7 +36,8 @@ namespace CinemaSeatBooking.Controllers
                 CompanyName = companyName,
                 Overview = overview,
                 PosterUrl = posterUrl,
-                MovieName = movieName
+                MovieName = movieName,
+                MovieId = movieId,
             };
 
             return View(model);
@@ -42,3 +46,4 @@ namespace CinemaSeatBooking.Controllers
 
     }
 }
+
