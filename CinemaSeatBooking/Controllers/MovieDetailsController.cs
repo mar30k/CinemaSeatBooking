@@ -9,12 +9,8 @@ namespace CinemaSeatBooking.Controllers
     {
         [HttpPost]
         public IActionResult Details(string movieCode, string companyName, string overview,
-            string posterUrl, string movieName, int movieId)
+             string posterUrl, string movieName, int movieId, List<string> genre)
         {
-            // Your logic to handle the movie details
-            // You can use the received parameters to fetch additional data or perform any necessary operations.
-
-            // Redirect to the details page with the received parameters
             return RedirectToAction("DetailsViewPage", new
             {
                 movieCode = movieCode,
@@ -23,11 +19,12 @@ namespace CinemaSeatBooking.Controllers
                 posterUrl = posterUrl,
                 movieName = movieName,
                 movieId = movieId,
+                genre = genre
             });
         }
 
         public IActionResult DetailsViewPage(string movieCode, string companyName, string overview,
-            string posterUrl, string movieName, int movieId)
+            string posterUrl, string movieName, int movieId, List<string> genre)
         {
             // Your logic to fetch additional data or process the received values
             var model = new MovieModel
@@ -38,6 +35,7 @@ namespace CinemaSeatBooking.Controllers
                 PosterUrl = posterUrl,
                 MovieName = movieName,
                 MovieId = movieId,
+                Genre = genre
             };
 
             return View(model);
