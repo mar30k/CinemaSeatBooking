@@ -23,6 +23,30 @@ namespace CinemaSeatBooking.Controllers
         {
             var moviesWithPosterUrls = new List<MovieModel>();
 
+            // Dictionary to map genre IDs to genre names
+            Dictionary<int, string> genreDictionary = new Dictionary<int, string>
+            {
+                { 28, "Action" },
+                { 12, "Adventure" },
+                { 16, "Animation" },
+                { 35, "Comedy" },
+                { 80, "Crime" },
+                { 99, "Documentary" },
+                { 18, "Drama" },
+                { 10751, "Family" },
+                { 14, "Fantasy" },
+                { 36, "History" },
+                { 27, "Horror" },
+                { 10402, "Music" },
+                { 9648, "Mystery" },
+                { 10749, "Romance" },
+                { 878, "Science Fiction" },
+                { 10770, "TV Movie" },
+                { 53, "Thriller" },
+                { 10752, "War" },
+                { 37, "Western" }
+            };
+
             foreach (var movie in movies)
             {
                 var movieTitle = Uri.EscapeDataString(movie.MovieName);
@@ -38,10 +62,17 @@ namespace CinemaSeatBooking.Controllers
 
                         if (movieDetails.results.Count > 0)
                         {
-                            var posterUrl = "https://image.tmdb.org/t/p/w500" + movieDetails.results[0].poster_path;
+                            var result = movieDetails.results[0];
+                            var posterUrl = "https://image.tmdb.org/t/p/w500" + result.poster_path;
+
+                            // Assign values to MovieModel properties
                             movie.PosterUrl = posterUrl;
-                            movie.Overview = movieDetails.results[0].overview;
-                            movie.GenreId = movieDetails.results[0].genre_ids;
+                            movie.Overview = result.overview;
+                            movie.GenreId = result.genre_ids;
+                            movie.MovieId = result.id;
+                            // Map genre IDs to genre names
+                            movie.Genre = result.genre_ids?.Select(id => genreDictionary.ContainsKey(id) ? genreDictionary[id] : "Unknown").ToList();
+
                             moviesWithPosterUrls.Add(movie);
                         }
                     }
