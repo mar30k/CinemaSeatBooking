@@ -9,13 +9,15 @@
             var movie = group.First();
             var companyNames = group.Select(m => m.CompanyName).ToList();
 
-            <div class="col mb-2 mt-2 movie-card" style="animation-delay: @(delay)s;">
+            <div class="col mb-2 mt-2 movie-card" style="animation-delay: @(delay);">
                 <div class="card position-relative">
                     <img src="@movie.PosterUrl" alt="Poster Image" class="img-fluid">
                     <div class="button-container">
                         @foreach (var companyName in companyNames)
                         {
-                            <button class="button">@companyName</button>
+                            <button class="button" onclick="onCompanyButtonClick('@movie.MovieCode', '@companyName', '@movie.Overview', '@movie.PosterUrl','@movie.MovieName')">
+                                @companyName
+                            </button>
                         }
                     </div>
                     <div class="card-title">
@@ -29,3 +31,21 @@
     }
 </div>
 
+<script>
+    function onCompanyButtonClick(movieCode, companyName, overview, posterUrl ,movieName) {
+        // Create a form dynamically
+        var form = $('<form action="/MovieDetails/Details" method="post">' +
+            '<input type="hidden" name="movieCode" value="' + movieCode + '" />' +
+            '<input type="hidden" name="companyName" value="' + companyName + '" />' +
+            '<input type="hidden" name="overview" value="' + overview + '" />' +
+            '<input type="hidden" name="posterUrl" value="' + posterUrl + '" />' +
+            '<input type="hidden" name="movieName" value="' + movieName + '" />' +
+            '</form>');
+
+        // Append the form to the body
+        $('body').append(form);
+
+        // Submit the form
+        form.submit();
+    }
+</script>
