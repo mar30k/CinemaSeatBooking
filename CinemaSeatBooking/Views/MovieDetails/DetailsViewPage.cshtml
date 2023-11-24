@@ -1,0 +1,38 @@
+﻿@model CinemaSeatBooking.Models.MovieModel
+<style>
+    .card {
+        max-width: 1200px; /* Set a maximum width for better UI */
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        overflow: hidden;
+        margin: 20px; /* Add margin for better spacing */
+    }
+
+        .card img {
+            max-width: 100%; /* Ensure the image fills its container */
+            height: auto; /* Maintain aspect ratio */
+        }
+
+    h3, h4, p {
+        margin-top: 10px; /* Add margin between header, overview, and movie name */
+        margin-bottom: 10px; /* Add margin between header, overview, and movie name */
+    }
+</style>
+
+<div class="card">
+    <div class="row no-gutters">
+        <div class="col-md-4">
+            <img src="@Model.PosterUrl" alt="Movie Poster">
+        </div>
+        <div class="col-md-8">
+            <div class="card-body">
+                <h3 class="card-header">@Model.CompanyName</h3>
+                <h3>@Model.MovieName</h3>
+                <h4>Overview</h4>
+                <p>@Model.Overview</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
