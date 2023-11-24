@@ -15,7 +15,7 @@
                     <div class="button-container">
                         @foreach (var companyName in companyNames)
                         {
-                            <button class="button" onclick="onCompanyButtonClick('@movie.MovieCode', '@companyName', '@movie.Overview', '@movie.PosterUrl','@movie.MovieName')">
+                            <button class="button" onclick="onCompanyButtonClick('@movie.MovieCode', '@companyName', '@movie.Overview', '@movie.PosterUrl','@movie.MovieName','@movie.MovieId','@movie.Genre')">
                                 @companyName
                             </button>
                         }
@@ -32,7 +32,7 @@
 </div>
 
 <script>
-    function onCompanyButtonClick(movieCode, companyName, overview, posterUrl ,movieName) {
+    function onCompanyButtonClick(movieCode, companyName, overview, posterUrl ,movieName ,movieId, genre) {
         // Create a form dynamically
         var form = $('<form action="/MovieDetails/Details" method="post">' +
             '<input type="hidden" name="movieCode" value="' + movieCode + '" />' +
@@ -40,8 +40,9 @@
             '<input type="hidden" name="overview" value="' + overview + '" />' +
             '<input type="hidden" name="posterUrl" value="' + posterUrl + '" />' +
             '<input type="hidden" name="movieName" value="' + movieName + '" />' +
+            '<input type="hidden" name="movieId" value="' + movieId + '" />' +
+            '<input type="hidden" name="genre" value="' + genre + '" />' +
             '</form>');
-
         // Append the form to the body
         $('body').append(form);
 
