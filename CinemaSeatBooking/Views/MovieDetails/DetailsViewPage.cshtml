@@ -31,6 +31,18 @@
                 <h4>Overview</h4>
                 <p>@Model.Overview</p>
                 <h4>Genre</h4>
+
+                @if (Model.Genre != null && Model.Genre.Any())
+                {
+                    foreach (var genre in Model.Genre)
+                    {
+                        <p>@genre</p>
+                    }
+                }
+                else
+                {
+                    <p>No genres available</p>
+                }
             </div>
         </div>
     </div>
