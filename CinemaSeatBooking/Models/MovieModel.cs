@@ -13,5 +13,7 @@
         public int? ReleaseYear { get; set; }
         public string? CompanyTinNumber { get; set; }
         public string? PosterUrl {  get; set; }
+        public string? Overview { get; set; }
+        public List<int>? GenreId { get; set; }
     }
 }
