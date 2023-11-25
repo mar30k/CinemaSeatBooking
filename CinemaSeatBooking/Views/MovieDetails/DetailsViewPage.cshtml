@@ -23,29 +23,33 @@
     <div class="row no-gutters">
         <div class="col-md-4">
             <img src="@Model.PosterUrl" alt="Movie Poster">
+            <img src="@Model.BackdropPath" alt="Movie Poster">
         </div>
         <div class="col-md-8">
             <div class="card-body">
                 <h3 class="card-header">@Model.CompanyName</h3>
-                <h3>@Model.MovieName - @Model.MovieId</h3>
+                <h3>@Model.MovieName</h3>
                 <h4>Overview</h4>
                 <p>@Model.Overview</p>
                 <h4>Genre</h4>
 
-                @if (Model.Genre != null && Model.Genre.Any())
-                {
-                    foreach (var genre in Model.Genre)
+                <ul>
+                    @foreach (var genre in Model.Genres)
                     {
-                        <p>@genre</p>
+                        <li>@genre.Name</li>
                     }
-                }
-                else
-                {
-                    <p>No genres available</p>
-                }
+                </ul>
+                <h4>Cast</h4>
+                <ul>
+                    @foreach (var castMember in Model.Cast.Take(10)) // Display only the first 10 cast members
+                    {
+                        <li>
+                            <img src="@castMember.ProfilePath" alt="@castMember.Name" style="max-width: 50px; max-height: 75px;">
+                            @castMember.Name
+                        </li>
+                    }
+                </ul>
             </div>
         </div>
     </div>
 </div>
-
-
