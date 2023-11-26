@@ -1,55 +1,131 @@
 ﻿@model CinemaSeatBooking.Models.MovieModel
-<style>
-    .card {
-        max-width: 1200px; /* Set a maximum width for better UI */
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        overflow: hidden;
-        margin: 20px; /* Add margin for better spacing */
-    }
-
-        .card img {
-            max-width: 100%; /* Ensure the image fills its container */
-            height: auto; /* Maintain aspect ratio */
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Page Title</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Your existing styles and scripts go here -->
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column; /* Stack children vertically */
         }
 
-    h3, h4, p {
-        margin-top: 10px; /* Add margin between header, overview, and movie name */
-        margin-bottom: 10px; /* Add margin between header, overview, and movie name */
-    }
-</style>
+        .background-container {
+            position: relative;
+            height: 60vh; /* Set height to 60% of the viewport height */
+        }
 
-<div class="card">
-    <div class="row no-gutters">
-        <div class="col-md-4">
-            <img src="@Model.PosterUrl" alt="Movie Poster">
-            <img src="@Model.BackdropPath" alt="Movie Poster">
-        </div>
-        <div class="col-md-8">
-            <div class="card-body">
-                <h3 class="card-header">@Model.CompanyName</h3>
-                <h3>@Model.MovieName</h3>
-                <h4>Overview</h4>
-                <p>@Model.Overview</p>
-                <h4>Genre</h4>
+        .background-image {
+            background: url('@Model.BackdropPath') center/cover no-repeat; /* Set backdrop as background */
+            height: 100%; /* Set height to 100% of the container */
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Center the content vertically */
+            position: relative; /* Set position to relative for absolute positioning */
+        }
 
-                <ul>
-                    @foreach (var genre in Model.Genres)
-                    {
-                        <li>@genre.Name</li>
-                    }
-                </ul>
-                <h4>Cast</h4>
-                <ul>
-                    @foreach (var castMember in Model.Cast.Take(10)) // Display only the first 10 cast members
-                    {
-                        <li>
-                            <img src="@castMember.ProfilePath" alt="@castMember.Name" style="max-width: 50px; max-height: 75px;">
-                            @castMember.Name
-                        </li>
-                    }
-                </ul>
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .info-container {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: -30px; /* Adjust margin to overlap with the background image */
+            z-index: 1; /* Bring the content to the front */
+        }
+
+            .info-container img {
+                max-width: 100px; /* Adjust the width of the poster image */
+                max-height: 150px; /* Adjust the height of the poster image */
+                height: auto; /* Maintain aspect ratio */
+                margin-right: 20px; /* Add margin to the right of the poster image */
+                border-radius: 8px; /* Add border-radius for a rounded look */
+            }
+
+        h3 {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            font-weight: bold;
+            font-size: 24px;
+            color: #007bff; /* Blue color for CompanyName */
+        }
+
+        h4, p {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .cast-section {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            z-index: 1; /* Bring the cast section to the front */
+        }
+
+        .cast-card {
+            display: inline-block;
+            margin: 0 10px;
+            max-width: 200px;
+            text-align: center;
+        }
+
+            .cast-card img {
+                max-width: 100%;
+                height: auto;
+                border-radius: 8px;
+            }
+
+        .cast-card-title {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-container">
+        <div class="background-image">
+            <div class="container" style="margin-top: 150px">
+                <div class="row">
+                    <div class="col">
+                        <img src="@Model.PosterUrl" alt="Movie Poster">
+                    </div>
+                    <div class="col">
+                        <h3>@Model.CompanyName</h3>
+                        <h3>@Model.MovieName</h3>
+                        <h4>Overview</h4>
+                        <p>@Model.Overview</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
+
+    <div class="cast-section">
+        @foreach (var castMember in Model.Cast.Take(10))
+        {
+            <div class="cast-card">
+                <img src="@castMember.ProfilePath" alt="@castMember.Name">
+                <div class="cast-card-title">@castMember.Name</div>
+            </div>
+        }
+    </div>
+
+    <!-- Bootstrap JS (optional, but may be needed for certain components) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+
+
+
+
+
