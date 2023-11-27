@@ -34,7 +34,7 @@
         }
 
         .info-container {
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: rgba(255, 255, 255, 0.4);
             padding: 20px;
             border-radius: 8px;
             margin-top: -30px; /* Adjust margin to overlap with the background image */
@@ -67,10 +67,10 @@
                 color: black;
                 font-size: 40px;
             }
+
         .cast-section {
             overflow-x: auto; /* Enable horizontal scrolling */
             white-space: nowrap; /* Prevent line breaks */
-            text-align: center;
             background-color: rgba(255, 255, 255, 0.8);
             padding: 20px;
             z-index: 1; /* Bring the cast section to the front */
@@ -81,6 +81,7 @@
             margin: 0 10px; /* Adjust margin for spacing */
             max-width: 180px; /* Set the maximum width of the cast card */
             text-align: center;
+            
         }
 
             .cast-card img {
@@ -114,7 +115,7 @@
                             <p>Genres:</p>
                             @foreach (var genre in Model.Genres)
                             {
-                                <div style="display: inline-block; margin-right: 10px; padding: 5px; background-color:lightgray;  color:white; border-radius:7px;">@genre.Name</div>
+                                <div style="display: inline-block; margin-right: 15px; padding: 5px; background-color:lightgray;  color:white; border-radius:7px;">@genre.Name</div>
                             }
 
                         </div>
@@ -134,23 +135,41 @@
     </div>
 
     <div class="container py-5">
+        <h4 style="color: black">
+            Casts
+        </h4>
         <div class="cast-section">
             @foreach (var castMember in Model.Cast.Take(10))
             {
                 <div class="cast-card">
-                    <img src="@castMember.ProfilePath" alt="@castMember.Name">
+                    @if (castMember.ProfilePath == "https://image.tmdb.org/t/p/w500")
+                    {
+                        <img src="../Assets/NoCastImage.jpg" alt="@castMember.Name">
+                    }
+                    else
+                    {
+                        <img src="@castMember.ProfilePath" alt="@castMember.Name">
+                    }
                     <div class="cast-card-title">@castMember.Name</div>
                 </div>
             }
         </div>
+        <div id="youtubePlayer" style="margin-top: 30px;">
+            @if (!string.IsNullOrEmpty(Model.YoutubeKey))
+            {
+                <iframe width="560"
+                        height="315"
+                        src="https://www.youtube.com/embed/@Model.YoutubeKey?rel=0"
+                        frameborder="0"
+                        allowfullscreen></iframe>
+            }
+            else
+            {
+                <p>No trailer available</p>
+            }
+        </div>
     </div>
-    <div id="youtubePlayer">
-        <iframe width="560"
-                height="315"
-                src="https://www.youtube.com/embed/dPYfzlMKEPI"
-                frameborder="0"
-                allowfullscreen></iframe>
-    </div>
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
