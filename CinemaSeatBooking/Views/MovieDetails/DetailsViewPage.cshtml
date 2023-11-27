@@ -25,7 +25,6 @@
         }
 
         .background-image {
-            background: url('@Model.BackdropPath') center/cover no-repeat; /* Set backdrop as background */
             height: 100%; /* Set height to 100% of the container */
             display: flex;
             align-items: center;
@@ -33,6 +32,16 @@
             position: relative; /* Set position to relative for absolute positioning */
         }
 
+            .background-image::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: url('@Model.BackdropPath') center/cover no-repeat; /* Set backdrop as background */
+                filter: blur(2px); /* Add a 5px blur effect to the background image */
+            }
         .info-container {
             background-color: rgba(255, 255, 255, 0.4);
             padding: 20px;
@@ -107,17 +116,45 @@
                         <img src="@Model.PosterUrl" alt="Movie Poster">
                     </div>
                     <div class="col-md-8">
-                        <h4 class="companyName">@Model.CompanyName</h4>
+                        <h4 class="companyName" style="background-color:rgba(0,0,0,0.3) ">@Model.CompanyName</h4>
                         <h3>@Model.MovieName</h3>
                         <h4>Overview</h4>
                         <p>@Model.Overview</p>
                         <div>
-                            <p>Genres:</p>
+                            @functions {
+                                // Helper function to get the color based on genre
+                                string GetGenreColor(string genreName)
+                                {
+                                    switch (genreName)
+                                    {
+                                        case "Action": return "#FF5733";
+                                        case "Adventure": return "#4CAF50";
+                                        case "Animation": return "#2196F3";
+                                        case "Comedy": return "#FFC107";
+                                        case "Crime": return "#9C27B0";
+                                        case "Documentary": return "#607D8B";
+                                        case "Drama": return "#FF9800";
+                                        case "Family": return "#795548";
+                                        case "Fantasy": return "#9E9E9E";
+                                        case "History": return "#673AB7";
+                                        case "Horror": return "#E91E63";
+                                        case "Music": return "#FFEB3B";
+                                        case "Mystery": return "#3F51B5";
+                                        case "Romance": return "#FF4081";
+                                        case "Science Fiction": return "#00BCD4";
+                                        case "TV Movie": return "#8BC34A";
+                                        case "Thriller": return "#2196F3";
+                                        case "War": return "#FF5722";
+                                        case "Western": return "#795548";
+                                        default: return "lightgray"; // Default color
+                                    }
+                                }
+                            }
+                            <p>Genres</p>
                             @foreach (var genre in Model.Genres)
                             {
-                                <div style="display: inline-block; margin-right: 15px; padding: 5px; background-color:lightgray;  color:white; border-radius:7px;">@genre.Name</div>
+                                <div style="display: inline-block; margin-right: 15px; padding: 5px; background-color:@GetGenreColor(genre.Name); color:white; border-radius:7px;">@genre.Name</div>
                             }
-
                         </div>
                         <div>
                             @foreach (var genres in Model.GenreNames)
@@ -173,14 +210,3 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
