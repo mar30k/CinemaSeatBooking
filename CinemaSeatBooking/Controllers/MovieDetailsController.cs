@@ -27,84 +27,114 @@ namespace CinemaSeatBooking.Controllers
         }
 
         public async Task<IActionResult> DetailsViewPage(string movieCode, string companyName, string overview,
-        string posterUrl, string movieName, int movieId ,string backdropPath)
+    string posterUrl, string movieName, int movieId, string backdropPath)
         {
-            // Construct the API URL
-            string apiUrl = $"{baseUrl}{movieId}?api_key={apiKey}&append_to_response=release_dates";
+            // Construct the API URL for videos
+            string videosApiUrl = $"{baseUrl}{movieId}/videos?api_key={apiKey}";
 
-            // Make the API call
+            // Make the API call for videos
             using (HttpClient client = new HttpClient())
             {
-                HttpResponseMessage response = await client.GetAsync(apiUrl);
+                HttpResponseMessage videosResponse = await client.GetAsync(videosApiUrl);
 
-                if (response.IsSuccessStatusCode)
+                if (videosResponse.IsSuccessStatusCode)
                 {
-                    // Read and parse the response content
-                    string responseData = await response.Content.ReadAsStringAsync();
-                    var movieDetails = JsonConvert.DeserializeObject<MovieModel>(responseData);
-                    var responseObj = JsonConvert.DeserializeObject<dynamic>(responseData);
+                    // Read and parse the videos response content
+                    string videosResponseData = await videosResponse.Content.ReadAsStringAsync();
+                    var videosResponseObj = JsonConvert.DeserializeObject<dynamic>(videosResponseData);
 
-                    // Extract runtime from the API response
-                    movieDetails.RunTime = responseObj.runtime?.ToObject<int?>();
-                    // Set additional properties in your MovieModel
-                    movieDetails.MovieCode = movieCode;
-                    movieDetails.CompanyName = companyName;
-                    movieDetails.Overview = overview;
-                    movieDetails.PosterUrl = posterUrl;
-                    movieDetails.MovieName = movieName;
-                    movieDetails.BackdropPath = backdropPath;
-                    // Extract genre information from movieDetails
-                    var genreNames = new List<string>();
-                    if (movieDetails.Genre != null)
+                    // Extract the key of the first trailer
+                    string trailerKey = null;
+                    foreach (var result in videosResponseObj.results)
                     {
-                        foreach (var genreInfo in movieDetails.Genre)
+                        if (result.type == "Trailer" && result.site == "YouTube")
                         {
-                            if (genreInfo is string)
-                            {
-                                genreNames.Add((string)genreInfo);
-                            }
-                            else if (genreInfo is JObject)
-                            {
-                                string genreName = ((JObject)genreInfo)["name"].ToString();
-                                genreNames.Add(genreName);
-                            }
+                            trailerKey = result.key.ToString();
+                            break;
                         }
                     }
 
-                    // Assign the genre names to the GenreNames property in MovieModel
-                    movieDetails.GenreNames = genreNames;
-                    string castApiUrl = $"{baseUrl}{movieId}/credits?api_key={apiKey}";
 
-                    // Make the API call for cast details
-                    HttpResponseMessage castResponse = await client.GetAsync(castApiUrl);
+                    // Construct the API URL for movie details
+                    string detailsApiUrl = $"{baseUrl}{movieId}?api_key={apiKey}&append_to_response=release_dates";
 
-                    if (castResponse.IsSuccessStatusCode)
+                    // Make the API call for movie details
+                    HttpResponseMessage detailsResponse = await client.GetAsync(detailsApiUrl);
+
+                    if (detailsResponse.IsSuccessStatusCode)
                     {
-                        string castResponseData = await castResponse.Content.ReadAsStringAsync();
-                        var castDetails = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(castResponseData);
+                        // Read and parse the movie details response content
+                        string detailsResponseData = await detailsResponse.Content.ReadAsStringAsync();
+                        var movieDetails = JsonConvert.DeserializeObject<MovieModel>(detailsResponseData);
 
-                        // Extract cast names and profile paths directly
-                        var castList = ((IEnumerable<dynamic>)castDetails["cast"])
-                            .Select(c => new CastMember
+                        // Set additional properties in your MovieModel
+                        movieDetails.MovieCode = movieCode;
+                        movieDetails.CompanyName = companyName;
+                        movieDetails.Overview = overview;
+                        movieDetails.PosterUrl = posterUrl;
+                        movieDetails.MovieName = movieName;
+                        movieDetails.BackdropPath = backdropPath;
+                        movieDetails.YoutubeKey = trailerKey; // Add the YoutubeKey property
+
+                        // Extract genre information from movieDetails
+                        var genreNames = new List<string>();
+                        if (movieDetails.Genre != null)
+                        {
+                            foreach (var genreInfo in movieDetails.Genre)
                             {
-                                Name = c["name"].ToString(),
-                                ProfilePath = "https://image.tmdb.org/t/p/w500"+c["profile_path"].ToString()
-                            })
-                            .ToList();
+                                if (genreInfo is string)
+                                {
+                                    genreNames.Add((string)genreInfo);
+                                }
+                                else if (genreInfo is JObject)
+                                {
+                                    string genreName = ((JObject)genreInfo)["name"].ToString();
+                                    genreNames.Add(genreName);
+                                }
+                            }
+                        }
 
-                        // Assign the castList to the Cast property in MovieModel
-                        movieDetails.Cast = castList;
+                        // Assign the genre names to the GenreNames property in MovieModel
+                        movieDetails.GenreNames = genreNames;
+
+                        // Make the API call for cast details
+                        string castApiUrl = $"{baseUrl}{movieId}/credits?api_key={apiKey}";
+                        HttpResponseMessage castResponse = await client.GetAsync(castApiUrl);
+
+                        if (castResponse.IsSuccessStatusCode)
+                        {
+                            string castResponseData = await castResponse.Content.ReadAsStringAsync();
+                            var castDetails = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(castResponseData);
+
+                            // Extract cast names and profile paths directly
+                            var castList = ((IEnumerable<dynamic>)castDetails["cast"])
+                                .Select(c => new CastMember
+                                {
+                                    Name = c["name"].ToString(),
+                                    ProfilePath = "https://image.tmdb.org/t/p/w500" + c["profile_path"].ToString()
+                                })
+                                .ToList();
+
+                            // Assign the castList to the Cast property in MovieModel
+                            movieDetails.Cast = castList;
+                        }
+
+                        return View(movieDetails);
                     }
-                    return View(movieDetails);
+                    else
+                    {
+                        // Handle movie details API error
+                        return View("Error");
+                    }
                 }
                 else
                 {
-                    // Handle API error
+                    // Handle videos API error
                     return View("Error");
                 }
             }
-
         }
+
 
     }
 }
