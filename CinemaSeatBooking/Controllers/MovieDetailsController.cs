@@ -42,7 +42,10 @@ namespace CinemaSeatBooking.Controllers
                     // Read and parse the response content
                     string responseData = await response.Content.ReadAsStringAsync();
                     var movieDetails = JsonConvert.DeserializeObject<MovieModel>(responseData);
+                    var responseObj = JsonConvert.DeserializeObject<dynamic>(responseData);
 
+                    // Extract runtime from the API response
+                    movieDetails.RunTime = responseObj.runtime?.ToObject<int?>();
                     // Set additional properties in your MovieModel
                     movieDetails.MovieCode = movieCode;
                     movieDetails.CompanyName = companyName;

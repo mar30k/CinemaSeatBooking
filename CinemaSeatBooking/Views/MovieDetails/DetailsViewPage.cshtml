@@ -8,6 +8,8 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Your existing styles and scripts go here -->
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://www.youtube.com/iframe_api"></script>
     <style>
         body {
             margin: 0;
@@ -18,7 +20,8 @@
 
         .background-container {
             position: relative;
-            height: 60vh; /* Set height to 60% of the viewport height */
+            height: 60vh; /* Set height to 75% of the viewport height */
+            overflow: hidden;
         }
 
         .background-image {
@@ -30,24 +33,18 @@
             position: relative; /* Set position to relative for absolute positioning */
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
         .info-container {
-            background-color: rgba(255, 255, 255, 0.8);
+            background-color: rgba(255, 255, 255, 0.1);
             padding: 20px;
             border-radius: 8px;
             margin-top: -30px; /* Adjust margin to overlap with the background image */
-            z-index: 1; /* Bring the content to the front */
+            z-index: 2; /* Bring the content to the front */
         }
 
             .info-container img {
-                max-width: 100px; /* Adjust the width of the poster image */
-                max-height: 150px; /* Adjust the height of the poster image */
-                height: auto; /* Maintain aspect ratio */
-                margin-right: 20px; /* Add margin to the right of the poster image */
+                width: 300px; /* Set the width to your desired value */
+                height: 450px; /* Set the height to your desired value */
+                object-fit: cover; /* Maintain aspect ratio and cover the container */
                 border-radius: 8px; /* Add border-radius for a rounded look */
             }
 
@@ -56,15 +53,23 @@
             margin-bottom: 10px;
             font-weight: bold;
             font-size: 24px;
-            color: #007bff; /* Blue color for CompanyName */
+            color: white; /* Blue color for CompanyName */
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
         }
 
         h4, p {
             margin-top: 10px;
             margin-bottom: 10px;
+            color: white;
         }
 
+            .companyName{
+                color: black;
+                font-size: 40px;
+            }
         .cast-section {
+            overflow-x: auto; /* Enable horizontal scrolling */
+            white-space: nowrap; /* Prevent line breaks */
             text-align: center;
             background-color: rgba(255, 255, 255, 0.8);
             padding: 20px;
@@ -73,13 +78,14 @@
 
         .cast-card {
             display: inline-block;
-            margin: 0 10px;
-            max-width: 200px;
+            margin: 0 10px; /* Adjust margin for spacing */
+            max-width: 180px; /* Set the maximum width of the cast card */
             text-align: center;
         }
 
             .cast-card img {
                 max-width: 100%;
+                max-height: 200px; /* Set the maximum height of the cast card image */
                 height: auto;
                 border-radius: 8px;
             }
@@ -93,36 +99,66 @@
 <body>
     <div class="background-container">
         <div class="background-image">
-            <div class="container" style="margin-top: 150px">
+            <!-- Empty container to hold the background image -->
+            <div class="info-container container">
                 <div class="row">
-                    <div class="col">
+                    <div class="col-md-4">
                         <img src="@Model.PosterUrl" alt="Movie Poster">
                     </div>
-                    <div class="col">
-                        <h3>@Model.CompanyName</h3>
+                    <div class="col-md-8">
+                        <h4 class="companyName">@Model.CompanyName</h4>
                         <h3>@Model.MovieName</h3>
                         <h4>Overview</h4>
                         <p>@Model.Overview</p>
+                        <div>
+                            <p>Genres:</p>
+                            @foreach (var genre in Model.Genres)
+                            {
+                                <div style="display: inline-block; margin-right: 10px; padding: 5px; background-color:lightgray;  color:white; border-radius:7px;">@genre.Name</div>
+                            }
+
+                        </div>
+                        <div>
+                            @foreach (var genres in Model.GenreNames)
+                            {
+                                <div class="genres">
+                                    @genres
+                                </div>
+                            }
+                        </div>
+                        <p>Runtime: @Model.FormattedRunTime</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="cast-section">
-        @foreach (var castMember in Model.Cast.Take(10))
-        {
-            <div class="cast-card">
-                <img src="@castMember.ProfilePath" alt="@castMember.Name">
-                <div class="cast-card-title">@castMember.Name</div>
-            </div>
-        }
+    <div class="container py-5">
+        <div class="cast-section">
+            @foreach (var castMember in Model.Cast.Take(10))
+            {
+                <div class="cast-card">
+                    <img src="@castMember.ProfilePath" alt="@castMember.Name">
+                    <div class="cast-card-title">@castMember.Name</div>
+                </div>
+            }
+        </div>
     </div>
-
-    <!-- Bootstrap JS (optional, but may be needed for certain components) -->
+    <div id="youtubePlayer">
+        <iframe width="560"
+                height="315"
+                src="https://www.youtube.com/embed/dPYfzlMKEPI"
+                frameborder="0"
+                allowfullscreen></iframe>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
+
+
+
+
 
 
 
