@@ -11,11 +11,12 @@ namespace CinemaSeatBooking.Controllers
         private readonly string baseUrl = "https://api.themoviedb.org/3/movie/";
 
         [HttpPost]
-        public IActionResult Details(string movieCode, string companyName, string overview,
+        public IActionResult Details(string selectedDate, string movieCode, string companyName, string overview,
              string posterUrl, string movieName, int movieId, string backdropPath)
         {
             return RedirectToAction("DetailsViewPage", new
             {
+                selectedDate = selectedDate,
                 movieCode = movieCode,
                 companyName = companyName,
                 overview = overview,
@@ -26,7 +27,7 @@ namespace CinemaSeatBooking.Controllers
             });
         }
 
-        public async Task<IActionResult> DetailsViewPage(string movieCode, string companyName, string overview,
+        public async Task<IActionResult> DetailsViewPage(string selectedDate, string movieCode, string companyName, string overview,
     string posterUrl, string movieName, int movieId, string backdropPath )
         {
             try
@@ -135,7 +136,8 @@ namespace CinemaSeatBooking.Controllers
                                     string retrievedBranchCode = movieInfo.BranchCode;
 
                                     // Use the retrieved information for the schedules API call
-                                    string schedulesApiUrl = $"https://api-hulubeje.cnetcommerce.com/api/cinema/cinemaSchedules?orgTin={retrievedCompanyTinNumber}&date=2023-11-28 11:11:11.326116&branchCode={retrievedBranchCode}";
+                                    string schedulesApiUrl = $"https://api-hulubeje.cnetcommerce.com/api/cinema/cinemaSchedules?orgTin={retrievedCompanyTinNumber}&date={selectedDate:yyyy-MM-dd} 11:11:11.326116&branchCode={retrievedBranchCode}";
+
 
                                     HttpResponseMessage schedulesResponse = await client.GetAsync(schedulesApiUrl);
 
