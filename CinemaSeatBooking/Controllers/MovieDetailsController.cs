@@ -129,6 +129,8 @@ namespace CinemaSeatBooking.Controllers
 
                                 var movieInfo = movieList.FirstOrDefault(m => m.MovieName == movieName && m.CompanyName == companyName);
 
+                                movieDetails.CompanyTinNumber = movieInfo.CompanyTinNumber;
+
                                 if (movieInfo != null)
                                 {
                                     // Retrieve company tin number and branch code

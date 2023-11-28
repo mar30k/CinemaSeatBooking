@@ -1,0 +1,65 @@
+﻿@model CinemaSeatBooking.Models.SeatLayout
+
+<!-- Your HTML markup for displaying the seat arrangement -->
+@if (Model != null)
+{
+    <h2>@Model.SpaceCode</h2>
+    <p>Max X: @Model.MaxX</p>
+    <p>Max Y: @Model.MaxY</p>
+
+    @if (Model.Seats != null && Model.Seats.Any())
+    {
+        <h3>Seats:</h3>
+        <style>
+            table {
+                border-collapse: collapse;
+                width: 100%; /* Make the table take up the full width of its container */
+            }
+
+            td, th {
+                border: 1px solid black;
+                padding: 12px; /* Adjust the padding as needed */
+                text-align: center; /* Center the content within cells */
+            }
+        </style>
+
+        <table>
+            @for (int y = 1; y <= Model.MaxY; y++)
+            {
+                <tr>
+                    @for (int x = 1; x <= Model.MaxX; x++)
+                    {
+                        <td>
+                            @if (Model.Seats.Any(seat => seat.X == x && seat.Y == y))
+                            {
+                                var seat = Model.Seats.First(seat => seat.X == x && seat.Y == y);
+
+                                @if (seat.Name == "Empty")
+                                    {
+                                        <p>-</p>
+                                    }
+                                else
+                                {
+                                    <p>@seat.Name</p>
+                                }
+                                
+                            }
+                            else
+                            {
+                                <p>Empty</p>
+                            }
+                        </td>
+                    }
+                </tr>
+            }
+        </table>
+    }
+    else
+    {
+        <p>No seats available.</p>
+    }
+}
+else
+{
+    <p>No seat arrangement data available.</p>
+}
