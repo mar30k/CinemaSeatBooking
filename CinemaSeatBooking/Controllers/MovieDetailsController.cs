@@ -12,7 +12,7 @@ namespace CinemaSeatBooking.Controllers
 
         [HttpPost]
         public IActionResult Details(string movieCode, string companyName, string overview,
-             string posterUrl, string movieName, int movieId, string backdropPath, string companyTinNUmber, string branchcode)
+             string posterUrl, string movieName, int movieId, string backdropPath)
         {
             return RedirectToAction("DetailsViewPage", new
             {
@@ -23,13 +23,11 @@ namespace CinemaSeatBooking.Controllers
                 movieName = movieName,
                 movieId = movieId,
                 backdropPath = backdropPath,
-                companyTinNUmber = companyTinNUmber,
-                branchcode = branchcode,
             });
         }
 
         public async Task<IActionResult> DetailsViewPage(string movieCode, string companyName, string overview,
-    string posterUrl, string movieName, int movieId, string backdropPath ,string companyTinNumber, string branchcode)
+    string posterUrl, string movieName, int movieId, string backdropPath )
         {
             try
             {
@@ -78,7 +76,6 @@ namespace CinemaSeatBooking.Controllers
                             movieDetails.MovieName = movieName;
                             movieDetails.BackdropPath = backdropPath;
                             movieDetails.YoutubeKey = trailerKey; // Add the YoutubeKey property
-                            movieDetails.CompanyTinNumber = companyTinNumber;
                             // Extract genre information from movieDetails
                             var genreNames = new List<string>();
                             if (movieDetails.Genre != null)
@@ -122,33 +119,71 @@ namespace CinemaSeatBooking.Controllers
                                 movieDetails.Cast = castList;
                             }
 
-                            // Make the API call for cinema schedules
-                            string schedulesApiUrl = $"https://api-hulubeje.cnetcommerce.com/api/cinema/cinemaSchedules?orgTin={companyTinNumber}&date=2023-11-27 11:11:11.326116&branchCode={branchcode}";
-
-                            // Make the API call for cinema schedules
-                            HttpResponseMessage schedulesResponse = await client.GetAsync(schedulesApiUrl);
-
-                            if (schedulesResponse.IsSuccessStatusCode)
+                            string productsApiUrl = "https://api-hulubeje.cnetcommerce.com/api/Cinema/GetProductsForFilterAndPreview?industryType=LKUP000120765&date=2023-11-27";
+                            HttpResponseMessage productsResponse = await client.GetAsync(productsApiUrl);
+                            if (productsResponse.IsSuccessStatusCode)
                             {
-                                // Read and parse the cinema schedules response content
-                                string schedulesResponseData = await schedulesResponse.Content.ReadAsStringAsync();
-                                var schedulesResponseObj = JsonConvert.DeserializeObject<dynamic>(schedulesResponseData);
+                                string productsResponseData = await productsResponse.Content.ReadAsStringAsync();
+                                var movieList = JsonConvert.DeserializeObject<List<MovieModel>>(productsResponseData);
 
-                                // Extract schedules from the response
-                                var schedules = JsonConvert.DeserializeObject<List<MovieSchedule>>(schedulesResponseObj.movies[0].movieSchedules.ToString());
+                                var movieInfo = movieList.FirstOrDefault(m => m.MovieName == movieName && m.CompanyName == companyName);
 
-                                // Add schedules to the MovieModel
-                                movieDetails.Schedules = schedules;
+                                if (movieInfo != null)
+                                {
+                                    // Retrieve company tin number and branch code
+                                    string retrievedCompanyTinNumber = movieInfo.CompanyTinNumber;
+                                    string retrievedBranchCode = movieInfo.BranchCode;
+
+                                    // Use the retrieved information for the schedules API call
+                                    string schedulesApiUrl = $"https://api-hulubeje.cnetcommerce.com/api/cinema/cinemaSchedules?orgTin={retrievedCompanyTinNumber}&date=2023-11-28 11:11:11.326116&branchCode={retrievedBranchCode}";
+
+                                    HttpResponseMessage schedulesResponse = await client.GetAsync(schedulesApiUrl);
+
+                                    if (schedulesResponse.IsSuccessStatusCode)
+                                    {
+                                        // Read and parse the cinema schedules response content
+                                        string schedulesResponseData = await schedulesResponse.Content.ReadAsStringAsync();
+                                        var schedulesResponseObj = JsonConvert.DeserializeObject<dynamic>(schedulesResponseData);
+
+                                        // Find schedules for the selected movie using the movie name
+                                        var selectedMovie = ((IEnumerable<dynamic>)schedulesResponseObj.movies)
+                                            .FirstOrDefault(m => m.movieName == movieName);
+
+                                        if (selectedMovie != null)
+                                        {
+                                            // Extract schedules from the response
+                                            var schedules = JsonConvert.DeserializeObject<List<MovieSchedule>>(selectedMovie.movieSchedules.ToString());
+
+                                            // Add schedules to the MovieModel
+                                            movieDetails.Schedules = schedules;
+                                        }
+                                        else
+                                        {
+                                            // Handle case where schedules for the selected movie are not found
+                                            return View("Error");
+                                        }
+                                    }
+                                    else
+                                    {
+                                        // Handle schedules API error
+                                        return View("Error");
+                                    }
+
+                                    // Return the MovieDetails view with the combined model
+                                    return View(movieDetails);
+                                }
+                                else
+                                {
+                                    // Handle case where movie information is not found in the response
+                                    return View("Error");
+                                }
 
                             }
                             else
                             {
-                                // Handle schedules API error
+                                // Handle products API error
                                 return View("Error");
-                            }
-
-                            // Return the MovieDetails view with the combined model
-                            return View(movieDetails);
+                            }                           
                         }
                         else
                         {
@@ -169,8 +204,5 @@ namespace CinemaSeatBooking.Controllers
                 return View("Error");
             }
         }
-
-
-
     }
 }
