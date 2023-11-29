@@ -13,9 +13,10 @@ namespace CinemaSeatBooking.Controllers
         private readonly string _tmdbApiBaseUrl = "https://api.themoviedb.org/3";
         public HomeController()
         {
-            _httpClient = new HttpClient();
-
-            _httpClient.BaseAddress = new Uri("https://api-hulubeje.cnetcommerce.com/api/");
+            _httpClient = new HttpClient
+            {
+                BaseAddress = new Uri("https://api-hulubeje.cnetcommerce.com/api/")
+            };
 
             _httpClient.DefaultRequestHeaders.Add("Api-Key", "YourApiKey");
         }
@@ -25,7 +26,7 @@ namespace CinemaSeatBooking.Controllers
 
             foreach (var movie in movies)
             {
-                var movieTitle = Uri.EscapeDataString(movie.MovieName);
+                var movieTitle = Uri.EscapeDataString(movie.MovieName);  
                 var apiUrl = $"{_tmdbApiBaseUrl}/search/movie?api_key={_tmdbApiKey}&query={movieTitle}";
 
                 using (var tmdbClient = new HttpClient())

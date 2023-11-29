@@ -120,7 +120,7 @@ namespace CinemaSeatBooking.Controllers
                                 movieDetails.Cast = castList;
                             }
 
-                            string productsApiUrl = "https://api-hulubeje.cnetcommerce.com/api/Cinema/GetProductsForFilterAndPreview?industryType=LKUP000120765&date=2023-11-27";
+                            string productsApiUrl = $"https://api-hulubeje.cnetcommerce.com/api/Cinema/GetProductsForFilterAndPreview?industryType=LKUP000120765&date={selectedDate:yyyy-MM-dd}";
                             HttpResponseMessage productsResponse = await client.GetAsync(productsApiUrl);
                             if (productsResponse.IsSuccessStatusCode)
                             {
@@ -148,7 +148,6 @@ namespace CinemaSeatBooking.Controllers
                                         // Read and parse the cinema schedules response content
                                         string schedulesResponseData = await schedulesResponse.Content.ReadAsStringAsync();
                                         var schedulesResponseObj = JsonConvert.DeserializeObject<dynamic>(schedulesResponseData);
-
                                         // Find schedules for the selected movie using the movie name
                                         var selectedMovie = ((IEnumerable<dynamic>)schedulesResponseObj.movies)
                                             .FirstOrDefault(m => m.movieName == movieName);
