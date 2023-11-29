@@ -234,7 +234,7 @@
                                 }
                                 else
                                 {
-                                    <button class="btn btn-primary " onclick="onScheduleButtonClick('@schedule.SpaceCode', '@Model.CompanyTinNumber.ToString()')" type="button">
+                                    <button class="btn btn-primary " onclick="onScheduleButtonClick('@schedule.SpaceCode', '@Model.CompanyTinNumber.ToString()', '@schedule.Code')" type="button">
                                         Book Now <br> @schedule.NPrice ETB
                                     </button>
                                 }
@@ -252,7 +252,7 @@
                                     }
                                     else
                                     {
-                                        <button class="btn btn-primary" onclick="onScheduleButtonClick('@schedule.SpaceCode', '@Model.CompanyTinNumber.ToString()')" type="button">Book Vip <br> @schedule.VIP.VPrice ETB</button>
+                                        <button class="btn btn-primary" onclick="onScheduleButtonClick('@schedule.VIP.SpaceCode', '@Model.CompanyTinNumber.ToString()')" type="button">Book Vip <br> @schedule.VIP.VPrice ETB</button>
                                     }
                                 </div>
                             }
@@ -264,11 +264,12 @@
     </div>
 
     <script>
-        function onScheduleButtonClick(spacecode, companyTinNumber) {
+        function onScheduleButtonClick(spacecode, companyTinNumber, code) {
 
             var form = $('<form action="/SeatLayout/SeatArrangement" method="post">' +
                 '<input type="hidden" name="spacecode" value="' + spacecode + '" />' +
                 '<input type="hidden" name="companyTinNumber" value="' + companyTinNumber + '" />' +
+                '<input type="hidden" name="code" value="' + code + '" />' +
                 '</form>');
             // Append the form to the body
             $('body').append(form);
