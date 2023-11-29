@@ -1,65 +1,71 @@
 ﻿@model CinemaSeatBooking.Models.SeatLayout
-
-<!-- Your HTML markup for displaying the seat arrangement -->
-@if (Model != null)
-{
-    <h2>@Model.SpaceCode</h2>
-    <p>Max X: @Model.MaxX</p>
-    <p>Max Y: @Model.MaxY</p>
-
-    @if (Model.Seats != null && Model.Seats.Any())
-    {
-        <h3>Seats:</h3>
-        <style>
-            table {
-                border-collapse: collapse;
-                width: 100%; /* Make the table take up the full width of its container */
-            }
-
-            td, th {
-                border: 1px solid black;
-                padding: 12px; /* Adjust the padding as needed */
-                text-align: center; /* Center the content within cells */
-            }
-        </style>
-
-        <table>
-            @for (int y = 1; y <= Model.MaxY; y++)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <body>
+        <div class="container">
+            @if (Model != null)
             {
-                <tr>
-                    @for (int x = 1; x <= Model.MaxX; x++)
-                    {
-                        <td>
-                            @if (Model.Seats.Any(seat => seat.X == x && seat.Y == y))
-                            {
-                                var seat = Model.Seats.First(seat => seat.X == x && seat.Y == y);
+                <h2>@Model.SpaceCode</h2>
+                <p>Max X: @Model.MaxX</p>
+                <p>Max Y: @Model.MaxY</p>
+                <div class="container">
+                </div>
+                @if (Model.Seats != null && Model.Seats.Any())
+                {
+                    <h3>Seats:</h3>
+                    <style>
+                        table {
+                            border-collapse: collapse;
+                            width: 100%; /* Make the table take up the full width of its container */
+                        }
 
-                                @if (seat.Name == "Empty")
-                                    {
-                                        <p>-</p>
-                                    }
-                                else
-                                {
-                                    <p>@seat.Name</p>
-                                }
-                                
-                            }
-                            else
+                        td, th {
+                            border: 1px solid black;
+                            padding: 12px; /* Adjust the padding as needed */
+                            text-align: center; /* Center the content within cells */
+                        }
+                    </style>
+
+                    <div class="table-responsive">
+                        <table class="table">
+                            @for (int y = 1; y <= Model.MaxY; y++)
                             {
-                                <p>Empty</p>
+                                <tr>
+                                    @for (int x = 1; x <= Model.MaxX; x++)
+                                    {
+                                        <td>
+                                            @if (Model.Seats.Any(seat => seat.X == x && seat.Y == y))
+                                            {
+                                                var seat = Model.Seats.First(seat => seat.X == x && seat.Y == y);
+                                                <p>@seat.Name</p>
+                                            }
+                                            else
+                                            {
+                                                <p>Empty</p>
+                                            }
+                                        </td>
+                                    }
+                                </tr>
                             }
-                        </td>
-                    }
-                </tr>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p>No seats available.</p>
+                }
             }
-        </table>
-    }
-    else
-    {
-        <p>No seats available.</p>
-    }
-}
-else
-{
-    <p>No seat arrangement data available.</p>
-}
+            else
+            {
+                <p>No seat arrangement data available.</p>
+            }
+
+        </div>
+    </body>
+</head>
+</html>
+<!-- Your HTML markup for displaying the seat arrangement -->

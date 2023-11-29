@@ -25,7 +25,7 @@ namespace CinemaSeatBooking.Controllers
 
         public async Task<IActionResult> SeatArrangementView(string spacecode, string companyTinNumber)
         {
-            HttpResponseMessage response = await _httpClient.GetAsync($"cinema/getCinemaSeatArrangment?orgTin=00000{companyTinNumber}&spaceCode={spacecode}");
+            HttpResponseMessage response = await _httpClient.GetAsync($"cinema/getCinemaSeatArrangment?orgTin={companyTinNumber}&spaceCode={spacecode}");
 
             if (response.IsSuccessStatusCode)
             {
