@@ -1,17 +1,37 @@
 ﻿@model CinemaSeatBooking.Models.SeatLayout
+@{
+    string formattedDate = DateTime.Now.ToString("MMM-d h.mmtt");
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
     <body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <div class="d-flex justify-content-between align-items-center w-100 ml-5">
+                    <div class="Popcorn ">
+                        <h4>Seats</h4>
+                    </div>
+                    <div>
+                        <div class="food-and-drink" style="display: inline-block; ">
+                            <a class="custom-btn btn btn-primary" asp-controller="Home" asp-action="Index" role="button">Movies</a>
+                        </div>
+                        <div class="today-date" style="display: inline-block; margin-top: 10px; margin-right: 10px;">
+                            <p style="margin-left:10px;">@formattedDate</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
         <div class="container">
             @if (Model != null)
             {
-                <h2>@Model.SpaceCode</h2>
-                <p>Max X: @Model.MaxX</p>
-                <p>Max Y: @Model.MaxY</p>
                 <div class="container">
                 </div>
                 @if (Model.Seats != null && Model.Seats.Any())
@@ -20,39 +40,66 @@
                     <style>
                         table {
                             border-collapse: collapse;
-                            width: 100%; /* Make the table take up the full width of its container */
                         }
 
                         td, th {
-                            border: 1px solid black;
-                            padding: 12px; /* Adjust the padding as needed */
+                            border: 1px solid rgba(0,0,0,0);
                             text-align: center; /* Center the content within cells */
                         }
                     </style>
 
-                    <div class="table-responsive">
-                        <table class="table">
-                            @for (int y = 1; y <= Model.MaxY; y++)
-                            {
-                                <tr>
-                                    @for (int x = 1; x <= Model.MaxX; x++)
-                                    {
-                                        <td>
-                                            @if (Model.Seats.Any(seat => seat.X == x && seat.Y == y))
-                                            {
-                                                var seat = Model.Seats.First(seat => seat.X == x && seat.Y == y);
-                                                <p>@seat.Name</p>
-                                            }
-                                            else
-                                            {
-                                                <p>Empty</p>
-                                            }
-                                        </td>
-                                    }
-                                </tr>
-                            }
-                        </table>
-                    </div>
+                <div class="table-responsive table-md">
+                    <table class="table">
+                        @for (int y = Model.MaxY; y >= 1; y--)
+                        {
+                            <tr>
+                                @for (int x = 1; x <= Model.MaxX; x++)
+                                {
+                                    <td>
+                                        @if (Model.Seats.Any(seat => seat.X == x && seat.Y == y && seat.Name != ""))
+                                        {
+                                            var seat = Model.Seats.First(seat => seat.X == x && seat.Y == y);
+                                            <div style="
+                                    float: left;
+                                    width: 25px;
+                                    height: 25px; ">
+                                                <p style="display: inline-block;
+                                font-size: 10px;
+                                line-height: 25px;
+                                font-weight: 400;
+                                background: #fff;
+                                vertical-align: top;
+                                border: 1px solid #1ea83c;
+                                width: 25px;
+                                height: 25px;
+                                border-radius: 2px;
+                                color: #1ea83c;
+                                text-align: center;">@seat.Name</p>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <p style="display: inline-block;
+                                    font-size: 10px;
+                                    line-height: 25px;
+                                    font-weight: 400;
+                                    background: #fff;
+                                    vertical-align: top;
+                                    width: 25px;
+                                    height: 25px;
+                                    border-radius: 2px;
+                                    color: #1ea83c;
+                                    text-align: center;">
+                                            </p>
+                                        }
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </table>
+                </div>
+
+
                 }
                 else
                 {
@@ -66,6 +113,5 @@
 
         </div>
     </body>
-</head>
 </html>
 <!-- Your HTML markup for displaying the seat arrangement -->
