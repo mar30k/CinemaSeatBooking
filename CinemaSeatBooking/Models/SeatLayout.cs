@@ -7,7 +7,8 @@
         public int MaxY { get; set; }
         public List<SeatInfo> Seats { get; set; }
         public string? MaxSeats { get; set; }
-        public List<string>? BookedSeats { get; set;}
+        public List<string>? BookedSeats { get; set; }
+        public List<string>? SoldSeats { get; set; }
     }
 
     public class SeatInfo

@@ -1,8 +1,6 @@
 ﻿using CinemaSeatBooking.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System.Diagnostics;
-using System.Net.Http;
 namespace CinemaSeatBooking.Controllers
 {
     public class SeatLayoutController : Controller
@@ -54,6 +52,15 @@ namespace CinemaSeatBooking.Controllers
                     return View("Error");
                 }
 
+                HttpResponseMessage soldseatsResponse = await _httpClient.GetAsync($"/cinema/GetBookedSeats?orgTin={companyTinNumber}&scheduleCode={code}&spaceCode={spacecode}");
+                if (soldseatsResponse.IsSuccessStatusCode)
+                {
+                    string bookedSeatData = await soldseatsResponse.Content.ReadAsStringAsync();
+
+                    List<string> soldSeats = JsonConvert.DeserializeObject<List<string>>(bookedSeatData);
+
+                    seatArrangement.SoldSeats ??= soldSeats;
+                }
                 // Pass the updated SeatLayout instance to the view
                 return View(seatArrangement);
             }
