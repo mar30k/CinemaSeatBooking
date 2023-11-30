@@ -138,10 +138,6 @@
                 @if (Model.Seats != null && Model.Seats.Any())
                 {
                 <div style="display: flex;justify-content:safe center; align-items: center; overflow-x: auto; margin-top: 30px;">
-                    <!-- ... (previous HTML code) ... -->
-                    <!-- ... (previous HTML code) ... -->
-                    <!-- ... (previous HTML code) ... -->
-
                     <table>
                         @for (int y = Model.MaxY; y >= 1; y--)
                         {
@@ -153,14 +149,15 @@
                                         {
                                             var seat = Model.Seats.First(seat => seat.X == x && seat.Y == y);
 
-                                            // Check if the seat is booked or sold
+                                            // Check if the seat is booked, sold, or taken
                                             var isBooked = Model.BookedSeats?.Contains(seat.Code) ?? false;
                                             var isSold = Model.SoldSeats?.Contains(seat.Code) ?? false;
+                                            var isTaken = Model.TakenSeats?.Contains(seat.Code) ?? false;
 
-                                            var backgroundColor = isBooked ? (isSold ? "red" : "blue") : "";
-                                            var textColor = isBooked || isBooked && isSold ? "white" : "";
+                                            var backgroundColor = isBooked ? (isSold ? "red" : "blue") : (isTaken ? "orange" : "");
+                                            var textColor = isTaken || isBooked || (isBooked && isSold) ? "white" : "";
 
-                                            <button id="@seat.Code" class="buttons" onclick="return false" @(isBooked || isSold ? "disabled" : "") style="background-color: @(backgroundColor); color: @(textColor)">
+                                            <button id="@seat.Code" class="buttons" onclick="return false" @(isBooked || isSold || isTaken ? "disabled" : "") style="background-color: @(backgroundColor); color: @(textColor)">
                                                 @seat.Name
                                             </button>
                                         }
@@ -171,6 +168,7 @@
                                             </div>
                                         }
                                     </td>
+
                                 }
                             </tr>
 
@@ -180,6 +178,7 @@
                     <div style="margin-top: 20px;">
                         <p>Total Booked Seats: @(Model.BookedSeats?.Count ?? 0)</p>
                         <p>Total Sold Seats: @(Model.SoldSeats?.Count ?? 0)</p>
+                        <p>Total Available Seats: @(Model.AvailableSeats?.Count - Model.BookedSeats?.Count ?? 0)</p>
                     </div>
                     </div>
                 }
