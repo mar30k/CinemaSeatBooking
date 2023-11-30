@@ -9,6 +9,7 @@
         public string? MaxSeats { get; set; }
         public List<string>? BookedSeats { get; set; }
         public List<string>? SoldSeats { get; set; }
+        public List<string>? AvailableSeats { get; set; }
     }
 
     public class SeatInfo

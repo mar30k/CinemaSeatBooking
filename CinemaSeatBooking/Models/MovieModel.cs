@@ -60,8 +60,6 @@
         public string Time { get; set; }
         public string SpaceCode { get; set; }
         public string HallName { get; set; }
-        public string Dimension { get; set; }
-        public string Header { get; set; }
         public string Status { get; set; }
         public decimal VPrice { get; set; }
     }
