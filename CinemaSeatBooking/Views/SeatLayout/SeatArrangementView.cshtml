@@ -178,6 +178,7 @@
                     <div style="margin-top: 20px;">
                         <p>Total Booked Seats: @(Model.BookedSeats?.Count ?? 0)</p>
                         <p>Total Sold Seats: @(Model.SoldSeats?.Count ?? 0)</p>
+                        <p>Total Taken Seats: @(Model.TakenSeats?.Count ?? 0)</p>
                         <p>Total Available Seats: @(Model.AvailableSeats?.Count - Model.BookedSeats?.Count ?? 0)</p>
                     </div>
                     </div>
