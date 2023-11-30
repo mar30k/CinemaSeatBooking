@@ -1,14 +1,6 @@
 ﻿@model CinemaSeatBooking.Models.SeatLayout
 @{
     string formattedDate = DateTime.Now.ToString("MMM-d h.mmtt");
-    List<string> seatCodes = new List<string>
-    {
-        "SETA000000826",
-        "SETA000000827",
-        "SETA000000828",
-        "SETA000000828",
-        "SETA000000829"
-    };
 }
 
 <!DOCTYPE html>
@@ -71,17 +63,35 @@
     <script>
         var selectedSeats = [];
 
-        function toggleSeatSelection(seatCode) {
+        document.addEventListener("DOMContentLoaded", function () {
+            var buttons = document.querySelectorAll('.buttons');
+
+            buttons.forEach(function (button) {
+                button.addEventListener('click', function () {
+                    var seatCode = this.id;
+                    var isBooked = this.getAttribute('data-isBooked') === 'True';
+                    var isSold = this.getAttribute('data-isSold') === 'True';
+
+                    toggleSeatSelection(seatCode, isBooked, isSold);
+                });
+            });
+        });
+
+        function toggleSeatSelection(seatCode, isBooked, isSold) {
+            if (isBooked || isSold) {
+                // Seat is booked or sold, don't allow selection
+                return;
+            }
+
             var index = selectedSeats.indexOf(seatCode);
-            var maxSelectedSeats = 3;
 
             if (index === -1) {
                 // Seat is not selected, check if we can select more seats
-                if (selectedSeats.length < maxSelectedSeats) {
+                if (selectedSeats.length < 3) {
                     selectedSeats.push(seatCode);
                 } else {
-                    // Alert or notify the user that they can't select more than 10 seats
-                    alert("You can only select up to {} seats.");
+                    // Alert or notify the user that they can't select more seats
+                    alert("You can only select up to 3 seats.");
                     return;
                 }
             } else {
@@ -98,6 +108,7 @@
             console.log("Selected Seats: ", selectedSeats);
         }
     </script>
+
 </head>
     <body>
     <header>
@@ -127,6 +138,10 @@
                 @if (Model.Seats != null && Model.Seats.Any())
                 {
                 <div style="display: flex;justify-content:safe center; align-items: center; overflow-x: auto; margin-top: 30px;">
+                    <!-- ... (previous HTML code) ... -->
+                    <!-- ... (previous HTML code) ... -->
+                    <!-- ... (previous HTML code) ... -->
+
                     <table>
                         @for (int y = Model.MaxY; y >= 1; y--)
                         {
@@ -138,7 +153,16 @@
                                         {
                                             var seat = Model.Seats.First(seat => seat.X == x && seat.Y == y);
 
-                                            <button id="@seat.Code" class="buttons" onclick="toggleSeatSelection('@seat.Code')">@seat.Name</button>
+                                            // Check if the seat is booked or sold
+                                            var isBooked = Model.BookedSeats?.Contains(seat.Code) ?? false;
+                                            var isSold = Model.SoldSeats?.Contains(seat.Code) ?? false;
+
+                                            var backgroundColor = isBooked ? (isSold ? "red" : "blue") : "";
+                                            var textColor = isBooked || isBooked && isSold ? "white" : "";
+
+                                            <button id="@seat.Code" class="buttons" onclick="return false" @(isBooked || isSold ? "disabled" : "") style="background-color: @(backgroundColor); color: @(textColor)">
+                                                @seat.Name
+                                            </button>
                                         }
                                         else
                                         {
@@ -149,8 +173,14 @@
                                     </td>
                                 }
                             </tr>
+
                         }
                     </table>
+
+                    <div style="margin-top: 20px;">
+                        <p>Total Booked Seats: @(Model.BookedSeats?.Count ?? 0)</p>
+                        <p>Total Sold Seats: @(Model.SoldSeats?.Count ?? 0)</p>
+                    </div>
                     </div>
                 }
                 else
@@ -167,4 +197,4 @@
 
     </body>
 </html>
-<!-- Your HTML markup for displaying the seat arrangement -->
+
