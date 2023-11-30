@@ -8,17 +8,19 @@ namespace CinemaSeatBooking.Controllers
         private readonly HttpClient _httpClient;
         public SeatLayoutController()
         {
-            _httpClient = new HttpClient();
-            _httpClient.BaseAddress = new Uri("https://api-hulubeje.cnetcommerce.com/api/");
+            _httpClient = new HttpClient
+            {
+                BaseAddress = new Uri("https://api-hulubeje.cnetcommerce.com/api/")
+            };
         }
         [HttpPost]
         public IActionResult SeatArrangement(string spacecode, string companyTinNumber, string code)
         {
             return RedirectToAction("SeatArrangementView", new
             {
-                spacecode = spacecode,
-                companyTinNumber = companyTinNumber,
-                code = code,
+                spacecode,
+                companyTinNumber,
+                code,
             });
         }
 
@@ -52,15 +54,30 @@ namespace CinemaSeatBooking.Controllers
                     return View("Error");
                 }
 
-                HttpResponseMessage soldseatsResponse = await _httpClient.GetAsync($"/cinema/GetBookedSeats?orgTin={companyTinNumber}&scheduleCode={code}&spaceCode={spacecode}");
+                HttpResponseMessage soldseatsResponse = await _httpClient.GetAsync($"cinema/GetSoldSeats?orgTin={companyTinNumber}&scheduleCode={code}&spaceCode={spacecode}");
                 if (soldseatsResponse.IsSuccessStatusCode)
                 {
-                    string bookedSeatData = await soldseatsResponse.Content.ReadAsStringAsync();
+                    string soldSeatData = await soldseatsResponse.Content.ReadAsStringAsync();
 
-                    List<string> soldSeats = JsonConvert.DeserializeObject<List<string>>(bookedSeatData);
+                    List<string> soldSeats = JsonConvert.DeserializeObject<List<string>>(soldSeatData);
 
                     seatArrangement.SoldSeats ??= soldSeats;
                 }
+                else
+                {
+                    //handle the case where GetSoldSeats api fails 
+                    return View("Error");
+                }
+
+                HttpResponseMessage availableSeatsResponse = await _httpClient.GetAsync($"cinema/GetAvailableSeats?orgTin={companyTinNumber}&scheduleCode={code}&spaceCode={spacecode}");
+                if (availableSeatsResponse.IsSuccessStatusCode)
+                {
+                    string availableSeatsData = await availableSeatsResponse.Content.ReadAsStringAsync();
+                     List<string> availableSeats = JsonConvert.DeserializeObject<List<string>>(availableSeatsData);
+
+                    seatArrangement.AvailableSeats ??= availableSeats;  
+                }
+
                 // Pass the updated SeatLayout instance to the view
                 return View(seatArrangement);
             }
