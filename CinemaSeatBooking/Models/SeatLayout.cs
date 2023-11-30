@@ -10,6 +10,7 @@
         public List<string>? BookedSeats { get; set; }
         public List<string>? SoldSeats { get; set; }
         public List<string>? AvailableSeats { get; set; }
+        public List<string>? TakenSeats { get; set; }
     }
 
     public class SeatInfo
