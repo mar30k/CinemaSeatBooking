@@ -21,18 +21,19 @@ public class SeatLayoutController : Controller
         };
     }
     [HttpPost]
-    public IActionResult SeatArrangement(string spacecode, string companyTinNumber, string code)
+    public IActionResult SeatArrangement(string spacecode, string companyTinNumber, string code, decimal price)
     {
         return RedirectToAction("SeatArrangementView", new
         {
             spacecode,
             companyTinNumber,
             code,
+            price
         });
     }
 
     [HttpGet]
-    public async Task<IActionResult> SeatArrangementView(string spacecode, string companyTinNumber, string code)
+    public async Task<IActionResult> SeatArrangementView(string spacecode, string companyTinNumber, string code, decimal price)
 
     {
         HttpResponseMessage response = await _httpClient.GetAsync($"cinema/getCinemaSeatArrangment?orgTin={companyTinNumber}&spaceCode={spacecode}");
@@ -110,12 +111,104 @@ public class SeatLayoutController : Controller
                 }
             }
 
+            seatArrangement.CompanyTinNumber = companyTinNumber;
+            seatArrangement.SpaceCode = spacecode;
+            seatArrangement.MovieSccheduleCode = code;
+            seatArrangement.Price = price;
             // Pass the updated SeatLayout instance to the view
             return View(seatArrangement);
         }
 
         // Handle the case when the first API call fails
         return View("Error");
+    }
+
+    public async Task<IActionResult> GetUpdatedSeatInfo( string spacecode, string companyTinNumber, string code)
+    {
+        try
+        {
+            // Reuse the logic from SeatArrangementView action to fetch seat information
+            HttpResponseMessage response = await _httpClient.GetAsync($"cinema/getCinemaSeatArrangment?orgTin={companyTinNumber}&spaceCode={spacecode}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                string responseData = await response.Content.ReadAsStringAsync();
+
+                // Deserialize into a single SeatLayout instance
+                SeatLayout updatedSeatModel = JsonConvert.DeserializeObject<SeatLayout>(responseData);
+
+                // Make a second API call to get booked seats
+                HttpResponseMessage bookedSeatsResponse = await _httpClient.GetAsync($"cinema/GetBookedSeats?orgTin={companyTinNumber}&scheduleCode={code}&spaceCode={spacecode}");
+
+                if (bookedSeatsResponse.IsSuccessStatusCode)
+                {
+                    string bookedSeatsData = await bookedSeatsResponse.Content.ReadAsStringAsync();
+                    List<string> bookedSeats = JsonConvert.DeserializeObject<List<string>>(bookedSeatsData);
+                    updatedSeatModel.BookedSeats ??= bookedSeats;
+                }
+                else
+                {
+                    // Handle the case when the second API call fails
+                    return PartialView("_SeatInfoPartialView", null);
+                }
+
+                HttpResponseMessage soldseatsResponse = await _httpClient.GetAsync($"cinema/GetSoldSeats?orgTin={companyTinNumber}&scheduleCode={code}&spaceCode={spacecode}");
+                if (soldseatsResponse.IsSuccessStatusCode)
+                {
+                    string soldSeatData = await soldseatsResponse.Content.ReadAsStringAsync();
+                    List<string> soldSeats = JsonConvert.DeserializeObject<List<string>>(soldSeatData);
+                    updatedSeatModel.SoldSeats ??= soldSeats;
+                }
+                else
+                {
+                    // Handle the case where GetSoldSeats API fails 
+                    return PartialView("_SeatInfoPartialView", null);
+                }
+
+                HttpResponseMessage availableSeatsResponse = await _httpClient.GetAsync($"cinema/GetAvailableSeats?orgTin={companyTinNumber}&scheduleCode={code}&spaceCode={spacecode}");
+                if (availableSeatsResponse.IsSuccessStatusCode)
+                {
+                    string availableSeatsData = await availableSeatsResponse.Content.ReadAsStringAsync();
+                    List<string> availableSeats = JsonConvert.DeserializeObject<List<string>>(availableSeatsData);
+                    updatedSeatModel.AvailableSeats ??= availableSeats;
+
+                    var anonymousObject = new
+                    {
+                        schedule = code,
+                        allSeats = updatedSeatModel.AvailableSeats,
+                        orgTin = companyTinNumber
+                    };
+
+                    string jsonBody = JsonConvert.SerializeObject(anonymousObject);
+                    var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+
+                    HttpResponseMessage takenSeatsResponse = await _httpClient.PostAsync("ManageSeatCache/GetCachedSeatsForSchedule", content);
+                    if (takenSeatsResponse.IsSuccessStatusCode)
+                    {
+                        string takenSeatsResponseData = await takenSeatsResponse.Content.ReadAsStringAsync();
+                        List<string> takenSeats = JsonConvert.DeserializeObject<List<string>>(takenSeatsResponseData);
+                        updatedSeatModel.TakenSeats ??= takenSeats;
+                    }
+                    else
+                    {
+                        return PartialView("_SeatInfoPartialView", null);
+                    }
+                }
+
+                // Pass the updated SeatLayout instance to the partial view
+                return View("SeatArrangementView", updatedSeatModel);
+            }
+            else
+            {
+                // Handle the case when the first API call fails
+                return PartialView("_SeatInfoPartialView", null);
+            }
+        }
+        catch (Exception)
+        {
+            // Handle general exceptions
+            return PartialView("_SeatInfoPartialView", null);
+        }
     }
 
 }

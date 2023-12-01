@@ -8,7 +8,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <style>
         .container-xl {
             max-width: 100%;
@@ -60,53 +65,148 @@
 
     </style>
 
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
     <script>
         var selectedSeats = [];
+        var countdownInterval;
+        var countdownTime = 60; // Countdown time in seconds
+        var isBookingStarted = false;
 
         document.addEventListener("DOMContentLoaded", function () {
             var buttons = document.querySelectorAll('.buttons');
+            var countdown;
 
             buttons.forEach(function (button) {
                 button.addEventListener('click', function () {
+                    if (!isBookingStarted) {
+                        startBooking();
+                        isBookingStarted = true;
+                    }
+
                     var seatCode = this.id;
                     var isBooked = this.getAttribute('data-isBooked') === 'True';
                     var isSold = this.getAttribute('data-isSold') === 'True';
 
-                    toggleSeatSelection(seatCode, isBooked, isSold);
+                    toggleSeatSelection(seatCode, isBooked || isSold);
                 });
             });
-        });
 
-        function toggleSeatSelection(seatCode, isBooked, isSold) {
-            if (isBooked || isSold) {
-                // Seat is booked or sold, don't allow selection
-                return;
+            function startBooking() {
+                // Display modal only on the first click
+                $('#bookingModal').modal('show');
+
+                // Handle "OK" button click
+                $('#okButton').one('click', function () {
+                    // Close the modal
+                    $('#bookingModal').modal('hide');
+
+                    // Start the countdown only after clicking "OK"
+                    countdown = countdownTime;
+                    startCountdownTimer();
+                });
             }
 
-            var index = selectedSeats.indexOf(seatCode);
+            function startCountdownTimer() {
+                // Display the countdown timer div
+                $('#countdownTimer').show();
 
-            if (index === -1) {
-                // Seat is not selected, check if we can select more seats
-                if (selectedSeats.length < 3) {
-                    selectedSeats.push(seatCode);
+                countdownInterval = setInterval(function () {
+                    updateCountdownTimer();
+                    countdown--;
+
+                    if (countdown <= 0) {
+                        clearInterval(countdownInterval);
+                        resetBooking();
+                        alert("Booking time expired. Please restart the booking process.");
+                        location.reload(); // Refresh the page
+                    }
+                }, 1000);
+            }
+
+            function updateCountdownTimer() {
+                $('#countdownTimer').text("Time remaining: " + formatTime(countdown));
+            }
+
+            function updateButtonStatus() {
+                var skipButton = document.getElementById('skipButton');
+
+                if (isBookingStarted) {
+                    var seatCount = selectedSeats.length;
+                    if (seatCount === 0) {
+                        skipButton.innerText = "Skip";
+                    } else {
+                        skipButton.innerText = "You Will Pay " + (seatCount * parseFloat("@Model.Price")).toFixed(2) + " ETB for " + seatCount + " seats";
+                    }
+
                 } else {
-                    // Alert or notify the user that they can't select more seats
-                    alert("You can only select up to 3 seats.");
-                    return;
+                    skipButton.innerText = "Skip";
                 }
-            } else {
-                // Seat is already selected, unselect it
-                selectedSeats.splice(index, 1);
             }
 
-            // Toggle background color based on selection
-            var button = document.getElementById(seatCode);
-            if (button) {
-                button.style.backgroundColor = (index === -1) ? "green" : "";
+            function resetBooking() {
+                selectedSeats = [];
+                clearInterval(countdownInterval);
+
+                // Clear background color of selected seats
+                buttons.forEach(function (button) {
+                    var seatCode = button.id;
+                    var isBooked = button.getAttribute('data-isBooked') === 'True';
+                    var isSold = button.getAttribute('data-isSold') === 'True';
+                    var isTaken = button.getAttribute('data-isTaken') === 'True';
+
+                    // Change background color only if the seat is not booked, sold, or taken
+                    if (!isBooked && !isSold && !isTaken) {
+                        button.style.backgroundColor = "";
+                    }
+                });
+
+                updateButtonStatus();
+                isBookingStarted = false; // Reset booking flag
             }
 
-            console.log("Selected Seats: ", selectedSeats);
-        }
+            // Handle "Cancel" button click
+            $('#cancelButton').click(function () {
+                // Close the modal
+                $('#bookingModal').modal('hide');
+                resetBooking();
+            });
+
+            function formatTime(seconds) {
+                var min = Math.floor(seconds / 60);
+                var sec = seconds % 60;
+                return min + ":" + (sec < 10 ? "0" : "") + sec;
+            }
+
+            // Periodically fetch and update seat information
+            function toggleSeatSelection(seatCode, isDisabled) {
+                var index = selectedSeats.indexOf(seatCode);
+
+                if (!isDisabled && index === -1) {
+                    if (selectedSeats.length < 3) {
+                        selectedSeats.push(seatCode);
+                    } else {
+                        var alertElement = document.getElementById("seatLimitAlert");
+                        alertElement.style.display = "block";
+
+                        setTimeout(function () {
+                            alertElement.style.display = "none";
+                        }, 2000);
+                        return;
+                    }
+                } else if (!isDisabled) {
+                    selectedSeats.splice(index, 1);
+                }
+
+                // Toggle background color based on selection
+                var button = document.getElementById(seatCode);
+                if (button) {
+                    button.style.backgroundColor = index === -1 ? "green" : "";
+                }
+                updateButtonStatus();
+                console.log("Selected Seats: ", selectedSeats);
+            }
+        });
     </script>
 
 </head>
@@ -123,78 +223,42 @@
                             <a class="custom-btn btn btn-primary" asp-controller="Home" asp-action="Index" role="button">Movies</a>
                         </div>
                         <div class="today-date" style="display: inline-block; margin-top: 10px; margin-right: 10px;">
-                            <p style="margin-left:10px;">@formattedDate</p>
+                            <div id="countdownTimer" style="display:none;">Time remaining: 1:00</div>
                         </div>
                     </div>
                 </div>
             </div>
         </nav>
     </header>
+    <div id="seatLimitAlert" class="alert alert-danger fixed-bottom mb-3" role="alert" style="display: none; position: fixed; bottom: 20px; left: 20px; width: 300px;">
+        You can't select more than 3 seats
+    </div>
         <div class="container-xl">
-            @if (Model != null)
-            {
-                <div class="container">
-                </div>
-                @if (Model.Seats != null && Model.Seats.Any())
-                {
-                <div style="display: flex;justify-content:safe center; align-items: center; overflow-x: auto; margin-top: 30px;">
-                    <table>
-                        @for (int y = Model.MaxY; y >= 1; y--)
-                        {
-                            <tr>
-                                @for (int x = 1; x <= Model.MaxX; x++)
-                                {
-                                    <td style="height: 30px !important; width: 30px !important">
-                                        @if (Model.Seats.Any(seat => seat.X == x && seat.Y == y && !string.IsNullOrWhiteSpace(seat.Name)))
-                                        {
-                                            var seat = Model.Seats.First(seat => seat.X == x && seat.Y == y);
-
-                                            // Check if the seat is booked, sold, or taken
-                                            var isBooked = Model.BookedSeats?.Contains(seat.Code) ?? false;
-                                            var isSold = Model.SoldSeats?.Contains(seat.Code) ?? false;
-                                            var isTaken = Model.TakenSeats?.Contains(seat.Code) ?? false;
-
-                                            var backgroundColor = isBooked ? (isSold ? "red" : "blue") : (isTaken ? "orange" : "");
-                                            var textColor = isTaken || isBooked || (isBooked && isSold) ? "white" : "";
-
-                                            <button id="@seat.Code" class="buttons" onclick="return false" @(isBooked || isSold || isTaken ? "disabled" : "") style="background-color: @(backgroundColor); color: @(textColor)">
-                                                @seat.Name
-                                            </button>
-                                        }
-                                        else
-                                        {
-                                            <div class="hall">
-                                                <p></p>
-                                            </div>
-                                        }
-                                    </td>
-
-                                }
-                            </tr>
-
-                        }
-                    </table>
-
-                    <div style="margin-top: 20px;">
-                        <p>Total Booked Seats: @(Model.BookedSeats?.Count ?? 0)</p>
-                        <p>Total Sold Seats: @(Model.SoldSeats?.Count ?? 0)</p>
-                        <p>Total Taken Seats: @(Model.TakenSeats?.Count ?? 0)</p>
-                        <p>Total Available Seats: @(Model.AvailableSeats?.Count - Model.BookedSeats?.Count ?? 0)</p>
-                    </div>
-                    </div>
-                }
-                else
-                {
-                    <p>No seats available.</p>
-                }
-            }
-            else
-            {
-                <p>No seat arrangement data available.</p>
-            }
+        <div id="countdownTimer" style="display:none;">Time remaining: 1:00</div>
+            <div id="seatInfoContainer">
+            <partial name="_SeatInfoPartialView" />
         </div>
-
-
+        </div>
+        <div class="modal" tabindex="-1" role="dialog" id="bookingModal" style="justify-content: center">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Booking Reminder</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>You will be given <span id="countdownTimer">60</span> seconds to finish booking.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" id="cancelButton">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="okButton">OK</button>
+                    </div>
+                    <!-- Add additional styling or content as needed -->
+                </div>
+            </div>
+        </div>
     </body>
 </html>
 
