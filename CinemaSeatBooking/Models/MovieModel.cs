@@ -19,8 +19,8 @@
         public int? MovieId { get; set; }
         public List<string>? Genre { get; set; }
         public List<Genre>? Genres { get; set; }
-        public List<string> GenreNames { get; set; }
-        public List<CastMember> Cast { get; set; }
+        public List<string>? GenreNames { get; set; }
+        public List<CastMember>? Cast { get; set; }
         public int? RunTime { get; set; }
         public string? YoutubeKey { get; set; }
         public string? FormattedRunTime
@@ -37,7 +37,7 @@
             }
         }
 
-        public List<MovieSchedule> Schedules { get; set; } // Added property for cinema schedules
+        public List<MovieSchedule>? Schedules { get; set; } // Added property for cinema schedules
     }
 
     public class MovieSchedule
@@ -51,7 +51,7 @@
         public string? Status { get; set; }
         public string? Header { get; set; }
         public decimal NPrice { get; set; }
-        public VIPSchedule VIP { get; set; }
+        public VIPSchedule? VIP { get; set; }
     }
 
     public class VIPSchedule
