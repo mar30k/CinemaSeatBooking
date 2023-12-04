@@ -4,7 +4,7 @@
     {
         public string? SpaceCode { get; set; }
         public string? CompanyTinNumber { get; set; }
-        public string? MovieSccheduleCode { get; set; }
+        public string? MovieScheduleCode { get; set; }
         public int MaxX { get; set; }
         public int MaxY { get; set; }
         public decimal Price { get; set; }

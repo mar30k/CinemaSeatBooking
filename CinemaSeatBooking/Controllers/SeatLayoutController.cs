@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 namespace CinemaSeatBooking.Controllers;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -113,7 +111,7 @@ public class SeatLayoutController : Controller
 
             seatArrangement.CompanyTinNumber = companyTinNumber;
             seatArrangement.SpaceCode = spacecode;
-            seatArrangement.MovieSccheduleCode = code;
+            seatArrangement.MovieScheduleCode = code;
             seatArrangement.Price = price;
             // Pass the updated SeatLayout instance to the view
             return View(seatArrangement);
@@ -196,7 +194,7 @@ public class SeatLayoutController : Controller
                 }
 
                 // Pass the updated SeatLayout instance to the partial view
-                return View("SeatArrangementView", updatedSeatModel);
+                return View("_SeatInfoPartialView", updatedSeatModel);
             }
             else
             {
