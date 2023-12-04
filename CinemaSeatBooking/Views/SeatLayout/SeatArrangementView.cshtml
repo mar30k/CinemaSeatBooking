@@ -76,39 +76,53 @@
         document.addEventListener("DOMContentLoaded", function () {
             var buttons = document.querySelectorAll('.buttons');
             var countdown;
-
-            buttons.forEach(function (button) {
-                button.addEventListener('click', function () {
-                    if (!isBookingStarted) {
-                        startBooking();
-                        isBookingStarted = true;
-                    }
-
-                    var seatCode = this.id;
-                    var seatStatus = this.getAttribute('data-seat-status');
+            selectedSeats = retrieveSelectedSeatsFromStorage();
+            document.body.addEventListener('click', function (event) {
+                if (event.target.classList.contains('buttons')) {
+                    var seatCode = event.target.id;
+                    var seatStatus = event.target.getAttribute('data-seat-status');
 
                     var isBooked = seatStatus === 'booked';
                     var isSold = seatStatus === 'sold';
                     var isTaken = seatStatus === 'taken';
 
+                    if (!isBookingStarted) {
+                        startBooking();
+                        isBookingStarted = true;
+                    }
+
                     toggleSeatSelection(seatCode, isBooked || isSold);
-                });
+                }
             });
+
             setInterval(function () {
                 updateSeatInfo();
-            }, 70000); // Update every 10000 milliseconds (10 seconds)
+            }, 10000); // Update every 10000 milliseconds (10 seconds)
 
             function updateSeatInfo() {
                 // Extract values from the SeatLayout model
+                var Price = "@Model.Price";
                 var companyTinNumber = "@Model.CompanyTinNumber"; // Replace with the actual property in your model
                 var code = "@Model.MovieScheduleCode"; // Replace with the actual property in your model
                 var spacecode = "@Model.SpaceCode"; // Replace with the actual property in your model
                 // Use AJAX to fetch updated seat information
-                $.get("/SeatLayout/GetUpdatedSeatInfo", { companyTinNumber: companyTinNumber, code: code, spacecode: spacecode }, function (data) {
+                $.get("/SeatLayout/GetUpdatedSeatInfo", { companyTinNumber: companyTinNumber, code: code, spacecode: spacecode, price: 100 }, function (data) {
                     // Update the seat information container with the fetched partial view or JSON data
                     $("#seatInfoContainer").html(data);
+                    applyEventListeners();
+                    updateButtonStatus();
+                    updateSelectedSeatsUI();
                 });
                 console.log("updated the data");
+            }
+
+            function applyEventListeners() {
+                var buttons = document.querySelectorAll('.buttons');
+                buttons.forEach(function (button) {
+                    button.addEventListener('click', function () {
+                        // Your existing click event logic...
+                    });
+                });
             }
 
             function startBooking() {
@@ -162,6 +176,19 @@
                 }
             }
 
+            // Handle "Cancel" button click
+            $('#cancelButton').click(function () {
+                // Close the modal
+                $('#bookingModal').modal('hide');
+                resetBooking();
+            });
+
+            function formatTime(seconds) {
+                var min = Math.floor(seconds / 60);
+                var sec = seconds % 60;
+                return min + ":" + (sec < 10 ? "0" : "") + sec;
+            }
+
             function resetBooking() {
                 clearInterval(countdownInterval);
                 var companyTinNumber = "@Model.CompanyTinNumber";
@@ -197,21 +224,9 @@
 
                 // Clear the selected seats array
                 selectedSeats = [];
+                saveSelectedSeatsToStorage();
                 updateButtonStatus();
                 isBookingStarted = false; // Reset booking flag
-            }
-
-            // Handle "Cancel" button click
-            $('#cancelButton').click(function () {
-                // Close the modal
-                $('#bookingModal').modal('hide');
-                resetBooking();
-            });
-
-            function formatTime(seconds) {
-                var min = Math.floor(seconds / 60);
-                var sec = seconds % 60;
-                return min + ":" + (sec < 10 ? "0" : "") + sec;
             }
 
             // Periodically fetch and update seat information
@@ -270,7 +285,6 @@
                         }
                     });
                 }
-
                 // Toggle background color based on selection
                 var button = document.getElementById(seatCode);
                 if (button) {
@@ -278,8 +292,51 @@
                 }
                 updateButtonStatus();
                 console.log("Selected Seats: ", selectedSeats);
+
+                saveSelectedSeatsToStorage();
+                updateSelectedSeatsUI();
                 return selectedSeats;
             }
+            function initializeSeatSelection() {
+                // Example: Attach click event to seat buttons
+                var buttons = document.querySelectorAll('.buttons');
+                buttons.forEach(function (button) {
+                    button.addEventListener('click', function () {
+                        // Handle seat selection logic
+                        toggleSeatSelection(this.id);
+                    });
+                });
+
+                // Example: Retrieve selected seats from session storage
+                selectedSeats = retrieveSelectedSeatsFromStorage();
+
+                // Update UI based on selected seats
+                updateSelectedSeatsUI();
+            }
+            function saveSelectedSeatsToStorage() {
+                sessionStorage.setItem('selectedSeats', JSON.stringify(selectedSeats));
+            }
+
+            function retrieveSelectedSeatsFromStorage() {
+                var storedSelectedSeats = sessionStorage.getItem('selectedSeats');
+                return storedSelectedSeats ? JSON.parse(storedSelectedSeats) : [];
+            }
+            // Function to update the UI based on selected seats
+            function updateSelectedSeatsUI() {
+                selectedSeats.forEach(function (seatCode) {
+                    // Update the UI for each selected seat (e.g., change background color)
+                    var button = document.getElementById(seatCode);
+                    if (button) {
+                        button.style.backgroundColor = "green"; // Adjust based on your styling
+                        button.removeAttribute("disabled"); // Remove the disabled attribute
+                    }
+                });
+            }
+
+            updateSelectedSeatsUI();
+            document.addEventListener("DOMContentLoaded", function () {
+                initializeSeatSelection();
+            });
         });
     </script>
 </head>
@@ -311,26 +368,6 @@
             <div id="seatInfoContainer">
             <partial name="_SeatInfoPartialView" />
         </div>
-        </div>
-        <div class="modal" tabindex="-1" role="dialog" id="bookingModal" style="justify-content: center">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Booking Reminder</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <p>You will be given <span id="countdownTimer">60</span> seconds to finish booking.</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" id="cancelButton">Cancel</button>
-                        <button type="button" class="btn btn-primary" id="okButton">OK</button>
-                    </div>
-                    <!-- Add additional styling or content as needed -->
-                </div>
-            </div>
         </div>
     </body>
 </html>
