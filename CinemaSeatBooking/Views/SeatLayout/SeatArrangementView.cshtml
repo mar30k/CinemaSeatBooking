@@ -85,17 +85,35 @@
                     }
 
                     var seatCode = this.id;
-                    var isBooked = this.getAttribute('data-isBooked') === 'True';
-                    var isSold = this.getAttribute('data-isSold') === 'True';
+                    var seatStatus = this.getAttribute('data-seat-status');
+
+                    var isBooked = seatStatus === 'booked';
+                    var isSold = seatStatus === 'sold';
+                    var isTaken = seatStatus === 'taken';
 
                     toggleSeatSelection(seatCode, isBooked || isSold);
                 });
             });
+            setInterval(function () {
+                updateSeatInfo();
+            }, 70000); // Update every 10000 milliseconds (10 seconds)
+
+            function updateSeatInfo() {
+                // Extract values from the SeatLayout model
+                var companyTinNumber = "@Model.CompanyTinNumber"; // Replace with the actual property in your model
+                var code = "@Model.MovieScheduleCode"; // Replace with the actual property in your model
+                var spacecode = "@Model.SpaceCode"; // Replace with the actual property in your model
+                // Use AJAX to fetch updated seat information
+                $.get("/SeatLayout/GetUpdatedSeatInfo", { companyTinNumber: companyTinNumber, code: code, spacecode: spacecode }, function (data) {
+                    // Update the seat information container with the fetched partial view or JSON data
+                    $("#seatInfoContainer").html(data);
+                });
+                console.log("updated the data");
+            }
 
             function startBooking() {
                 // Display modal only on the first click
                 $('#bookingModal').modal('show');
-
                 // Handle "OK" button click
                 $('#okButton').one('click', function () {
                     // Close the modal
@@ -145,22 +163,40 @@
             }
 
             function resetBooking() {
-                selectedSeats = [];
                 clearInterval(countdownInterval);
+                var companyTinNumber = "@Model.CompanyTinNumber";
+                var movieScheduleCode = "@Model.MovieScheduleCode";
 
-                // Clear background color of selected seats
-                buttons.forEach(function (button) {
-                    var seatCode = button.id;
-                    var isBooked = button.getAttribute('data-isBooked') === 'True';
-                    var isSold = button.getAttribute('data-isSold') === 'True';
-                    var isTaken = button.getAttribute('data-isTaken') === 'True';
-
-                    // Change background color only if the seat is not booked, sold, or taken
-                    if (!isBooked && !isSold && !isTaken) {
+                // Clear background color of selected seats only
+                selectedSeats.forEach(function (selectedSeat) {
+                    var button = document.getElementById(selectedSeat);
+                    if (button) {
                         button.style.backgroundColor = "";
                     }
                 });
 
+                var urlRemove = 'https://api-hulubeje.cnetcommerce.com/api/ManageSeatCache/DeleteCachedSeatsForSchedule';
+                $.ajax({
+                    url: urlRemove,
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        schedule: movieScheduleCode, // Assuming these variables are still in scope
+                        allSeats: selectedSeats, // Pass the selected seats array
+                        orgTin: companyTinNumber // Assuming this variable is still in scope
+                    }),
+                    success: function (response) {
+                        // Handle success
+                        console.log(response);
+                    },
+                    error: function (error) {
+                        // Handle error
+                        console.error(error);
+                    }
+                });
+
+                // Clear the selected seats array
+                selectedSeats = [];
                 updateButtonStatus();
                 isBookingStarted = false; // Reset booking flag
             }
@@ -181,14 +217,33 @@
             // Periodically fetch and update seat information
             function toggleSeatSelection(seatCode, isDisabled) {
                 var index = selectedSeats.indexOf(seatCode);
+                var companyTinNumber = "@Model.CompanyTinNumber";
+                var movieScheduleCode = "@Model.MovieScheduleCode";
+                var consignee = "0912141914"; // Keep the consignee same, as you mentioned
+
+                var urlAdd = 'https://api-hulubeje.cnetcommerce.com/api/ManageSeatCache/SetCachedSeatsForSchedule' +
+                    `?schedule=${movieScheduleCode}&seat=${seatCode}&consignee=${consignee}&orgTin=${companyTinNumber}`;
+
+                var urlRemove = 'https://api-hulubeje.cnetcommerce.com/api/ManageSeatCache/DeleteCachedSeatsForSchedule';
 
                 if (!isDisabled && index === -1) {
                     if (selectedSeats.length < 3) {
                         selectedSeats.push(seatCode);
+                        $.ajax({
+                            url: urlAdd,
+                            type: 'POST',
+                            success: function (response) {
+                                // Handle success
+                                console.log(response);
+                            },
+                            error: function (error) {
+                                // Handle error
+                                console.error(error);
+                            }
+                        });
                     } else {
                         var alertElement = document.getElementById("seatLimitAlert");
                         alertElement.style.display = "block";
-
                         setTimeout(function () {
                             alertElement.style.display = "none";
                         }, 2000);
@@ -196,6 +251,24 @@
                     }
                 } else if (!isDisabled) {
                     selectedSeats.splice(index, 1);
+                    $.ajax({
+                        url: urlRemove,
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            schedule: movieScheduleCode,
+                            allSeats: [seatCode],
+                            orgTin: companyTinNumber
+                        }),
+                        success: function (response) {
+                            // Handle success
+                            console.log(response);
+                        },
+                        error: function (error) {
+                            // Handle error
+                            console.error(error);
+                        }
+                    });
                 }
 
                 // Toggle background color based on selection
@@ -205,10 +278,10 @@
                 }
                 updateButtonStatus();
                 console.log("Selected Seats: ", selectedSeats);
+                return selectedSeats;
             }
         });
     </script>
-
 </head>
     <body>
     <header>
