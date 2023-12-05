@@ -101,12 +101,11 @@
 
             function updateSeatInfo() {
                 // Extract values from the SeatLayout model
-                var Price = "@Model.Price";
                 var companyTinNumber = "@Model.CompanyTinNumber"; // Replace with the actual property in your model
                 var code = "@Model.MovieScheduleCode"; // Replace with the actual property in your model
                 var spacecode = "@Model.SpaceCode"; // Replace with the actual property in your model
                 // Use AJAX to fetch updated seat information
-                $.get("/SeatLayout/GetUpdatedSeatInfo", { companyTinNumber: companyTinNumber, code: code, spacecode: spacecode, price: 100 }, function (data) {
+                $.get("/SeatLayout/GetUpdatedSeatInfo", { companyTinNumber: companyTinNumber, code: code, spacecode: spacecode }, function (data) {
                     // Update the seat information container with the fetched partial view or JSON data
                     $("#seatInfoContainer").html(data);
                     applyEventListeners();
@@ -329,6 +328,7 @@
                     if (button) {
                         button.style.backgroundColor = "green"; // Adjust based on your styling
                         button.removeAttribute("disabled"); // Remove the disabled attribute
+                        button.style.color = "black"
                     }
                 });
             }
@@ -364,10 +364,12 @@
         You can't select more than 3 seats
     </div>
         <div class="container-xl">
-        <div id="countdownTimer" style="display:none;">Time remaining: 1:00</div>
+            <div id="countdownTimer" style="display:none;">
+                 Time remaining: 1:00
+            </div>
             <div id="seatInfoContainer">
-            <partial name="_SeatInfoPartialView" />
-        </div>
+                <partial name="_SeatInfoPartialView" />
+            </div>
         </div>
     </body>
 </html>

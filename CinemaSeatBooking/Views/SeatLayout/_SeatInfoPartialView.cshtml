@@ -1,5 +1,62 @@
 ﻿@model CinemaSeatBooking.Models.SeatLayout
-<div>
+<style>
+    .container-xl {
+        max-width: 100%;
+        overflow-x: auto;
+    }
+
+    .buttons:hover {
+        background-color: green;
+        color: white;
+        cursor: pointer;
+    }
+
+    .buttons {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+        font-size: 10px;
+        font-weight: 400;
+        background: #fff;
+        border: 1px solid #1ea83c;
+        border-radius: 2px;
+        color: #1ea83c;
+        width: 100%;
+        height: 100%;
+    }
+
+    .hall {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+
+        .hall .p {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            font-size: 10px;
+            font-weight: 400;
+            background: #fff;
+            width: 100%;
+            height: 100%;
+        }
+
+    .booked-seat {
+        background-color: blue;
+        color: white;
+    }
+
+</style>
+<div style="margin-top: 20px; color:white; ">
+    <p style="background-color: blue; display: inline-block; padding: 2px; border-radius: 5px; border: 1px solid green; margin-right: 5px;">Booked @(Model.BookedSeats?.Count ?? 0)</p>
+    <p style="background-color: red; display: inline-block;padding: 2px; border-radius: 5px; border: 1px solid green; margin-right: 5px;">Sold @(Model.SoldSeats?.Count ?? 0)</p>
+    <p style="background-color: darkorange; display: inline-block; padding: 2px; border-radius: 5px; border: 1px solid green; margin-right: 5px;">Taken @(Model.TakenSeats?.Count ?? 0)</p>
+    <p style="background-color: white; color:black; display: inline-block; padding: 2px; border-radius: 5px; border: 1px solid green; ">Available @(Model.AvailableSeats?.Count(seatCode => Model.Seats.Any(seat => seat.Code == seatCode && !string.IsNullOrWhiteSpace(seat.Name))) - Model.TakenSeats?.Count ?? 0)</p>
+</div>
+<div style="background: lightgrey; padding: 20px;">
     @if (Model != null)
     {
         <div class="container">
@@ -43,14 +100,6 @@
 
                     }
                 </table>
-
-                <div style="margin-top: 20px;">
-                    <p>Total Booked Seats: @(Model.BookedSeats?.Count ?? 0)</p>
-                    <p>Total Sold Seats: @(Model.SoldSeats?.Count ?? 0)</p>
-                    <p>Total Taken Seats: @(Model.TakenSeats?.Count ?? 0)</p>
-                    <p>Total Available Seats: @(Model.AvailableSeats?.Count(seatCode => Model.Seats.Any(seat => seat.Code == seatCode && !string.IsNullOrWhiteSpace(seat.Name))) - Model.TakenSeats?.Count ?? 0)</p>
-
-                </div>
             </div>
         }
         else
@@ -62,9 +111,9 @@
     {
         <p>No seat arrangement data available.</p>
     }
-    <div style="margin-left:500px;margin-top: 20px; " id="priceContainer">
-        <button id="skipButton" class="btn btn-outline-primary" onclick="skipBooking()">Skip</button>
-    </div>
+</div>
+<div style="text-align: center; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);" id="priceContainer">
+    <button id="skipButton" class="btn btn-outline-primary">Skip</button>
 </div>
 <div class="modal" tabindex="-1" role="dialog" id="bookingModal" style="justify-content: center">
     <div class="modal-dialog" role="document">
@@ -82,7 +131,7 @@
                 <button type="button" class="btn btn-secondary" id="cancelButton">Cancel</button>
                 <button type="button" class="btn btn-primary" id="okButton">OK</button>
             </div>
-            <!-- Add additional styling or content as needed -->
         </div>
     </div>
 </div>
+
