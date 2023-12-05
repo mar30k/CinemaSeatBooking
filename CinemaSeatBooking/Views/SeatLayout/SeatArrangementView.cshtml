@@ -66,7 +66,6 @@
     </style>
 
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
     <script>
         var selectedSeats = [];
         var countdownInterval;
@@ -321,6 +320,34 @@
                 return storedSelectedSeats ? JSON.parse(storedSelectedSeats) : [];
             }
             // Function to update the UI based on selected seats
+            $('#skipButton').click(function () {
+                // Get selected seats from session storage
+                var selectedSeats = retrieveSelectedSeatsFromStorage();
+                var countdownTime = countdown; // Assuming countdown is a global variable
+                var companyTinNumber = "@Model.CompanyTinNumber";
+
+                console.log("CompanyTinNumber: " + companyTinNumber);
+                console.log("selectedSeats: " + JSON.stringify(selectedSeats));
+
+                var form = $('<form action="/FoodAndBeverage/Products" method="post"></form>');
+
+                selectedSeats.forEach(function (seat, index) {
+                    form.append('<input type="hidden" name="selectedSeats[' + index + ']" value="' + seat + '" />');
+                });
+
+                // Append the countdown time
+                form.append('<input type="hidden" name="countdownTime" value="' + countdownTime + '" />');
+
+                // Append the companyTinNumber
+                form.append('<input type="hidden" name="companyTinNumber" value="' + companyTinNumber + '" />');
+
+                // Append the form to the body
+                $('body').append(form);
+
+                // Submit the form
+                form.submit();
+            });
+
             function updateSelectedSeatsUI() {
                 selectedSeats.forEach(function (seatCode) {
                     // Update the UI for each selected seat (e.g., change background color)
@@ -339,6 +366,7 @@
             });
         });
     </script>
+    
 </head>
     <body>
     <header>
@@ -369,6 +397,9 @@
             </div>
             <div id="seatInfoContainer">
                 <partial name="_SeatInfoPartialView" />
+            </div>
+            <div style="text-align: center; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);" id="priceContainer">
+                <button id="skipButton" class="btn btn-outline-primary">Skip</button>
             </div>
         </div>
     </body>
