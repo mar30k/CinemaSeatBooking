@@ -51,7 +51,7 @@ public class SeatLayoutController : Controller
                 string bookedSeatsData = await bookedSeatsResponse.Content.ReadAsStringAsync();
 
                 // Deserialize the response into a List<string>
-                List<string> bookedSeats = JsonConvert.DeserializeObject<List<string>>(bookedSeatsData);
+                var bookedSeats = JsonConvert.DeserializeObject<List<string>>(bookedSeatsData);
 
                 // Update the SeatLayout model with the booked seats information
                 seatArrangement.BookedSeats ??= bookedSeats;
@@ -67,7 +67,7 @@ public class SeatLayoutController : Controller
             {
                 string soldSeatData = await soldseatsResponse.Content.ReadAsStringAsync();
 
-                List<string> soldSeats = JsonConvert.DeserializeObject<List<string>>(soldSeatData);
+                var soldSeats = JsonConvert.DeserializeObject<List<string>>(soldSeatData);
 
                 seatArrangement.SoldSeats ??= soldSeats;
             }
@@ -81,7 +81,7 @@ public class SeatLayoutController : Controller
             if (availableSeatsResponse.IsSuccessStatusCode)
             {
                 string availableSeatsData = await availableSeatsResponse.Content.ReadAsStringAsync();
-                List<string> availableSeats = JsonConvert.DeserializeObject<List<string>>(availableSeatsData);
+                var availableSeats = JsonConvert.DeserializeObject<List<string>>(availableSeatsData);
 
                 seatArrangement.AvailableSeats ??= availableSeats;
 
@@ -99,7 +99,7 @@ public class SeatLayoutController : Controller
                 if (takenSeatsResponse.IsSuccessStatusCode)
                 {
                     string takenSeatsResponseData = await takenSeatsResponse.Content.ReadAsStringAsync();
-                    List<string> takenSeats = JsonConvert.DeserializeObject<List<string>>(takenSeatsResponseData);
+                    var takenSeats = JsonConvert.DeserializeObject<List<string>>(takenSeatsResponseData);
 
                     seatArrangement.TakenSeats ??= takenSeats;
                 }
@@ -133,7 +133,7 @@ public class SeatLayoutController : Controller
                 string responseData = await response.Content.ReadAsStringAsync();
 
                 // Deserialize into a single SeatLayout instance
-                SeatLayout updatedSeatModel = JsonConvert.DeserializeObject<SeatLayout>(responseData);
+                var updatedSeatModel = JsonConvert.DeserializeObject<SeatLayout>(responseData);
 
                 // Make a second API call to get booked seats
                 HttpResponseMessage bookedSeatsResponse = await _httpClient.GetAsync($"cinema/GetBookedSeats?orgTin={companyTinNumber}&scheduleCode={code}&spaceCode={spacecode}");
@@ -141,7 +141,7 @@ public class SeatLayoutController : Controller
                 if (bookedSeatsResponse.IsSuccessStatusCode)
                 {
                     string bookedSeatsData = await bookedSeatsResponse.Content.ReadAsStringAsync();
-                    List<string> bookedSeats = JsonConvert.DeserializeObject<List<string>>(bookedSeatsData);
+                    var bookedSeats = JsonConvert.DeserializeObject<List<string>>(bookedSeatsData);
                     updatedSeatModel.BookedSeats ??= bookedSeats;
                 }
                 else
@@ -154,7 +154,7 @@ public class SeatLayoutController : Controller
                 if (soldseatsResponse.IsSuccessStatusCode)
                 {
                     string soldSeatData = await soldseatsResponse.Content.ReadAsStringAsync();
-                    List<string> soldSeats = JsonConvert.DeserializeObject<List<string>>(soldSeatData);
+                    var soldSeats = JsonConvert.DeserializeObject<List<string>>(soldSeatData);
                     updatedSeatModel.SoldSeats ??= soldSeats;
                 }
                 else
@@ -167,7 +167,7 @@ public class SeatLayoutController : Controller
                 if (availableSeatsResponse.IsSuccessStatusCode)
                 {
                     string availableSeatsData = await availableSeatsResponse.Content.ReadAsStringAsync();
-                    List<string> availableSeats = JsonConvert.DeserializeObject<List<string>>(availableSeatsData);
+                    var availableSeats = JsonConvert.DeserializeObject<List<string>>(availableSeatsData);
                     updatedSeatModel.AvailableSeats ??= availableSeats;
 
                     var anonymousObject = new
@@ -184,7 +184,7 @@ public class SeatLayoutController : Controller
                     if (takenSeatsResponse.IsSuccessStatusCode)
                     {
                         string takenSeatsResponseData = await takenSeatsResponse.Content.ReadAsStringAsync();
-                        List<string> takenSeats = JsonConvert.DeserializeObject<List<string>>(takenSeatsResponseData);
+                        var takenSeats = JsonConvert.DeserializeObject<List<string>>(takenSeatsResponseData);
                         updatedSeatModel.TakenSeats ??= takenSeats;
                     }
                     else

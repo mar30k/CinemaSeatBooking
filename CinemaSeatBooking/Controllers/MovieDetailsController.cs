@@ -133,8 +133,8 @@ namespace CinemaSeatBooking.Controllers
                             if (movieInfo != null)
                             {
                                 // Retrieve company tin number and branch code
-                                string retrievedCompanyTinNumber = movieInfo.CompanyTinNumber;
-                                string retrievedBranchCode = movieInfo.BranchCode;
+                                var retrievedCompanyTinNumber = movieInfo.CompanyTinNumber;
+                                var retrievedBranchCode = movieInfo.BranchCode;
 
                                 // Use the retrieved information for the schedules API call
                                 string schedulesApiUrl = $"https://api-hulubeje.cnetcommerce.com/api/cinema/cinemaSchedules?orgTin={retrievedCompanyTinNumber}&date={selectedDate:yyyy-MM-dd} 11:11:11.326116&branchCode={retrievedBranchCode}";
