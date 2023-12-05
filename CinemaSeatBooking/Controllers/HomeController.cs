@@ -70,7 +70,7 @@ namespace CinemaSeatBooking.Controllers
                 {
                     string responseData = await response.Content.ReadAsStringAsync();
 
-                    List<MovieModel> movies = JsonConvert.DeserializeObject<List<MovieModel>>(responseData);
+                    var movies = JsonConvert.DeserializeObject<List<MovieModel>>(responseData);
 
                     // Call the method to get movies with poster URLs
                     var moviesWithPosters = await GetMoviesWithPosterUrls(movies);

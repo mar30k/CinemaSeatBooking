@@ -41,7 +41,7 @@ public class SeatLayoutController : Controller
             string responseData = await response.Content.ReadAsStringAsync();
 
             // Deserialize into a single SeatLayout instance
-            SeatLayout seatArrangement = JsonConvert.DeserializeObject<SeatLayout>(responseData);
+            var seatArrangement = JsonConvert.DeserializeObject<SeatLayout>(responseData);
 
             // Make a second API call to get booked seats
             HttpResponseMessage bookedSeatsResponse = await _httpClient.GetAsync($"cinema/GetBookedSeats?orgTin={companyTinNumber}&scheduleCode={code}&spaceCode={spacecode}");
