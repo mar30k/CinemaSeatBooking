@@ -1,0 +1,71 @@
+﻿@model List<CinemaSeatBooking.Models.Product>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+    <body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <div class="d-flex justify-content-between align-items-center w-100 ml-5">
+                    <div class="Popcorn d-inline-flex">
+                        <h4 style="margin-right: 20px; margin-top: 3px;">Food And Beverage</h4>
+                    </div>
+                    <div>
+                        <div class="food-and-drink" style="display: inline-block; ">
+                            <a class="custom-btn btn btn-primary" asp-controller="Home" asp-action="Index" role="button">Movies</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div>
+        @if (Model != null && Model.Any())
+        {
+            <div class="container">
+                <div class="row">
+                    @foreach (var product in Model)
+                    {
+                        @if (product.Children != null && product.Children.Any())
+                        {
+                            // Filter only the products with productType "Category"
+                            var categoryProducts = product.Children.Where(child => child.ProductType == "Category");
+
+                            foreach (var categoryProduct in categoryProducts)
+                            {
+                                // Check if the category has children and filter only the articles
+                                var articleProducts = categoryProduct.Children.Where(child => child.ProductType == "Article");
+
+                                foreach (var articleProduct in articleProducts)
+                                {
+                                    <div class="col-md-4 mb-4">
+                                        <div class="card">
+                                            <!-- Display the picture at the top -->
+                                            <img src="@articleProduct.Pictures.FirstOrDefault()" class="card-img-top" alt="Product Image">
+
+                                            <div class="card-body text-center">
+                                                <!-- Display name and price at the center -->
+                                                <h5 class="card-title">@articleProduct.Name</h5>
+                                                <p class="card-text">Price: $@articleProduct.Price</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        }
+                    }
+                </div>
+            </div>
+        }
+        else
+        {
+            <p>No products available.</p>
+        }
+
+    </div>
+    </body>
+</html>
+<!-- Check if there are products to display -->
+
