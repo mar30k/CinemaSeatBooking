@@ -30,24 +30,28 @@ namespace CinemaSeatBooking.Controllers
 
         }
 
-        public async Task<IActionResult> ProductsView(string companyTinNumber)
+        public async Task<IActionResult> ProductsView(string companyTinNumber, int countdownTime)
         {
-
             HttpResponseMessage response = await _httpClient.GetAsync($"Product/GetProducts?orgTin={companyTinNumber}&type=Restaurant&consignee=0912141914&platform=Web&longitude=0");
 
             if (response.IsSuccessStatusCode)
             {
-                string responsedata = await response.Content.ReadAsStringAsync();
+                string responseData = await response.Content.ReadAsStringAsync();
 
-                var productsData = JsonConvert.DeserializeObject<List<Product>>(responsedata);
+                var productsData = JsonConvert.DeserializeObject<List<Product>>(responseData);
 
-                return View(productsData);
+                var viewModel = new ProductsViewModel
+                {
+                    CountDownTime = countdownTime,
+                    Products = productsData,
+                };
+
+                return View(viewModel);
             }
             else
             {
                 return View(null);
             }
-
         }
     }
 
