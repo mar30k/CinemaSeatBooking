@@ -10,7 +10,7 @@
   }
 .card {
     position: relative;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -24,10 +24,6 @@
     .card .card-body p {
         align-items: center;
     }
-.card-img-top {
-    height: 230px;
-    width: 100px;
-}
 .with-shadow {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
 }

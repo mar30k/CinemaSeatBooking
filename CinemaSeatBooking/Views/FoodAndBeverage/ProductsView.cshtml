@@ -1,8 +1,175 @@
-﻿@model List<CinemaSeatBooking.Models.Product>
+﻿@model ProductsViewModel
 <!DOCTYPE html>
 <html lang="en">
     <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/styles.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/CinemaSeatBooking.styles.css" asp-append-version="true" />
+    <style>
+        .custom-container {
+            padding-left: 35px;
+            padding-right: 35px;
+        }
+
+        .card-img-top {
+            height: 230px;
+            width: 100%;
+        }
+    </style>
+    <script>
+        // Function to initialize the script after the DOM has loaded
+        document.addEventListener('DOMContentLoaded', function () {
+            const selectableCards = document.querySelectorAll('.selectable-card');
+            const selectedCardsContainer = document.getElementById('selected-cards-container');
+            const countDownTimer = document.getElementById("demo");
+            const selectedCards = [];
+
+
+            var initialTimeInSeconds = "@Model.CountDownTime";
+            var countDownTimeInSeconds = initialTimeInSeconds + 60;
+
+            var countDownDate = new Date().getTime() + countDownTimeInSeconds * 1000;
+            var x = setInterval(function () {
+                var now = new Date().getTime();
+                var distance = countDownDate - now;
+                if (distance < 0) {
+                    clearInterval(x);
+                    document.getElementById("demo").innerHTML = "EXPIRED";
+                    return;
+                }
+                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                document.getElementById("demo").innerHTML ="Remaining Time: " + minutes + "m " + seconds + "s ";
+            }, 1000);
+
+            selectableCards.forEach((card, index) => {
+                card.addEventListener('click', () => {
+                    card.classList.toggle('selected');
+                    if (card.classList.contains('selected')) {
+                        const cardTitle = card.querySelector('.card-title').textContent;
+                        const cardPrice = parseFloat(card.querySelector('.card-text').textContent);
+                        const quantity = 1;
+                        selectedCards.push({ title: cardTitle, price: cardPrice, quantity, index });
+                    } else {
+                        const selectedCardIndex = selectedCards.findIndex(selectedCard => selectedCard.index === index);
+                        if (selectedCardIndex !== -1) {
+                            selectedCards.splice(selectedCardIndex, 1);
+                        }
+                    }
+                    updateSelectedCardsDisplay();
+                    renderSelectedCards();
+
+                    updateTaxAndGrandTotal();
+                });
+            });
+
+            function updateSelectedCardsDisplay() {
+                if (selectedCards.length > 0) {
+                    selectedCardsContainer.style.display = 'block';
+                    selectedCardsContainer.style.border = '1px solid black';
+                } else {
+                    selectedCardsContainer.style.display = 'none';
+                    selectedCardsContainer.style.border = 'none';
+                }
+            }
+
+            function updateTaxAndGrandTotal() {
+                let totalPrice = 0;
+                selectedCards.forEach(selectedCard => {
+                    totalPrice += selectedCard.price * selectedCard.quantity;
+                });
+
+                const tax = 0.15 * totalPrice;
+                const grandTotal = totalPrice + tax;
+
+                const taxDisplay = document.querySelector('.tax-display');
+                const grandTotalDisplay = document.querySelector('.grand-total-display');
+                const totalPriceDisplay = document.querySelector('.total-price-display');
+
+                if (taxDisplay && grandTotalDisplay && totalPriceDisplay) {
+                    taxDisplay.textContent = `${tax.toFixed(2)} Birr`;
+                    grandTotalDisplay.textContent = `${grandTotal.toFixed(2)} Birr`;
+                    totalPriceDisplay.textContent = `${totalPrice.toFixed(2)} Birr`;
+                }
+            }
+            function renderSelectedCards() {
+                selectedCardsContainer.innerHTML = '';
+                let totalPrice = 0;
+
+                selectedCards.forEach(selectedCard => {
+                    const cardDiv = document.createElement('div');
+                    cardDiv.className = 'selected-card';
+                    cardDiv.style.marginBottom = '3px';
+                    cardDiv.style.marginTop = '2px';
+
+                    const cardDetails = document.createElement('div');
+                    cardDetails.style.display = 'flex';
+                    cardDetails.style.alignItems = 'center';
+
+                    const titleSpan = document.createElement('span');
+                    titleSpan.textContent = selectedCard.title;
+                    titleSpan.style.flex = '1';
+                    cardDetails.appendChild(titleSpan);
+
+                    const quantityInput = document.createElement('input');
+                    quantityInput.type = 'number';
+                    quantityInput.value = selectedCard.quantity;
+                    quantityInput.min = '1';
+                    quantityInput.setAttribute('oninput', 'validity.valid||(value="");');
+                    quantityInput.style.margin = '0 10px';
+
+                    quantityInput.addEventListener('input', () => {
+                        let newQuantity = parseInt(quantityInput.value, 10);
+
+                        newQuantity = Math.max(newQuantity, 0);
+
+                        selectedCard.quantity = newQuantity;
+
+                        updateTotalPrice();
+                    });
+
+                    quantityInput.addEventListener('keydown', (event) => {
+                        if (!/^\d+$/.test(event.key) || event.key === '-') {
+                            event.preventDefault();
+                        }
+                    });
+
+                    cardDetails.appendChild(quantityInput);
+
+                    const priceSpan = document.createElement('span');
+
+                    let updatedCalculatedPrice = selectedCard.quantity > 0 ? selectedCard.price * selectedCard.quantity : 0;
+                    priceSpan.textContent = `${updatedCalculatedPrice.toFixed(2)} Birr`;
+
+                    cardDetails.appendChild(priceSpan);
+
+                    const cardContainer = document.createElement('div');
+                    cardContainer.className = 'card-container';
+
+                    cardContainer.appendChild(cardDetails);
+
+                    cardDiv.appendChild(cardContainer);
+                    selectedCardsContainer.appendChild(cardDiv);
+
+                    totalPrice += updatedCalculatedPrice;
+                });
+
+                updateTaxAndGrandTotal();
+            }
+
+            function updateTotalPrice() {
+                let totalPrice = 0;
+                selectedCards.forEach(selectedCard => {
+                    totalPrice += selectedCard.price * selectedCard.quantity;
+                });
+                const totalPriceDisplay = document.querySelector('.total-price-display');
+                if (totalPriceDisplay) {
+                    totalPriceDisplay.textContent = `${totalPrice.toFixed(2)} Birr`;
+                    updateTaxAndGrandTotal();
+                }
+            }
+        });
+    </script>
     </head>
     <body>
     <header>
@@ -10,62 +177,85 @@
             <div class="container-fluid">
                 <div class="d-flex justify-content-between align-items-center w-100 ml-5">
                     <div class="Popcorn d-inline-flex">
-                        <h4 style="margin-right: 20px; margin-top: 3px;">Food And Beverage</h4>
+                        <h4 style="margin-top: 3px;">Food And Beverage</h4>
                     </div>
                     <div>
-                        <div class="food-and-drink" style="display: inline-block; ">
+                        <!--
+                            <div class="food-and-drink" style="display: inline-block; margin-right: 20px;">
                             <a class="custom-btn btn btn-primary" asp-controller="Home" asp-action="Index" role="button">Movies</a>
+                        </div>
+                        -->
+                        <div style="text-align: center; display: inline-block; margin-right: 20px;" id="priceContainer">
+                            <button id="skipButton" class="btn btn-outline-primary">Skip</button>
+                        </div>
+                        <div style="text-align: center; display: inline-block;">
+                            <p id="demo"></p>
                         </div>
                     </div>
                 </div>
             </div>
         </nav>
     </header>
-    <div>
-        @if (Model != null && Model.Any())
-        {
-            <div class="container">
-                <div class="row">
-                    @foreach (var product in Model)
-                    {
-                        @if (product.Children != null && product.Children.Any())
-                        {
-                            // Filter only the products with productType "Category"
-                            var categoryProducts = product.Children.Where(child => child.ProductType == "Category");
-
-                            foreach (var categoryProduct in categoryProducts)
+    <div class="custom-container" style="position: relative; padding-right: 0; padding-left: 0">
+        <div class="row">
+            <div class="col-9 ml-5 mb-3 mt-3 m-5 ">
+                @if (Model != null && Model.Products.Any())
+                {
+                    <div class="container">
+                        <div class="row">
+                            @foreach (var product in Model.Products)
                             {
-                                // Check if the category has children and filter only the articles
-                                var articleProducts = categoryProduct.Children.Where(child => child.ProductType == "Article");
-
-                                foreach (var articleProduct in articleProducts)
+                                @if (product.Children != null && product.Children.Any())
                                 {
-                                    <div class="col-md-4 mb-4">
-                                        <div class="card">
-                                            <!-- Display the picture at the top -->
-                                            <img src="@articleProduct.Pictures.FirstOrDefault()" class="card-img-top" alt="Product Image">
+                                    var categoryProducts = product.Children.ToList();
+                                    for (int i = 0; i < categoryProducts.Count; i++)
+                                    {
+                                        var categoryProduct = categoryProducts[i];
 
-                                            <div class="card-body text-center">
-                                                <!-- Display name and price at the center -->
-                                                <h5 class="card-title">@articleProduct.Name</h5>
-                                                <p class="card-text">Price: $@articleProduct.Price</p>
-                                            </div>
+                                        <div class="col-12 mb-3">
+                                            <h5>@categoryProduct.Name</h5>
                                         </div>
-                                    </div>
+
+                                        @if (categoryProduct.Children != null && categoryProduct.Children.Any())
+                                        {
+                                            foreach (var articleProduct in categoryProduct.Children)
+                                            {
+                                                <div class="col-9 col-lg-3 col-md-4 col-sm-6 mb-3">
+                                                    <a>
+                                                        <div class="card selectable-card">
+                                                            <img src="@articleProduct.Pictures.FirstOrDefault()" class="card-img-top">
+                                                            <div class="card-body">
+                                                                <h6 class="card-title">@articleProduct.Name</h6>
+                                                                <p style="display: inline-block; margin: 0;">@articleProduct.Price Birr </p>
+                                                                <input style="display: inline-block; padding: 10px; height:25px; width: 45px; text-align: center; margin: 4px;" type="number" value="0" />
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            }
+                                        }
+                                        @if (i < categoryProducts.Count - 1)
+                                        {
+                                            <div class="col-12">
+                                                <hr/>
+                                            </div>
+                                        }
+                                    }
                                 }
                             }
-                        }
-                    }
-                </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <p>No products available.</p>
+                }
             </div>
-        }
-        else
-        {
-            <p>No products available.</p>
-        }
-
+            <div class="col-lg-2 col-md-2 ml-5 mt-3 mr-5 ">
+                <partial name="_Bill" />
+            </div>
+        </div>
+        
     </div>
     </body>
 </html>
-<!-- Check if there are products to display -->
-
