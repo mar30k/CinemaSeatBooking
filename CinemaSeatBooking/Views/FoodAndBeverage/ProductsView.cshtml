@@ -15,161 +15,42 @@
             height: 230px;
             width: 100%;
         }
+
+        .btn-circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            font-size: 14px;
+        }
+
+        #selected-items-container {
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .selected-item {
+            margin-bottom: 5px;
+            padding: 5px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        .btn-outline-primary {
+            color: #28a745; /* Green color */
+            border-color: #28a745;
+        }
+
+            .btn-outline-primary:hover {
+                background-color: #28a745; /* Green color on hover */
+                color: #fff; /* Text color on hover */
+            }
     </style>
-    <script>
-        // Function to initialize the script after the DOM has loaded
-        document.addEventListener('DOMContentLoaded', function () {
-            const selectableCards = document.querySelectorAll('.selectable-card');
-            const selectedCardsContainer = document.getElementById('selected-cards-container');
-            const countDownTimer = document.getElementById("demo");
-            const selectedCards = [];
-
-
-            var initialTimeInSeconds = "@Model.CountDownTime";
-            var countDownTimeInSeconds = initialTimeInSeconds + 60;
-
-            var countDownDate = new Date().getTime() + countDownTimeInSeconds * 1000;
-            var x = setInterval(function () {
-                var now = new Date().getTime();
-                var distance = countDownDate - now;
-                if (distance < 0) {
-                    clearInterval(x);
-                    document.getElementById("demo").innerHTML = "EXPIRED";
-                    return;
-                }
-                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                document.getElementById("demo").innerHTML ="Remaining Time: " + minutes + "m " + seconds + "s ";
-            }, 1000);
-
-            selectableCards.forEach((card, index) => {
-                card.addEventListener('click', () => {
-                    card.classList.toggle('selected');
-                    if (card.classList.contains('selected')) {
-                        const cardTitle = card.querySelector('.card-title').textContent;
-                        const cardPrice = parseFloat(card.querySelector('.card-text').textContent);
-                        const quantity = 1;
-                        selectedCards.push({ title: cardTitle, price: cardPrice, quantity, index });
-                    } else {
-                        const selectedCardIndex = selectedCards.findIndex(selectedCard => selectedCard.index === index);
-                        if (selectedCardIndex !== -1) {
-                            selectedCards.splice(selectedCardIndex, 1);
-                        }
-                    }
-                    updateSelectedCardsDisplay();
-                    renderSelectedCards();
-
-                    updateTaxAndGrandTotal();
-                });
-            });
-
-            function updateSelectedCardsDisplay() {
-                if (selectedCards.length > 0) {
-                    selectedCardsContainer.style.display = 'block';
-                    selectedCardsContainer.style.border = '1px solid black';
-                } else {
-                    selectedCardsContainer.style.display = 'none';
-                    selectedCardsContainer.style.border = 'none';
-                }
-            }
-
-            function updateTaxAndGrandTotal() {
-                let totalPrice = 0;
-                selectedCards.forEach(selectedCard => {
-                    totalPrice += selectedCard.price * selectedCard.quantity;
-                });
-
-                const tax = 0.15 * totalPrice;
-                const grandTotal = totalPrice + tax;
-
-                const taxDisplay = document.querySelector('.tax-display');
-                const grandTotalDisplay = document.querySelector('.grand-total-display');
-                const totalPriceDisplay = document.querySelector('.total-price-display');
-
-                if (taxDisplay && grandTotalDisplay && totalPriceDisplay) {
-                    taxDisplay.textContent = `${tax.toFixed(2)} Birr`;
-                    grandTotalDisplay.textContent = `${grandTotal.toFixed(2)} Birr`;
-                    totalPriceDisplay.textContent = `${totalPrice.toFixed(2)} Birr`;
-                }
-            }
-            function renderSelectedCards() {
-                selectedCardsContainer.innerHTML = '';
-                let totalPrice = 0;
-
-                selectedCards.forEach(selectedCard => {
-                    const cardDiv = document.createElement('div');
-                    cardDiv.className = 'selected-card';
-                    cardDiv.style.marginBottom = '3px';
-                    cardDiv.style.marginTop = '2px';
-
-                    const cardDetails = document.createElement('div');
-                    cardDetails.style.display = 'flex';
-                    cardDetails.style.alignItems = 'center';
-
-                    const titleSpan = document.createElement('span');
-                    titleSpan.textContent = selectedCard.title;
-                    titleSpan.style.flex = '1';
-                    cardDetails.appendChild(titleSpan);
-
-                    const quantityInput = document.createElement('input');
-                    quantityInput.type = 'number';
-                    quantityInput.value = selectedCard.quantity;
-                    quantityInput.min = '1';
-                    quantityInput.setAttribute('oninput', 'validity.valid||(value="");');
-                    quantityInput.style.margin = '0 10px';
-
-                    quantityInput.addEventListener('input', () => {
-                        let newQuantity = parseInt(quantityInput.value, 10);
-
-                        newQuantity = Math.max(newQuantity, 0);
-
-                        selectedCard.quantity = newQuantity;
-
-                        updateTotalPrice();
-                    });
-
-                    quantityInput.addEventListener('keydown', (event) => {
-                        if (!/^\d+$/.test(event.key) || event.key === '-') {
-                            event.preventDefault();
-                        }
-                    });
-
-                    cardDetails.appendChild(quantityInput);
-
-                    const priceSpan = document.createElement('span');
-
-                    let updatedCalculatedPrice = selectedCard.quantity > 0 ? selectedCard.price * selectedCard.quantity : 0;
-                    priceSpan.textContent = `${updatedCalculatedPrice.toFixed(2)} Birr`;
-
-                    cardDetails.appendChild(priceSpan);
-
-                    const cardContainer = document.createElement('div');
-                    cardContainer.className = 'card-container';
-
-                    cardContainer.appendChild(cardDetails);
-
-                    cardDiv.appendChild(cardContainer);
-                    selectedCardsContainer.appendChild(cardDiv);
-
-                    totalPrice += updatedCalculatedPrice;
-                });
-
-                updateTaxAndGrandTotal();
-            }
-
-            function updateTotalPrice() {
-                let totalPrice = 0;
-                selectedCards.forEach(selectedCard => {
-                    totalPrice += selectedCard.price * selectedCard.quantity;
-                });
-                const totalPriceDisplay = document.querySelector('.total-price-display');
-                if (totalPriceDisplay) {
-                    totalPriceDisplay.textContent = `${totalPrice.toFixed(2)} Birr`;
-                    updateTaxAndGrandTotal();
-                }
-            }
-        });
-    </script>
     </head>
     <body>
     <header>
@@ -185,10 +66,10 @@
                             <a class="custom-btn btn btn-primary" asp-controller="Home" asp-action="Index" role="button">Movies</a>
                         </div>
                         -->
-                        <div style="text-align: center; display: inline-block; margin-right: 20px;" id="priceContainer">
+                        <div style="text-align: center; display: inline-block; margin-right: 20px; margin-top: 3px;" id="priceContainer">
                             <button id="skipButton" class="btn btn-outline-primary">Skip</button>
                         </div>
-                        <div style="text-align: center; display: inline-block;">
+                        <div style="text-align: center; display: inline-block; margin-top: 3px;">
                             <p id="demo"></p>
                         </div>
                     </div>
@@ -221,16 +102,23 @@
                                             foreach (var articleProduct in categoryProduct.Children)
                                             {
                                                 <div class="col-9 col-lg-3 col-md-4 col-sm-6 mb-3">
-                                                    <a>
-                                                        <div class="card selectable-card">
-                                                            <img src="@articleProduct.Pictures.FirstOrDefault()" class="card-img-top">
-                                                            <div class="card-body">
-                                                                <h6 class="card-title">@articleProduct.Name</h6>
-                                                                <p style="display: inline-block; margin: 0;">@articleProduct.Price Birr </p>
-                                                                <input style="display: inline-block; padding: 10px; height:25px; width: 45px; text-align: center; margin: 4px;" type="number" value="0" />
+                                                    <div class="card selectable-card">
+                                                        <img src="@articleProduct.Pictures.FirstOrDefault()" class="card-img-top">
+                                                        <div class="card-body" style="display: flex; flex-direction: column; align-items: center;">
+                                                            <h6 class="card-title">@articleProduct.Name</h6>
+                                                            <p class="card-text" style="margin: 0; text-align: center;">@articleProduct.Price Birr</p>
+
+                                                            <!-- Quantity Control Division (Initially Hidden) -->
+                                                            <div class="quantity-control d-flex" style="margin-top: 5px; text-align: center; display: none !important;">
+                                                                <button class="btn btn-outline-danger btn-circle" style="padding: 6px; font-size: 12px;" onclick="decrementValue()">-</button>
+                                                                <p class="quantity" style="padding: 5px; font-size: 12px; margin: 0 ;">0</p>
+                                                                <button class="btn btn-outline-primary btn-circle" style="padding: 6px; font-size: 12px; border-color: #28a745;" onclick="incrementValue()">+</button>
                                                             </div>
+
+                                                            <!-- Show Button -->
+                                                            <button class="btn btn-sm btn-outline-primary" style="margin-top: 5px;" onclick="showQuantityControl(this)">Add to Cart</button>
                                                         </div>
-                                                    </a>
+                                                    </div>
                                                 </div>
                                             }
                                         }
@@ -251,11 +139,103 @@
                     <p>No products available.</p>
                 }
             </div>
-            <div class="col-lg-2 col-md-2 ml-5 mt-3 mr-5 ">
-                <partial name="_Bill" />
+            <div class="col-lg-2 col-md-2 ml-5 mt-3 mr-5">
+                <div id="selected-items-container">
+                    Cart
+                </div>
             </div>
         </div>
-        
     </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Use event delegation to handle clicks on dynamically generated cards
+            document.addEventListener('click', function (event) {
+                if (event.target.matches('.btn-outline-danger')) {
+                    decrementValue(event.target);
+                } else if (event.target.matches('.btn-outline-primary')) {
+                    incrementValue(event.target);
+                }
+            });
+        });
+
+        const selectedItemsContainer = document.getElementById('selected-items-container');
+        const selectedItems = [];
+
+        function showQuantityControl(button) {
+
+            // Find the parent card element
+            var cardBody = button.closest('.card-body');
+
+            // Toggle visibility of quantity control and show button
+            var quantityControl = cardBody.querySelector('.quantity-control');
+            quantityControl.style.display = quantityControl.style.display === 'flex' ? 'none' : 'flex';
+
+            button.style.display = quantityControl.style.display === 'none' ? 'inline-block' : 'none';
+        }
+
+        function incrementValue(button) {
+            // Find the associated quantity element
+            var quantityElement = button.parentElement.querySelector('.quantity');
+            let currentValue = parseInt(quantityElement.textContent, 10); // Default to 0 if NaN
+            quantityElement.textContent = currentValue + 1;
+            updateCardDisplay(quantityElement);
+        }
+
+        function decrementValue(button) {
+            // Find the associated quantity element
+            var quantityElement = button.parentElement.querySelector('.quantity');
+            let currentValue = parseInt(quantityElement.textContent, 10) || 0; // Default to 0 if NaN
+            if (currentValue > 0) {
+                quantityElement.textContent = currentValue - 1;
+                updateCardDisplay(quantityElement);
+            }
+        }
+
+        function updateCardDisplay(quantityElement) {
+            var cardContainer = quantityElement.closest('.card-body');
+            var cardTitle = cardContainer.querySelector('.card-title');
+            var cardText = cardContainer.querySelector('.card-text');
+
+            var itemName = cardTitle.textContent;
+            var itemPrice = parseFloat(cardText.textContent);
+
+            var quantity = parseInt(quantityElement.textContent, 10);
+
+            if (quantity > 0) {
+                itemPrice *= quantity;
+
+                var existingItem = selectedItems.find(item => item.name === itemName);
+
+                if (!existingItem) {
+                    selectedItems.push({ name: itemName, quantity: quantity, price: itemPrice });
+                } else {
+                    existingItem.quantity = quantity;
+                    existingItem.price = itemPrice;
+                }
+            } else {
+                selectedItems.splice(selectedItems.findIndex(item => item.name === itemName), 1);
+            }
+
+            renderSelectedItems();
+        }
+
+        function renderSelectedItems() {
+            selectedItemsContainer.innerHTML = 'Cart';
+
+            selectedItems.forEach(item => {
+                var itemDiv = document.createElement('div');
+                itemDiv.className = 'selected-item';
+
+                // Apply CSS styles for positioning
+                itemDiv.style.display = 'flex';
+                itemDiv.style.justifyContent = 'space-between';
+                itemDiv.style.padding = '5px';  // Adjust the padding as needed
+
+                itemDiv.textContent = `${item.name}\u00A0\u00A0${item.quantity}\u00A0\u00A0${item.price.toFixed(2)} Birr`;
+                selectedItemsContainer.appendChild(itemDiv);
+            });
+        }
+    </script>
     </body>
 </html>
