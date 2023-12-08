@@ -90,7 +90,7 @@
                         isBookingStarted = true;
                     }
 
-                    toggleSeatSelection(seatCode, isBooked || isSold);
+                    toggleSeatSelection(seatCode, isBooked || isSold || isTaken);
                 }
             });
 
@@ -140,9 +140,8 @@
             function startCountdownTimer() {
                 // Display the countdown timer div
                 $('#countdownTimer').show();
-
                 countdownInterval = setInterval(function () {
-                    updateCountdownTimer();
+                    $('#countdownTimer').text("Time remaining: " + formatTime(countdown));
                     countdown--;
 
                     if (countdown <= 0) {
@@ -154,13 +153,8 @@
                 }, 1000);
             }
 
-            function updateCountdownTimer() {
-                $('#countdownTimer').text("Time remaining: " + formatTime(countdown));
-            }
-
             function updateButtonStatus() {
                 var skipButton = document.getElementById('skipButton');
-
                 if (isBookingStarted) {
                     var seatCount = selectedSeats.length;
                     if (seatCount === 0) {
@@ -174,7 +168,6 @@
                 }
             }
 
-            // Handle "Cancel" button click
             $('#cancelButton').click(function () {
                 // Close the modal
                 $('#bookingModal').modal('hide');
@@ -323,11 +316,13 @@
             $('#skipButton').click(function () {
                 // Get selected seats from session storage
                 var selectedSeats = retrieveSelectedSeatsFromStorage();
-                var countdownTime = countdown; // Assuming countdown is a global variable
                 var companyTinNumber = "@Model.CompanyTinNumber";
-
+                var remainingTime = countdown ?? 0;
                 console.log("CompanyTinNumber: " + companyTinNumber);
                 console.log("selectedSeats: " + JSON.stringify(selectedSeats));
+
+                sessionStorage.setItem('remainingTime', remainingTime);
+                sessionStorage.setItem('countdownStarted', true);
 
                 var form = $('<form action="/FoodAndBeverage/Products" method="post"></form>');
 
@@ -335,16 +330,10 @@
                     form.append('<input type="hidden" name="selectedSeats[' + index + ']" value="' + seat + '" />');
                 });
 
-                // Append the countdown time
-                form.append('<input type="hidden" name="countdownTime" value="' + countdownTime + '" />');
-
-                // Append the companyTinNumber
                 form.append('<input type="hidden" name="companyTinNumber" value="' + companyTinNumber + '" />');
 
-                // Append the form to the body
                 $('body').append(form);
 
-                // Submit the form
                 form.submit();
             });
 
@@ -365,8 +354,8 @@
                 initializeSeatSelection();
             });
         });
+
     </script>
-    
 </head>
     <body>
     <header>
