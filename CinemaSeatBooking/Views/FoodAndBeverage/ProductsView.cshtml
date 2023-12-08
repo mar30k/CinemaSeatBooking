@@ -148,21 +148,57 @@
     
     <script>
         var storedRemainingTime = sessionStorage.getItem('remainingTime');
+        var updatedRemainingTime = parseInt(storedRemainingTime) + (sessionStorage.getItem('secondsAdded') === 'true' ? 0 : 60);
+        var secondsAdded = sessionStorage.getItem('secondsAdded');
+        var companyTin = "@Model.CompanyTinNumber";
+        var movieScheduleCode = "@Model.MovieScheduleCode";
 
-        var updatedRemainingTime = parseInt(storedRemainingTime) + 60;
+        var selectedSeats = JSON.parse(sessionStorage.getItem('selectedSeats')) || [];
+
+        function extendCachedSeats() {
+            if (!secondsAdded) {
+                var endpoint = 'https://api-hulubeje.cnetcommerce.com/api/ManageSeatCache/ExtendCachedSeatsForSchedule';
+
+                var payload = {
+                    "schedule": movieScheduleCode,
+                    "allSeats": selectedSeats,
+                    "orgTin": companyTin,
+                    "seconds": updatedRemainingTime
+                };
+
+                $.ajax({
+                    url: endpoint,
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(payload),
+                    success: function (response) {
+                        console.log('Success:', response);
+                    },
+                    error: function (error) {
+                        console.error('Error:', error);
+                    }
+                });
+            }
+            else{
+                console.log("already extended");
+            }
+        }
 
         function startCountdownTimer() {
             $('#UpdatedCountDownTimer').show();
             countdownInterval = setInterval(function () {
                 $('#UpdatedCountDownTimer').text("Time remaining: " + formatTime(updatedRemainingTime));
-                updatedRemainingTime--; // Corrected from countdown to updatedRemainingTime
+                updatedRemainingTime--;
 
                 if (updatedRemainingTime <= 0) {
                     clearInterval(countdownInterval);
-                    location.reload();
                 }
                 sessionStorage.setItem("remainingTime", updatedRemainingTime);
             }, 1000);
+
+            // Set the flag to indicate that 60 seconds have been added
+            sessionStorage.setItem('secondsAdded', 'true');
+
             console.log("Updated Remaining Time: " + updatedRemainingTime);
         }
 
@@ -174,6 +210,7 @@
 
         $(document).ready(function () {
             startCountdownTimer();
+            extendCachedSeats();
         });
 
         console.log("Updated Remaining Time: " + updatedRemainingTime);

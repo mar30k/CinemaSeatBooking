@@ -148,11 +148,10 @@
                         clearInterval(countdownInterval);
                         resetBooking();
                         alert("Booking time expired. Please restart the booking process.");
-                        location.reload(); // Refresh the page
+                        location.reload(); 
                     }
                 }, 1000);
             }
-
             var countdownStarted = sessionStorage.getItem('countdownStarted');
             if (countdownStarted === 'true') {
                 var remainingTime = parseInt(sessionStorage.getItem('remainingTime'));
@@ -326,7 +325,9 @@
                 // Get selected seats from session storage
                 var selectedSeats = retrieveSelectedSeatsFromStorage();
                 var companyTinNumber = "@Model.CompanyTinNumber";
+                var movieScheduleCode = "@Model.MovieScheduleCode";
                 var remainingTime = countdown ?? 0;
+
                 console.log("CompanyTinNumber: " + companyTinNumber);
                 console.log("selectedSeats: " + JSON.stringify(selectedSeats));
 
@@ -340,12 +341,12 @@
                 });
 
                 form.append('<input type="hidden" name="companyTinNumber" value="' + companyTinNumber + '" />');
+                form.append('<input type="hidden" name="companyTinNumber" value="' + movieScheduleCode + '" />');
 
                 $('body').append(form);
 
                 form.submit();
             });
-
             function updateSelectedSeatsUI() {
                 selectedSeats.forEach(function (seatCode) {
                     // Update the UI for each selected seat (e.g., change background color)
@@ -402,4 +403,3 @@
         </div>
     </body>
 </html>
-
