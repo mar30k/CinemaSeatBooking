@@ -153,6 +153,15 @@
                 }, 1000);
             }
 
+            var countdownStarted = sessionStorage.getItem('countdownStarted');
+            if (countdownStarted === 'true') {
+                var remainingTime = parseInt(sessionStorage.getItem('remainingTime'));
+                countdown = remainingTime;
+                startCountdownTimer();
+            } else {
+                console.log("Countdown has not started.");
+            }
+
             function updateButtonStatus() {
                 var skipButton = document.getElementById('skipButton');
                 if (isBookingStarted) {
@@ -370,7 +379,7 @@
                             <a class="custom-btn btn btn-primary" asp-controller="Home" asp-action="Index" role="button">Movies</a>
                         </div>
                         <div class="today-date" style="display: inline-block; margin-top: 10px; margin-right: 10px;">
-                            <div id="countdownTimer" style="display:none;">Time remaining: 1:00</div>
+                            <div id="countdownTimer" style="display:none;"></div>
                         </div>
                     </div>
                 </div>
