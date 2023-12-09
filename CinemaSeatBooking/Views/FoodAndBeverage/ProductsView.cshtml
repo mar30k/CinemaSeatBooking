@@ -202,16 +202,27 @@
             console.log("Updated Remaining Time: " + updatedRemainingTime);
         }
 
+        $(document).ready(function () {
+            // Retrieve stored data
+            var storedRemainingTime = sessionStorage.getItem('remainingTime');
+            var secondsAdded = sessionStorage.getItem('secondsAdded');
+
+            // Calculate updated remaining time
+            var updatedRemainingTime = parseInt(storedRemainingTime) + (secondsAdded === 'true' ? 0 : 60);
+
+            // Check if remaining time is greater than 0 before starting the countdown timer
+            if (updatedRemainingTime > 0) {
+                startCountdownTimer(updatedRemainingTime);
+            }
+
+            extendCachedSeats();
+        });
+
         function formatTime(seconds) {
             var min = Math.floor(seconds / 60);
             var sec = seconds % 60;
             return min + ":" + (sec < 10 ? "0" : "") + sec;
         }
-
-        $(document).ready(function () {
-            startCountdownTimer();
-            extendCachedSeats();
-        });
 
         console.log("Updated Remaining Time: " + updatedRemainingTime);
 
