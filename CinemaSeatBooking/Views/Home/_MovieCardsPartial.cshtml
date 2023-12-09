@@ -1,5 +1,4 @@
 ﻿@model List<MovieModel>
-@using System.Web
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <div class="row" id="movieCardsContainer">
     @{
@@ -17,8 +16,7 @@
                     <div class="button-container">
                         @foreach (var companyName in companyNames)
                         {
-                            var sanitizedOverview = HttpUtility.JavaScriptStringEncode(movie.Overview);
-                            <button class="button companyButton" data-movie-code="@movie.MovieCode" data-company-name="@companyName" data-overview="sanitizedOverview" data-poster-url="@movie.PosterUrl" data-movie-name="@movie.MovieName" data-movie-id="@movie.MovieId" data-backdrop-path="@movie.BackdropPath">
+                            <button class="button companyButton" data-movie-code="@movie.MovieCode" data-company-name="@companyName" data-overview="@movie.Overview" data-poster-url="@movie.PosterUrl" data-movie-name="@movie.MovieName" data-movie-id="@movie.MovieId" data-backdrop-path="@movie.BackdropPath">
                                 @companyName
                             </button>
                         }

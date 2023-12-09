@@ -332,7 +332,11 @@
                 console.log("selectedSeats: " + JSON.stringify(selectedSeats));
 
                 sessionStorage.setItem('remainingTime', remainingTime);
-                sessionStorage.setItem('countdownStarted', true);
+                if (remainingTime === 0) {
+                    sessionStorage.setItem('countdownStarted', false);
+                } else {
+                    sessionStorage.setItem('countdownStarted', true);
+                }
 
                 var form = $('<form action="/FoodAndBeverage/Products" method="post"></form>');
 

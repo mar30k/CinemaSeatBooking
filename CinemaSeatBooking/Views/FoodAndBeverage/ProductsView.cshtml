@@ -148,8 +148,15 @@
     
     <script>
         var storedRemainingTime = sessionStorage.getItem('remainingTime');
-        var updatedRemainingTime = parseInt(storedRemainingTime) + (sessionStorage.getItem('secondsAdded') === 'true' ? 0 : 60);
+
+        var countdownstarted = sessionStorage.getItem('countdownStarted');
+
+        var updatedRemainingTime = parseInt(storedRemainingTime) + (sessionStorage.getItem('secondsAdded') === 'true' || sessionStorage.getItem('countdownStarted') === null ? 0 : 60);
+
+        console.log("at the start countdownstarted " + countdownstarted)
         var secondsAdded = sessionStorage.getItem('secondsAdded');
+
+        console.log("at the start secondsAdded "+ secondsAdded)
         var companyTin = "@Model.CompanyTinNumber";
         var movieScheduleCode = "@Model.MovieScheduleCode";
 
@@ -180,7 +187,7 @@
                 });
             }
             else{
-                console.log("already extended");
+                console.log("already extended cache time");
             }
         }
 
@@ -196,8 +203,7 @@
                 sessionStorage.setItem("remainingTime", updatedRemainingTime);
             }, 1000);
 
-            // Set the flag to indicate that 60 seconds have been added
-            sessionStorage.setItem('secondsAdded', 'true');
+            sessionStorage.setItem('secondsAdded', 'true')
 
             console.log("Updated Remaining Time: " + updatedRemainingTime);
         }
@@ -207,11 +213,13 @@
             var storedRemainingTime = sessionStorage.getItem('remainingTime');
             var secondsAdded = sessionStorage.getItem('secondsAdded');
 
+            console.log("seconds added" + secondsAdded)
             // Calculate updated remaining time
             var updatedRemainingTime = parseInt(storedRemainingTime) + (secondsAdded === 'true' ? 0 : 60);
-
+            console.log("before if " + updatedRemainingTime)
             // Check if remaining time is greater than 0 before starting the countdown timer
             if (updatedRemainingTime > 0) {
+                console.log(updatedRemainingTime);
                 startCountdownTimer(updatedRemainingTime);
             }
 
