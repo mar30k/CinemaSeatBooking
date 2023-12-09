@@ -1,4 +1,5 @@
 ﻿@model List<MovieModel>
+@using System.Web
 <div class="row" id="movieCardsContainer">
     @{
         var groupedMovies = Model.GroupBy(m => m.MovieName);
@@ -15,7 +16,9 @@
                     <div class="button-container">
                         @foreach (var companyName in companyNames)
                         {
-                            <button class="button" onclick="onCompanyButtonClick('@movie.MovieCode', '@companyName', '@movie.Overview', '@movie.PosterUrl','@movie.MovieName','@movie.MovieId', '@movie.BackdropPath')">
+                            var sanitizedOverview = HttpUtility.JavaScriptStringEncode(movie.Overview);
+
+                            <button class="button" onclick="onCompanyButtonClick('@movie.MovieCode', '@companyName', '@sanitizedOverview', '@movie.PosterUrl','@movie.MovieName','@movie.MovieId', '@movie.BackdropPath')">
                                 @companyName
                             </button>
                         }
