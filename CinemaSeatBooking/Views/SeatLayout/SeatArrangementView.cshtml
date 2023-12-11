@@ -99,7 +99,6 @@
             }, 10000); // Update every 10000 milliseconds (10 seconds)
 
             function updateSeatInfo() {
-                // Extract values from the SeatLayout model
                 var companyTinNumber = "@Model.CompanyTinNumber"; // Replace with the actual property in your model
                 var code = "@Model.MovieScheduleCode"; // Replace with the actual property in your model
                 var spacecode = "@Model.SpaceCode"; // Replace with the actual property in your model
@@ -148,7 +147,8 @@
                         clearInterval(countdownInterval);
                         resetBooking();
                         alert("Booking time expired. Please restart the booking process.");
-                        location.reload(); 
+                        sessionStorage.clear(); // Clear session storage
+                        location.reload();
                     }
                 }, 1000);
             }
