@@ -42,6 +42,13 @@
             border-radius: 3px;
         }
 
+        .total-price{
+            margin-bottom: 5px;
+            padding: 5px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
         .btn-outline-primary {
             color: #28a745; /* Green color */
             border-color: #28a745;
@@ -148,12 +155,20 @@
     
     <script>
         var storedRemainingTime = sessionStorage.getItem('remainingTime');
+        var countdownStarted = sessionStorage.getItem('countdownStarted') === 'true';
+        var secondsAdded = sessionStorage.getItem('secondsAdded') === 'true';
 
-        var countdownstarted = sessionStorage.getItem('countdownStarted');
+        var updatedRemainingTime;
 
-        var updatedRemainingTime = parseInt(storedRemainingTime) + (sessionStorage.getItem('secondsAdded') === 'true' || sessionStorage.getItem('countdownStarted') === null ? 0 : 60);
+        if (countdownStarted && secondsAdded) {
+            updatedRemainingTime = parseInt(storedRemainingTime);
+        } else if (!countdownStarted && !secondsAdded) {
+            updatedRemainingTime = parseInt(storedRemainingTime);
+        } else {
+            updatedRemainingTime = parseInt(storedRemainingTime) + 60;
+        }
 
-        console.log("at the start countdownstarted " + countdownstarted)
+
         var secondsAdded = sessionStorage.getItem('secondsAdded');
 
         console.log("at the start secondsAdded "+ secondsAdded)
@@ -199,27 +214,17 @@
 
                 if (updatedRemainingTime <= 0) {
                     clearInterval(countdownInterval);
+                    sessionStorage.clear();
+                    location.reload();
                 }
                 sessionStorage.setItem("remainingTime", updatedRemainingTime);
             }, 1000);
 
             sessionStorage.setItem('secondsAdded', 'true')
-
-            console.log("Updated Remaining Time: " + updatedRemainingTime);
         }
 
         $(document).ready(function () {
-            // Retrieve stored data
-            var storedRemainingTime = sessionStorage.getItem('remainingTime');
-            var secondsAdded = sessionStorage.getItem('secondsAdded');
-
-            console.log("seconds added" + secondsAdded)
-            // Calculate updated remaining time
-            var updatedRemainingTime = parseInt(storedRemainingTime) + (secondsAdded === 'true' ? 0 : 60);
-            console.log("before if " + updatedRemainingTime)
-            // Check if remaining time is greater than 0 before starting the countdown timer
-            if (updatedRemainingTime > 0) {
-                console.log(updatedRemainingTime);
+             if (updatedRemainingTime > 0) {
                 startCountdownTimer(updatedRemainingTime);
             }
 
@@ -243,8 +248,6 @@
                     incrementValue(event.target);
                 }
             });
-
-
         });
 
         const selectedItemsContainer = document.getElementById('selected-items-container');
@@ -265,7 +268,7 @@
         function incrementValue(button) {
             // Find the associated quantity element
             var quantityElement = button.parentElement.querySelector('.quantity');
-            let currentValue = parseInt(quantityElement.textContent, 10); // Default to 0 if NaN
+            let currentValue = parseInt(quantityElement.textContent, 10);  
             quantityElement.textContent = currentValue + 1;
             updateCardDisplay(quantityElement);
         }
@@ -273,7 +276,7 @@
         function decrementValue(button) {
             // Find the associated quantity element
             var quantityElement = button.parentElement.querySelector('.quantity');
-            let currentValue = parseInt(quantityElement.textContent, 10) || 0; // Default to 0 if NaN
+            let currentValue = parseInt(quantityElement.textContent, 10) || 0; 
             if (currentValue > 0) {
                 quantityElement.textContent = currentValue - 1;
                 updateCardDisplay(quantityElement);
@@ -309,20 +312,111 @@
         }
 
         function renderSelectedItems() {
+
             selectedItemsContainer.innerHTML = 'Cart';
 
+            let totalPrice = 0;
+            let totalCount = 0;
+            var headerDiv = document.createElement('div');
+            headerDiv.className = 'headeer'
+
+            if (selectedItems.length > 0) {
+                headerDiv.style.display = 'flex';
+                headerDiv.style.justifyContent = 'space-between';
+                headerDiv.style.padding = '5px';
+
+                var nameHeaderSpan = document.createElement('span');
+                var quantityHeaderSpan = document.createElement('span');
+                var priceHeaderSpan = document.createElement('span');
+
+                nameHeaderSpan.textContent = 'NAME';
+                nameHeaderSpan.style.flex = '2';
+
+                quantityHeaderSpan.textContent = 'QUANTITY';
+                quantityHeaderSpan.style.flex = '1';
+                quantityHeaderSpan.style.textAlign = 'center';
+
+                priceHeaderSpan.textContent = 'PRICE';
+                priceHeaderSpan.style.flex = '`1';
+                priceHeaderSpan.style.textAlign = 'right';
+                priceHeaderSpan.style.marginLeft = '15px';
+
+                headerDiv.appendChild(nameHeaderSpan);
+                headerDiv.appendChild(quantityHeaderSpan);
+                headerDiv.appendChild(priceHeaderSpan);
+            }
+            else {
+                headerDiv.style.display = 'none';
+            }
+
+            selectedItemsContainer.appendChild(headerDiv);
             selectedItems.forEach(item => {
                 var itemDiv = document.createElement('div');
                 itemDiv.className = 'selected-item';
 
-                // Apply CSS styles for positioning
                 itemDiv.style.display = 'flex';
                 itemDiv.style.justifyContent = 'space-between';
-                itemDiv.style.padding = '5px';  // Adjust the padding as needed
+                itemDiv.style.padding = '5px';
 
-                itemDiv.textContent = `${item.name}\u00A0\u00A0${item.quantity}\u00A0\u00A0${item.price.toFixed(2)} Birr`;
+                var nameSpan = document.createElement('span');
+                var quantitySpan = document.createElement('span');
+                var priceSpan = document.createElement('span');
+
+                nameSpan.textContent = item.name;
+                nameSpan.style.flex = '2';
+                nameSpan.style.marginRight = '10px';
+
+                quantitySpan.textContent = item.quantity;
+                quantitySpan.style.flex = '1';
+                quantitySpan.style.textAlign = 'center';
+
+                priceSpan.textContent = `${item.price.toFixed(2)} $`;
+                priceSpan.style.flex = '1';
+                priceSpan.style.textAlign = 'right';
+
+                itemDiv.appendChild(nameSpan);
+                itemDiv.appendChild(quantitySpan);
+                itemDiv.appendChild(priceSpan);
+
                 selectedItemsContainer.appendChild(itemDiv);
+
+                totalPrice += item.price;
+                totalCount += item.quantity;
             });
+
+            
+            var totalDiv = document.createElement('div');
+            totalDiv.className = 'total-price';
+
+            if (selectedItems.length > 0) {
+                totalDiv.style.display = 'flex';
+                totalDiv.style.justifyContent = 'space-between';
+                totalDiv.style.padding = '5px';
+
+                var totalPrcieSpan = document.createElement('span');
+                var totalCountSpan = document.createElement('span');
+                var totalValueSpan = document.createElement('span');
+
+                totalPrcieSpan.textContent = 'Total Price';
+                totalPrcieSpan.style.flex = '2';
+                totalPrcieSpan.style.marginRight = '10px';
+
+                totalCountSpan.textContent = `${totalCount}`;
+                totalCountSpan.style.flex = '1';
+                totalCountSpan.style.textAlign = 'center';
+
+                totalValueSpan.textContent = `${totalPrice.toFixed(2)} $`;
+                totalValueSpan.style.flex = '1';
+                totalValueSpan.style.textAlign = 'right';
+
+                totalDiv.appendChild(totalPrcieSpan);
+                totalDiv.appendChild(totalCountSpan);
+                totalDiv.appendChild(totalValueSpan);
+            } else {
+                totalDiv.style.display = 'none';
+            }
+
+            selectedItemsContainer.appendChild(totalDiv);
         }
     </script>
     </body>
