@@ -90,7 +90,7 @@
                         isBookingStarted = true;
                     }
 
-                    toggleSeatSelection(seatCode, isBooked || isSold);
+                    toggleSeatSelection(seatCode, isBooked || isSold || isTaken);
                 }
             });
 
@@ -99,7 +99,6 @@
             }, 10000); // Update every 10000 milliseconds (10 seconds)
 
             function updateSeatInfo() {
-                // Extract values from the SeatLayout model
                 var companyTinNumber = "@Model.CompanyTinNumber"; // Replace with the actual property in your model
                 var code = "@Model.MovieScheduleCode"; // Replace with the actual property in your model
                 var spacecode = "@Model.SpaceCode"; // Replace with the actual property in your model
@@ -140,27 +139,30 @@
             function startCountdownTimer() {
                 // Display the countdown timer div
                 $('#countdownTimer').show();
-
                 countdownInterval = setInterval(function () {
-                    updateCountdownTimer();
+                    $('#countdownTimer').text("Time remaining: " + formatTime(countdown));
                     countdown--;
 
                     if (countdown <= 0) {
                         clearInterval(countdownInterval);
                         resetBooking();
                         alert("Booking time expired. Please restart the booking process.");
-                        location.reload(); // Refresh the page
+                        sessionStorage.clear(); // Clear session storage
+                        location.reload();
                     }
                 }, 1000);
             }
-
-            function updateCountdownTimer() {
-                $('#countdownTimer').text("Time remaining: " + formatTime(countdown));
+            var countdownStarted = sessionStorage.getItem('countdownStarted');
+            if (countdownStarted === 'true') {
+                var remainingTime = parseInt(sessionStorage.getItem('remainingTime'));
+                countdown = remainingTime;
+                startCountdownTimer();
+            } else {
+                console.log("Countdown has not started.");
             }
 
             function updateButtonStatus() {
                 var skipButton = document.getElementById('skipButton');
-
                 if (isBookingStarted) {
                     var seatCount = selectedSeats.length;
                     if (seatCount === 0) {
@@ -174,7 +176,6 @@
                 }
             }
 
-            // Handle "Cancel" button click
             $('#cancelButton').click(function () {
                 // Close the modal
                 $('#bookingModal').modal('hide');
@@ -323,11 +324,19 @@
             $('#skipButton').click(function () {
                 // Get selected seats from session storage
                 var selectedSeats = retrieveSelectedSeatsFromStorage();
-                var countdownTime = countdown; // Assuming countdown is a global variable
                 var companyTinNumber = "@Model.CompanyTinNumber";
+                var movieScheduleCode = "@Model.MovieScheduleCode";
+                var remainingTime = countdown ?? 0;
 
                 console.log("CompanyTinNumber: " + companyTinNumber);
                 console.log("selectedSeats: " + JSON.stringify(selectedSeats));
+
+                sessionStorage.setItem('remainingTime', remainingTime);
+                if (remainingTime === 0) {
+                    sessionStorage.setItem('countdownStarted', false);
+                } else {
+                    sessionStorage.setItem('countdownStarted', true);
+                }
 
                 var form = $('<form action="/FoodAndBeverage/Products" method="post"></form>');
 
@@ -335,19 +344,13 @@
                     form.append('<input type="hidden" name="selectedSeats[' + index + ']" value="' + seat + '" />');
                 });
 
-                // Append the countdown time
-                form.append('<input type="hidden" name="countdownTime" value="' + countdownTime + '" />');
-
-                // Append the companyTinNumber
                 form.append('<input type="hidden" name="companyTinNumber" value="' + companyTinNumber + '" />');
+                form.append('<input type="hidden" name="companyTinNumber" value="' + movieScheduleCode + '" />');
 
-                // Append the form to the body
                 $('body').append(form);
 
-                // Submit the form
                 form.submit();
             });
-
             function updateSelectedSeatsUI() {
                 selectedSeats.forEach(function (seatCode) {
                     // Update the UI for each selected seat (e.g., change background color)
@@ -365,8 +368,8 @@
                 initializeSeatSelection();
             });
         });
+
     </script>
-    
 </head>
     <body>
     <header>
@@ -381,7 +384,7 @@
                             <a class="custom-btn btn btn-primary" asp-controller="Home" asp-action="Index" role="button">Movies</a>
                         </div>
                         <div class="today-date" style="display: inline-block; margin-top: 10px; margin-right: 10px;">
-                            <div id="countdownTimer" style="display:none;">Time remaining: 1:00</div>
+                            <div id="countdownTimer" style="display:none;"></div>
                         </div>
                     </div>
                 </div>
@@ -404,4 +407,3 @@
         </div>
     </body>
 </html>
-

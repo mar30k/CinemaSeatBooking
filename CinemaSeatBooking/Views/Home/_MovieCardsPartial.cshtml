@@ -1,10 +1,11 @@
 ﻿@model List<MovieModel>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
 <div class="row" id="movieCardsContainer">
     @{
         var groupedMovies = Model.GroupBy(m => m.MovieName);
         var delay = 0.1; // Initial delay in seconds
 
-        foreach (var group in groupedMovies)
+        @foreach (var group in groupedMovies)
         {
             var movie = group.First();
             var companyNames = group.Select(m => m.CompanyName).ToList();
@@ -15,7 +16,7 @@
                     <div class="button-container">
                         @foreach (var companyName in companyNames)
                         {
-                            <button class="button" onclick="onCompanyButtonClick('@movie.MovieCode', '@companyName', '@movie.Overview', '@movie.PosterUrl','@movie.MovieName','@movie.MovieId', '@movie.BackdropPath')">
+                            <button class="button companyButton" data-movie-code="@movie.MovieCode" data-company-name="@companyName" data-overview="@movie.Overview" data-poster-url="@movie.PosterUrl" data-movie-name="@movie.MovieName" data-movie-id="@movie.MovieId" data-backdrop-path="@movie.BackdropPath">
                                 @companyName
                             </button>
                         }
@@ -25,30 +26,39 @@
                     </div>
                 </div>
             </div>
-
-            delay += 0.1; // Increase delay for the next card
+            delay += 0.1;  
         }
     }
 </div>
 
 <script>
-    function onCompanyButtonClick(movieCode, companyName, overview, posterUrl, movieName, movieId, backdropPath) {
-        var selectedDate = document.getElementById("selectedDate").value;
-        // Create a form dynamically
-        var form = $('<form action="/MovieDetails/Details" method="post">' +
-            '<input type="hidden" name="selectedDate" value="' + selectedDate + '" />' +
-            '<input type="hidden" name="movieCode" value="' + movieCode + '" />' +
-            '<input type="hidden" name="companyName" value="' + companyName + '" />' +
-            '<input type="hidden" name="overview" value="' + overview + '" />' +
-            '<input type="hidden" name="posterUrl" value="' + posterUrl + '" />' +
-            '<input type="hidden" name="movieName" value="' + movieName + '" />' +
-            '<input type="hidden" name="movieId" value="' + movieId + '" />' +
-            '<input type="hidden" name="backdropPath" value="' + backdropPath + '" />' +
-            '</form>');
-        // Append the form to the body
-        $('body').append(form);
+    $(document).ready(function () {
+        $('.companyButton').click(function (event) {
 
-        // Submit the form
-        form.submit();
-    }
+            var selectedDate = document.getElementById("selectedDate").value;
+            var movieCode = $(this).data('movie-code');
+            var companyName = $(this).data('company-name');
+            var overview = $(this).data('overview');
+            var posterUrl = $(this).data('poster-url');
+            var movieName = $(this).data('movie-name');
+            var movieId = $(this).data('movie-id');
+            var backdropPath = $(this).data('backdrop-path');
+            var form = $('<form action="/MovieDetails/Details" method="post"></form>');
+
+            form.append('<input type="hidden" name="selectedDate" value="' + selectedDate + '" />');
+            form.append('<input type="hidden" name="movieCode" value="' + movieCode + '" />');
+            form.append('<input type="hidden" name="companyName" value="' + companyName + '" />');
+            form.append('<input type="hidden" name="overview" value="' + overview + '" />');
+            form.append('<input type="hidden" name="posterUrl" value="' + posterUrl + '" />');
+            form.append('<input type="hidden" name="movieName" value="' + movieName + '" />');
+            form.append('<input type="hidden" name="movieId" value="' + movieId + '" />');
+            form.append('<input type="hidden" name="backdropPath" value="' + backdropPath + '" />');
+
+            $('body').append(form);
+
+            // Submit the form
+            form.submit();
+        });
+    });
+
 </script>

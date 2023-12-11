@@ -3,7 +3,8 @@
     public class ProductsViewModel
     {
         public List<Product> Products { get; set; }
-        public int CountDownTime { get; set; }
+        public string? MovieScheduleCode { get; set; }
+        public string? CompanyTinNumber { get; set; }
     }
 
 }

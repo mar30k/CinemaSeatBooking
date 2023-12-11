@@ -5,6 +5,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="../css/styles.css" rel="stylesheet">
     <link rel="stylesheet" href="~/CinemaSeatBooking.styles.css" asp-append-version="true" />
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <style>
         .custom-container {
             padding-left: 35px;
@@ -41,6 +42,13 @@
             border-radius: 3px;
         }
 
+        .total-price{
+            margin-bottom: 5px;
+            padding: 5px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
         .btn-outline-primary {
             color: #28a745; /* Green color */
             border-color: #28a745;
@@ -69,9 +77,7 @@
                         <div style="text-align: center; display: inline-block; margin-right: 20px; margin-top: 3px;" id="priceContainer">
                             <button id="skipButton" class="btn btn-outline-primary">Skip</button>
                         </div>
-                        <div style="text-align: center; display: inline-block; margin-top: 3px;">
-                            <p id="demo"></p>
-                        </div>
+                        <div id="UpdatedCountDownTimer" style="display:none; display: inline-block; margin-right: 20px; margin-top: 3px;"></div>
                     </div>
                 </div>
             </div>
@@ -148,6 +154,91 @@
     </div>
     
     <script>
+        var storedRemainingTime = sessionStorage.getItem('remainingTime');
+        var countdownStarted = sessionStorage.getItem('countdownStarted') === 'true';
+        var secondsAdded = sessionStorage.getItem('secondsAdded') === 'true';
+
+        var updatedRemainingTime;
+
+        if (countdownStarted && secondsAdded) {
+            updatedRemainingTime = parseInt(storedRemainingTime);
+        } else if (!countdownStarted && !secondsAdded) {
+            updatedRemainingTime = parseInt(storedRemainingTime);
+        } else {
+            updatedRemainingTime = parseInt(storedRemainingTime) + 60;
+        }
+
+
+        var secondsAdded = sessionStorage.getItem('secondsAdded');
+
+        console.log("at the start secondsAdded "+ secondsAdded)
+        var companyTin = "@Model.CompanyTinNumber";
+        var movieScheduleCode = "@Model.MovieScheduleCode";
+
+        var selectedSeats = JSON.parse(sessionStorage.getItem('selectedSeats')) || [];
+
+        function extendCachedSeats() {
+            if (!secondsAdded) {
+                var endpoint = 'https://api-hulubeje.cnetcommerce.com/api/ManageSeatCache/ExtendCachedSeatsForSchedule';
+
+                var payload = {
+                    "schedule": movieScheduleCode,
+                    "allSeats": selectedSeats,
+                    "orgTin": companyTin,
+                    "seconds": updatedRemainingTime
+                };
+
+                $.ajax({
+                    url: endpoint,
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(payload),
+                    success: function (response) {
+                        console.log('Success:', response);
+                    },
+                    error: function (error) {
+                        console.error('Error:', error);
+                    }
+                });
+            }
+            else{
+                console.log("already extended cache time");
+            }
+        }
+
+        function startCountdownTimer() {
+            $('#UpdatedCountDownTimer').show();
+            countdownInterval = setInterval(function () {
+                $('#UpdatedCountDownTimer').text("Time remaining: " + formatTime(updatedRemainingTime));
+                updatedRemainingTime--;
+
+                if (updatedRemainingTime <= 0) {
+                    clearInterval(countdownInterval);
+                    sessionStorage.clear();
+                    location.reload();
+                }
+                sessionStorage.setItem("remainingTime", updatedRemainingTime);
+            }, 1000);
+
+            sessionStorage.setItem('secondsAdded', 'true')
+        }
+
+        $(document).ready(function () {
+             if (updatedRemainingTime > 0) {
+                startCountdownTimer(updatedRemainingTime);
+            }
+
+            extendCachedSeats();
+        });
+
+        function formatTime(seconds) {
+            var min = Math.floor(seconds / 60);
+            var sec = seconds % 60;
+            return min + ":" + (sec < 10 ? "0" : "") + sec;
+        }
+
+        console.log("Updated Remaining Time: " + updatedRemainingTime);
+
         document.addEventListener('DOMContentLoaded', function () {
             // Use event delegation to handle clicks on dynamically generated cards
             document.addEventListener('click', function (event) {
@@ -177,7 +268,7 @@
         function incrementValue(button) {
             // Find the associated quantity element
             var quantityElement = button.parentElement.querySelector('.quantity');
-            let currentValue = parseInt(quantityElement.textContent, 10); // Default to 0 if NaN
+            let currentValue = parseInt(quantityElement.textContent, 10);  
             quantityElement.textContent = currentValue + 1;
             updateCardDisplay(quantityElement);
         }
@@ -185,7 +276,7 @@
         function decrementValue(button) {
             // Find the associated quantity element
             var quantityElement = button.parentElement.querySelector('.quantity');
-            let currentValue = parseInt(quantityElement.textContent, 10) || 0; // Default to 0 if NaN
+            let currentValue = parseInt(quantityElement.textContent, 10) || 0; 
             if (currentValue > 0) {
                 quantityElement.textContent = currentValue - 1;
                 updateCardDisplay(quantityElement);
@@ -221,20 +312,111 @@
         }
 
         function renderSelectedItems() {
+
             selectedItemsContainer.innerHTML = 'Cart';
 
+            let totalPrice = 0;
+            let totalCount = 0;
+            var headerDiv = document.createElement('div');
+            headerDiv.className = 'headeer'
+
+            if (selectedItems.length > 0) {
+                headerDiv.style.display = 'flex';
+                headerDiv.style.justifyContent = 'space-between';
+                headerDiv.style.padding = '5px';
+
+                var nameHeaderSpan = document.createElement('span');
+                var quantityHeaderSpan = document.createElement('span');
+                var priceHeaderSpan = document.createElement('span');
+
+                nameHeaderSpan.textContent = 'NAME';
+                nameHeaderSpan.style.flex = '2';
+
+                quantityHeaderSpan.textContent = 'QUANTITY';
+                quantityHeaderSpan.style.flex = '1';
+                quantityHeaderSpan.style.textAlign = 'center';
+
+                priceHeaderSpan.textContent = 'PRICE';
+                priceHeaderSpan.style.flex = '`1';
+                priceHeaderSpan.style.textAlign = 'right';
+                priceHeaderSpan.style.marginLeft = '15px';
+
+                headerDiv.appendChild(nameHeaderSpan);
+                headerDiv.appendChild(quantityHeaderSpan);
+                headerDiv.appendChild(priceHeaderSpan);
+            }
+            else {
+                headerDiv.style.display = 'none';
+            }
+
+            selectedItemsContainer.appendChild(headerDiv);
             selectedItems.forEach(item => {
                 var itemDiv = document.createElement('div');
                 itemDiv.className = 'selected-item';
 
-                // Apply CSS styles for positioning
                 itemDiv.style.display = 'flex';
                 itemDiv.style.justifyContent = 'space-between';
-                itemDiv.style.padding = '5px';  // Adjust the padding as needed
+                itemDiv.style.padding = '5px';
 
-                itemDiv.textContent = `${item.name}\u00A0\u00A0${item.quantity}\u00A0\u00A0${item.price.toFixed(2)} Birr`;
+                var nameSpan = document.createElement('span');
+                var quantitySpan = document.createElement('span');
+                var priceSpan = document.createElement('span');
+
+                nameSpan.textContent = item.name;
+                nameSpan.style.flex = '2';
+                nameSpan.style.marginRight = '10px';
+
+                quantitySpan.textContent = item.quantity;
+                quantitySpan.style.flex = '1';
+                quantitySpan.style.textAlign = 'center';
+
+                priceSpan.textContent = `${item.price.toFixed(2)} $`;
+                priceSpan.style.flex = '1';
+                priceSpan.style.textAlign = 'right';
+
+                itemDiv.appendChild(nameSpan);
+                itemDiv.appendChild(quantitySpan);
+                itemDiv.appendChild(priceSpan);
+
                 selectedItemsContainer.appendChild(itemDiv);
+
+                totalPrice += item.price;
+                totalCount += item.quantity;
             });
+
+            
+            var totalDiv = document.createElement('div');
+            totalDiv.className = 'total-price';
+
+            if (selectedItems.length > 0) {
+                totalDiv.style.display = 'flex';
+                totalDiv.style.justifyContent = 'space-between';
+                totalDiv.style.padding = '5px';
+
+                var totalPrcieSpan = document.createElement('span');
+                var totalCountSpan = document.createElement('span');
+                var totalValueSpan = document.createElement('span');
+
+                totalPrcieSpan.textContent = 'Total Price';
+                totalPrcieSpan.style.flex = '2';
+                totalPrcieSpan.style.marginRight = '10px';
+
+                totalCountSpan.textContent = `${totalCount}`;
+                totalCountSpan.style.flex = '1';
+                totalCountSpan.style.textAlign = 'center';
+
+                totalValueSpan.textContent = `${totalPrice.toFixed(2)} $`;
+                totalValueSpan.style.flex = '1';
+                totalValueSpan.style.textAlign = 'right';
+
+                totalDiv.appendChild(totalPrcieSpan);
+                totalDiv.appendChild(totalCountSpan);
+                totalDiv.appendChild(totalValueSpan);
+            } else {
+                totalDiv.style.display = 'none';
+            }
+
+            selectedItemsContainer.appendChild(totalDiv);
         }
     </script>
     </body>

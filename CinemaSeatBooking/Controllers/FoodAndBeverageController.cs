@@ -18,19 +18,18 @@ namespace CinemaSeatBooking.Controllers
             };
         }
         [HttpPost]
-        public IActionResult Products([FromForm] string selectedSeats, [FromForm] int countdownTime, [FromForm] string companyTinNumber)
+        public IActionResult Products([FromForm] string movieScheduleCode, [FromForm] string companyTinNumber)
         {
             // Convert the selectedSeats string to a list or array as needed
             return RedirectToAction("ProductsView", new
             {
-                countdownTime,
                 companyTinNumber,
-                selectedSeats,
+                movieScheduleCode,
             });
 
         }
 
-        public async Task<IActionResult> ProductsView(string companyTinNumber, int countdownTime)
+        public async Task<IActionResult> ProductsView(string companyTinNumber, string movieScheduleCode)
         {
             HttpResponseMessage response = await _httpClient.GetAsync($"Product/GetProducts?orgTin={companyTinNumber}&type=Restaurant&consignee=0912141914&platform=Web&longitude=0");
 
@@ -42,7 +41,8 @@ namespace CinemaSeatBooking.Controllers
 
                 var viewModel = new ProductsViewModel
                 {
-                    CountDownTime = countdownTime,
+                    MovieScheduleCode = movieScheduleCode,
+                    CompanyTinNumber = companyTinNumber,
                     Products = productsData,
                 };
 
