@@ -117,7 +117,7 @@
                     </div>
                     <div class="col-md-8">
                         <h4 class="companyName" style="background-color:rgba(0,0,0,0.3) ">@Model.CompanyName</h4>
-                        <h3>@Model.MovieName</h3>
+                        <h1 style="color: white">@Model.MovieName</h1>
                         <h4>Overview</h4>
                         <p>@Model.Overview</p>
                         <div>
@@ -179,7 +179,7 @@
             Casts
         </h4>
         <div class="cast-section">
-            @foreach (var castMember in Model.Cast)
+            @foreach (var castMember in Model.Cast.Take(10))
             {
                 <div class="cast-card">
                     @if (castMember.ProfilePath == "https://image.tmdb.org/t/p/w500")
@@ -214,48 +214,67 @@
                     <h2>Schedules</h2>
                     @foreach (var schedule in Model.Schedules)
                     {
-                        <div class="row mb-3">
-                            <div class="col">
-                                <p style="color: black">@schedule.HallName
-                                    @if (@schedule.Dimension == "2D")
-                                    {
-                                        <span style="background-color: blue; color: white; border-color: black; border-radius: 4px; padding-left: 2px; padding-right: 2px; "> @schedule.Dimension</span>
-                                    }
-                                    else
-                                    {
-                                        <span style="background-color: red; color: white; border-color: black; border-radius: 4px; padding-left: 2px; padding-right: 2px;"> @schedule.Dimension</span>
-                                    }
-                                </p>
-                                <p style="color: black">@schedule.StartTime  </p>
+                        <div class="card mb-3">
+                            <div class="row g-0">
+                                <div class="col-md-6" style="display: flex; flex-direction: column; align-items: center; text-align: center;">
+                                    <div class="card-body">
+                                        <p class="card-title" style="color: black; margin-bottom: 0;">
+                                            @schedule.HallName
+                                            @if (@schedule.Dimension == "2D")
+                                            {
+                                                <span class="badge bg-primary">@schedule.Dimension</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-danger">@schedule.Dimension</span>
+                                            }
+                                        </p>
+                                        @{
+                                            string utcTimeString = schedule.StartTime;
 
-                                @if (schedule.Status == "CLOSED")
-                                {
-                                    <button class="btn btn-danger" type="button" disabled>Closed</button>
-                                }
-                                else
-                                {
-                                    <button class="btn btn-primary " onclick="onScheduleButtonClick('@schedule.SpaceCode', '@Model.CompanyTinNumber.ToString()', '@schedule.Code','@schedule.NPrice')" type="button">
-                                        Book Now <br> @schedule.NPrice ETB
-                                    </button>
-                                }
-                            </div>
+                                            if (DateTime.TryParse(utcTimeString, out DateTime utcTime))
+                                            {
+                                                DateTime ethiopianTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(utcTime, "Africa/Addis_Ababa");
+                                                // Add a 6-hour offset to match Ethiopia's local time interpretation
+                                                ethiopianTime = ethiopianTime.AddHours(6);
 
-                            @if (schedule.VIP != null)
-                            {
-                                <div class="col">
-                                    <p style="color: black">@schedule.VIP.HallName</p>
-                                    <p style="color: black">book</p>
-
-                                    @if (schedule.VIP.Status == "CLOSED")
+                                                <p class="card-text" style="color: black; margin: 0;">@utcTime.ToString("h.mm tt")</p>
+                                                <p class="card-text" style="color: black; margin: 0;">@ethiopianTime.ToString("h.mm tt") (Local)</p>
+                                            }
+                                            else
+                                            {
+                                                <p class="card-text" style="color: red; margin: 0;">Invalid date format</p>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                                <div class="col-md-3 d-flex align-items-center justify-content-center">
+                                    @if (schedule.Status == "CLOSED")
                                     {
                                         <button class="btn btn-danger" type="button" disabled>Closed</button>
                                     }
                                     else
                                     {
-                                        <button class="btn btn-primary" onclick="onScheduleButtonClick('@schedule.VIP.SpaceCode', '@Model.CompanyTinNumber.ToString()', '@schedule.VIP.Code','@schedule.VIP.VPrice')" type="button">Book Vip <br> @schedule.VIP.VPrice ETB</button>
+                                        <button class="btn btn-success " onclick="onScheduleButtonClick('@schedule.SpaceCode', '@Model.CompanyTinNumber.ToString()', '@schedule.Code','@schedule.NPrice')" type="button">
+                                            Book Now <br> @schedule.NPrice ETB
+                                        </button>
                                     }
                                 </div>
-                            }
+
+                                @if (schedule.VIP != null)
+                                {
+                                    <div class="col-md-3 d-flex align-items-center justify-content-center">
+                                        @if (schedule.VIP.Status == "CLOSED")
+                                        {
+                                            <button class="btn btn-danger" type="button" disabled>Closed</button>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn btn-warning" onclick="onScheduleButtonClick('@schedule.VIP.SpaceCode', '@Model.CompanyTinNumber.ToString()', '@schedule.VIP.Code','@schedule.VIP.VPrice')" type="button">Book Vip <br> @schedule.VIP.VPrice ETB</button>
+                                        }
+                                    </div>
+                                }
+                            </div>
                         </div>
                     }
                 </div>
