@@ -38,6 +38,10 @@
 <script>
     function onCompanyButtonClick(movieCode, companyName, overview, posterUrl, movieName, movieId, backdropPath) {
         var selectedDate = document.getElementById("selectedDate").value;
+
+        sessionStorage.setItem('selectedMovieName', movieName);
+        sessionStorage.setItem('selectedCompanyName ', companyName);
+        sessionStorage.setItem('selectedDate', selectedDate);
         // Create a form dynamically
         var form = $('<form action="/MovieDetails/Details" method="post">' +
             '<input type="hidden" name="selectedDate" value="' + selectedDate + '" />' +
@@ -49,7 +53,6 @@
             '<input type="hidden" name="movieId" value="' + movieId + '" />' +
             '<input type="hidden" name="backdropPath" value="' + backdropPath + '" />' +
             '</form>');
-        // Append the form to the body
         $('body').append(form);
 
         form.submit();

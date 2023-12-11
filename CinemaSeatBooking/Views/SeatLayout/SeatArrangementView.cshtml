@@ -2,19 +2,27 @@
 @{
     string formattedDate = DateTime.Now.ToString("MMM-d h.mmtt");
 }
-
+@{
+    ViewData["Title"] = "Seat Layout";
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>@ViewData["Title"]</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <style>
+        .btn:focus,
+        .btn:active {
+            outline: none !important;
+            box-shadow: none !important;
+        }
         .container-xl {
             max-width: 100%;
             overflow-x: auto;
@@ -152,6 +160,7 @@
                     }
                 }, 1000);
             }
+
             var countdownStarted = sessionStorage.getItem('countdownStarted');
             if (countdownStarted === 'true') {
                 var remainingTime = parseInt(sessionStorage.getItem('remainingTime'));
@@ -236,6 +245,8 @@
                 var movieScheduleCode = "@Model.MovieScheduleCode";
                 var consignee = "0912141914"; // Keep the consignee same, as you mentioned
 
+                var seatName = document.getElementById
+
                 var urlAdd = 'https://api-hulubeje.cnetcommerce.com/api/ManageSeatCache/SetCachedSeatsForSchedule' +
                     `?schedule=${movieScheduleCode}&seat=${seatCode}&consignee=${consignee}&orgTin=${companyTinNumber}`;
 
@@ -244,6 +255,12 @@
                 if (!isDisabled && index === -1) {
                     if (selectedSeats.length < 3) {
                         selectedSeats.push(seatCode);
+
+                        var seatNames = selectedSeats.map(function (code) {
+                            return document.getElementById(code).innerText;
+                        });
+                        sessionStorage.setItem('selectedSeatNames', JSON.stringify(seatNames));
+
                         $.ajax({
                             url: urlAdd,
                             type: 'POST',
@@ -266,6 +283,12 @@
                     }
                 } else if (!isDisabled) {
                     selectedSeats.splice(index, 1);
+
+                    var updatedSeatNames = selectedSeats.map(function (code) {
+                        return document.getElementById(code).innerText;
+                    });
+                    sessionStorage.setItem('selectedSeatNames', JSON.stringify(updatedSeatNames));
+
                     $.ajax({
                         url: urlRemove,
                         type: 'POST',
@@ -363,6 +386,17 @@
                     }
                 });
             }
+
+            // window.addEventListener('popstate', function (event) {
+            //     // Clear sessionStorage
+            //     sessionStorage.clear();
+            // });
+
+            // // Optionally, you can also clear sessionStorage when the page is unloaded
+            // window.addEventListener('beforeunload', function (event) {
+            //     // Clear sessionStorage
+            //     sessionStorage.clear();
+            // });
 
             updateSelectedSeatsUI();
             document.addEventListener("DOMContentLoaded", function () {

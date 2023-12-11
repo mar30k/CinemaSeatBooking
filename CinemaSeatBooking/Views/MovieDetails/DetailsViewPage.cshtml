@@ -1,13 +1,14 @@
-﻿@model CinemaSeatBooking.Models.MovieModel
+﻿@model MovieModel
+@{
+    ViewData["Title"] = "Food And Beverage";
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Page Title</title>
-    <!-- Bootstrap CSS -->
+    <title>@ViewData["Title"]</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Your existing styles and scripts go here -->
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://www.youtube.com/iframe_api"></script>
     <style>
@@ -75,8 +76,13 @@
             .companyName{
                 color: black;
                 font-size: 40px;
-            }
-
+        }
+        /* Add this CSS to your stylesheet */
+        .btn:focus,
+        .btn:active {
+            outline: none !important;
+            box-shadow: none !important;
+        }
         .cast-section {
             overflow-x: auto; /* Enable horizontal scrolling */
             white-space: nowrap; /* Prevent line breaks */
@@ -104,6 +110,7 @@
             margin-top: 10px;
             font-weight: bold;
         }
+
     </style>
 </head>
 <body>

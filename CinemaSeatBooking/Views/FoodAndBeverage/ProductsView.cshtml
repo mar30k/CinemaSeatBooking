@@ -1,7 +1,13 @@
 ﻿@model ProductsViewModel
+@{
+    ViewData["Title"] = "Food And Beverage";
+}
 <!DOCTYPE html>
 <html lang="en">
     <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="../css/styles.css" rel="stylesheet">
     <link rel="stylesheet" href="~/CinemaSeatBooking.styles.css" asp-append-version="true" />
@@ -12,6 +18,11 @@
             padding-right: 35px;
         }
 
+        .btn:focus,
+        .btn:active {
+            outline: none !important;
+            box-shadow: none !important;
+        }
         .card-img-top {
             height: 230px;
             width: 100%;
@@ -69,11 +80,6 @@
                         <h4 style="margin-top: 3px;">Food And Beverage</h4>
                     </div>
                     <div>
-                        <!--
-                            <div class="food-and-drink" style="display: inline-block; margin-right: 20px;">
-                            <a class="custom-btn btn btn-primary" asp-controller="Home" asp-action="Index" role="button">Movies</a>
-                        </div>
-                        -->
                         <div style="text-align: center; display: inline-block; margin-right: 20px; margin-top: 3px;" id="priceContainer">
                             <button id="skipButton" class="btn btn-outline-primary">Skip</button>
                         </div>
@@ -329,14 +335,14 @@
                 var quantityHeaderSpan = document.createElement('span');
                 var priceHeaderSpan = document.createElement('span');
 
-                nameHeaderSpan.textContent = 'NAME';
+                nameHeaderSpan.textContent = 'Name';
                 nameHeaderSpan.style.flex = '2';
 
-                quantityHeaderSpan.textContent = 'QUANTITY';
+                quantityHeaderSpan.textContent = 'Quantity';
                 quantityHeaderSpan.style.flex = '1';
                 quantityHeaderSpan.style.textAlign = 'center';
 
-                priceHeaderSpan.textContent = 'PRICE';
+                priceHeaderSpan.textContent = 'Price';
                 priceHeaderSpan.style.flex = '`1';
                 priceHeaderSpan.style.textAlign = 'right';
                 priceHeaderSpan.style.marginLeft = '15px';
