@@ -161,6 +161,7 @@
                 console.log("Countdown has not started.");
             }
 
+            // Periodically fetch and update seat information
             function updateButtonStatus() {
                 var skipButton = document.getElementById('skipButton');
                 if (isBookingStarted) {
@@ -207,9 +208,9 @@
                     type: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify({
-                        schedule: movieScheduleCode, // Assuming these variables are still in scope
-                        allSeats: selectedSeats, // Pass the selected seats array
-                        orgTin: companyTinNumber // Assuming this variable is still in scope
+                        schedule: movieScheduleCode, 
+                        allSeats: selectedSeats,  
+                        orgTin: companyTinNumber  
                     }),
                     success: function (response) {
                         // Handle success
@@ -228,7 +229,7 @@
                 isBookingStarted = false; // Reset booking flag
             }
 
-            // Periodically fetch and update seat information
+            
             function toggleSeatSelection(seatCode, isDisabled) {
                 var index = selectedSeats.indexOf(seatCode);
                 var companyTinNumber = "@Model.CompanyTinNumber";
