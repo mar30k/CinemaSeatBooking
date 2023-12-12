@@ -18,10 +18,4 @@
         public double? Rating { get; set; }
     }
 
-    public class RootProduct
-    {
-        public List<Product>? Products { get; set; }
-    }
-
-
 }

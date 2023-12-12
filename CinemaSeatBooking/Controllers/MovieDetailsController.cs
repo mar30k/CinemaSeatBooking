@@ -69,13 +69,14 @@ namespace CinemaSeatBooking.Controllers
                         var movieDetails = JsonConvert.DeserializeObject<MovieModel>(detailsResponseData);
 
                         // Set additional properties in your MovieModel
-                        movieDetails.MovieCode = movieCode;
+                        movieDetails.MovieCode = movieCode; 
                         movieDetails.CompanyName = companyName;
                         movieDetails.Overview = overview;
                         movieDetails.PosterUrl = posterUrl;
                         movieDetails.MovieName = movieName;
                         movieDetails.BackdropPath = backdropPath;
                         movieDetails.YoutubeKey = trailerKey; // Add the YoutubeKey property
+                        movieDetails.SelectedDate = selectedDate; // Add the YoutubeKey property
                                                               // Extract genre information from movieDetails
                         var genreNames = new List<string>();
                         if (movieDetails.Genre != null)

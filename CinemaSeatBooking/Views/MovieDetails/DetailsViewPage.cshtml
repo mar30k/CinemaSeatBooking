@@ -262,7 +262,8 @@
                                     }
                                     else
                                     {
-                                        <button class="btn btn-success " onclick="onScheduleButtonClick('@schedule.SpaceCode', '@Model.CompanyTinNumber.ToString()', '@schedule.Code','@schedule.NPrice')" type="button">
+                                        <button class="btn btn-success " onclick="onScheduleButtonClick('@schedule.SpaceCode', '@Model.CompanyTinNumber.ToString()','@Model.CompanyName',
+                                            '@Model.SelectedDate.ToString()','@schedule.Code','@schedule.NPrice','@schedule.HallName','@utcTime.ToString("h.mm tt")')" type="button">
                                             Book Now <br> @schedule.NPrice ETB
                                         </button>
                                     }
@@ -277,7 +278,10 @@
                                         }
                                         else
                                         {
-                                            <button class="btn btn-warning" onclick="onScheduleButtonClick('@schedule.VIP.SpaceCode', '@Model.CompanyTinNumber.ToString()', '@schedule.VIP.Code','@schedule.VIP.VPrice')" type="button">Book Vip <br> @schedule.VIP.VPrice ETB</button>
+                                            <button class="btn btn-warning" onclick="onScheduleButtonClick('@schedule.SpaceCode', '@Model.CompanyTinNumber.ToString()','@Model.CompanyName',
+                                            '@Model.SelectedDate.ToString()','@schedule.Code','@schedule.NPrice','@schedule.HallName','@utcTime.ToString("h.mm tt")')" type="button">
+                                                Book Vip <br> @schedule.VIP.VPrice ETB
+                                            </button>
                                         }
                                     </div>
                                 }
@@ -290,13 +294,17 @@
     </div>
 
     <script>
-        function onScheduleButtonClick(spacecode, companyTinNumber, code, price) {
+        function onScheduleButtonClick(spacecode, companyTinNumber, companyName, selectedDate, code, price, hallName, utcTime) {
 
             var form = $('<form action="/SeatLayout/SeatArrangement" method="post">' +
                 '<input type="hidden" name="spacecode" value="' + spacecode + '" />' +
                 '<input type="hidden" name="companyTinNumber" value="' + companyTinNumber + '" />' +
+                '<input type="hidden" name="companyName" value="' + companyName + '" />' +
+                '<input type="hidden" name="selectedDate" value="' + selectedDate + '" />' +
                 '<input type="hidden" name="code" value="' + code + '" />' +
                 '<input type="hidden" name="price" value="' + price + '" />' +
+                '<input type="hidden" name="hallName" value="' + hallName + '" />' +
+                '<input type="hidden" name="utcTime" value="' + utcTime + '" />' +
                 '</form>');
             // Append the form to the body
             $('body').append(form);

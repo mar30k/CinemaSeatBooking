@@ -1,4 +1,5 @@
 ﻿@model CinemaSeatBooking.Models.SeatLayout
+@using System.Globalization
 @{
     string formattedDate = DateTime.Now.ToString("MMM-d h.mmtt");
 }
@@ -350,10 +351,9 @@
                 var selectedSeats = retrieveSelectedSeatsFromStorage();
                 var companyTinNumber = "@Model.CompanyTinNumber";
                 var movieScheduleCode = "@Model.MovieScheduleCode";
+                var movieName = "@Model.CompanyName";
+                 
                 var remainingTime = countdown ?? 0;
-
-                console.log("CompanyTinNumber: " + companyTinNumber);
-                console.log("selectedSeats: " + JSON.stringify(selectedSeats));
 
                 sessionStorage.setItem('remainingTime', remainingTime);
                 if (remainingTime === 0) {
@@ -363,10 +363,6 @@
                 }
 
                 var form = $('<form action="/FoodAndBeverage/Products" method="post"></form>');
-
-                selectedSeats.forEach(function (seat, index) {
-                    form.append('<input type="hidden" name="selectedSeats[' + index + ']" value="' + seat + '" />');
-                });
 
                 form.append('<input type="hidden" name="companyTinNumber" value="' + companyTinNumber + '" />');
                 form.append('<input type="hidden" name="companyTinNumber" value="' + movieScheduleCode + '" />');
@@ -429,10 +425,49 @@
     <div id="seatLimitAlert" class="alert alert-danger fixed-bottom mb-3" role="alert" style="display: none; position: fixed; bottom: 20px; left: 20px; width: 300px;">
         You can't select more than 3 seats
     </div>
+        <div style="font-family: Arial, sans-serif; max-width: 400px; margin: 0 auto; border: 1px solid #ccc; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); text-align: left;">
+            <h4 style="color: #333; margin-bottom: 10px;">@Model.CompanyName</h4>
+                <div style="text-align: left;">
+                    <p style="margin: 0; color: #555; font-size: 14px;">
+                    <strong>Hall Name:</strong> @Model.HallName
+                    </p>
+                    <p style="margin: 0; color: #555; font-size: 14px;">
+                    <strong>Time:</strong> @Model.UtcTime (@GetEthiopianTime(Model.UtcTime) Local)
+                    </p>
+                    <p style="margin: 0; color: #555; font-size: 14px;">
+                    <strong>Date:</strong> @GetFormattedDateWithDayOfWeek(Model.SelectedDate) 
+                    </p>
+                </div>
+        </div>
+        @functions {
+            public string GetFormattedDateWithDayOfWeek(string date)
+            {
+                DateTime parsedDate;
+                if (DateTime.TryParse(date, out parsedDate))
+                {
+                    string dayOfWeek = parsedDate.ToString("ddd"); // Get abbreviated day of the week
+                    string formattedDate = parsedDate.ToString("dd-MM-yyyy"); // "dd-MM-yyyy" gives the desired format
+
+                    return $"{dayOfWeek} {formattedDate}";
+                }
+
+                return string.Empty;
+            }
+
+            public string GetEthiopianTime(string utcTimeString)
+            {
+                if (DateTime.TryParse(utcTimeString, out DateTime utcTime))
+                {
+                    // Convert UTC time to Ethiopia time
+                    DateTime ethiopianTime = utcTime.AddHours(6);
+
+                    return ethiopianTime.ToString("h.mm tt");
+                }
+
+                return "Invalid time format";
+            }
+        }
         <div class="container-xl">
-            <div id="countdownTimer" style="display:none;">
-                 Time remaining: 1:00
-            </div>
             <div id="seatInfoContainer">
                 <partial name="_SeatInfoPartialView" />
             </div>

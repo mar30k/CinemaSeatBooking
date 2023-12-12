@@ -19,19 +19,23 @@ public class SeatLayoutController : Controller
         };
     }
     [HttpPost]
-    public IActionResult SeatArrangement(string spacecode, string companyTinNumber, string code, decimal price)
+    public IActionResult SeatArrangement(string spacecode, string companyTinNumber, string companyName, string selectedDate, string code, decimal price, string hallName, string utcTime)
     {
         return RedirectToAction("SeatArrangementView", new
         {
             spacecode,
             companyTinNumber,
+            companyName,
+            selectedDate,
             code,
-            price
+            price,
+            utcTime,
+            hallName,
         });
     }
 
     [HttpGet]
-    public async Task<IActionResult> SeatArrangementView(string spacecode, string companyTinNumber, string code, decimal price)
+    public async Task<IActionResult> SeatArrangementView(string spacecode, string companyTinNumber, string companyName, string selectedDate, string code, decimal price, string hallName, string utcTime)
 
     {
         HttpResponseMessage response = await _httpClient.GetAsync($"cinema/getCinemaSeatArrangment?orgTin={companyTinNumber}&spaceCode={spacecode}");
@@ -113,6 +117,11 @@ public class SeatLayoutController : Controller
             seatArrangement.SpaceCode = spacecode;
             seatArrangement.MovieScheduleCode = code;
             seatArrangement.Price = price;
+            seatArrangement.SelectedDate = selectedDate;
+            seatArrangement.HallName = hallName;
+            seatArrangement.UtcTime = utcTime;
+            seatArrangement.CompanyName = companyName;
+
             // Pass the updated SeatLayout instance to the view
             return View(seatArrangement);
         }

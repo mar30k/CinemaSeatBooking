@@ -50,12 +50,13 @@
     }
 
 </style>
-<div style="margin-top: 20px; color:white; ">
-    <p style="background-color: blue; display: inline-block; padding: 2px; border-radius: 5px; border: 1px solid green; margin-right: 5px;">Booked @(Model.BookedSeats?.Count ?? 0)</p>
-    <p style="background-color: red; display: inline-block;padding: 2px; border-radius: 5px; border: 1px solid green; margin-right: 5px;">Sold @(Model.SoldSeats?.Count ?? 0)</p>
-    <p style="background-color: darkorange; display: inline-block; padding: 2px; border-radius: 5px; border: 1px solid green; margin-right: 5px;">Taken @(Model.TakenSeats?.Count ?? 0)</p>
-    <p style="background-color: white; color:black; display: inline-block; padding: 2px; border-radius: 5px; border: 1px solid green; ">Available @(Model.AvailableSeats?.Count(seatCode => Model.Seats.Any(seat => seat.Code == seatCode && !string.IsNullOrWhiteSpace(seat.Name))) - Model.TakenSeats?.Count ?? 0)</p>
+<div style="margin-top: 20px; color: white; font-size: 14px;">
+    <p style="background-color: blue; display: inline-block; padding: 4px 8px; border-radius: 5px; border: 1px solid green; margin-right: 5px;">Booked: @(Model.BookedSeats?.Count ?? 0)</p>
+    <p style="background-color: red; display: inline-block; padding: 4px 8px; border-radius: 5px; border: 1px solid green; margin-right: 5px;">Sold: @(Model.SoldSeats?.Count ?? 0)</p>
+    <p style="background-color: darkorange; display: inline-block; padding: 4px 8px; border-radius: 5px; border: 1px solid green; margin-right: 5px;">Taken: @(Model.TakenSeats?.Count ?? 0)</p>
+    <p style="background-color: white; color: black; display: inline-block; padding: 4px 8px; border-radius: 5px; border: 1px solid green;">Available: @(Model.AvailableSeats?.Count(seatCode => Model.Seats.Any(seat => seat.Code == seatCode && !string.IsNullOrWhiteSpace(seat.Name))) - Model.TakenSeats?.Count ?? 0)</p>
 </div>
+
 <div style="background: lightgrey; padding: 20px;">
     @if (Model != null)
     {
@@ -131,4 +132,3 @@
         </div>
     </div>
 </div>
-

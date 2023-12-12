@@ -4,6 +4,10 @@
     {
         public string? SpaceCode { get; set; }
         public string? CompanyTinNumber { get; set; }
+        public string? CompanyName { get; set; }
+        public string? SelectedDate { get; set; }
+        public string? HallName { get; set; }
+        public string? UtcTime { get; set; }
         public string? MovieScheduleCode { get; set; }
         public int MaxX { get; set; }
         public int MaxY { get; set; }
