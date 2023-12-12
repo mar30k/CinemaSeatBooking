@@ -24,6 +24,7 @@
         public List<CastMember>? Cast { get; set; }
         public int? RunTime { get; set; }
         public string? YoutubeKey { get; set; }
+        public string? PgRating { get; set; } 
         public string? FormattedRunTime
         {
             get

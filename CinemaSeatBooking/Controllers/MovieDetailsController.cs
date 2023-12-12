@@ -156,9 +156,11 @@ namespace CinemaSeatBooking.Controllers
                                     {
                                         // Extract schedules from the response
                                         var schedules = JsonConvert.DeserializeObject<List<MovieSchedule>>(selectedMovie.movieSchedules.ToString());
+                                        var pgRating = selectedMovie.pgRating;
 
                                         // Add schedules to the MovieModel
                                         movieDetails.Schedules = schedules;
+                                        movieDetails.PgRating = pgRating;
                                     }
                                     else
                                     {
