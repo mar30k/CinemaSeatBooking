@@ -134,26 +134,26 @@
                                 {
                                     switch (genreName)
                                     {
-                                        case "Action": return "#FF5733";
-                                        case "Adventure": return "#4CAF50";
-                                        case "Animation": return "#2196F3";
-                                        case "Comedy": return "#FFC107";
-                                        case "Crime": return "#9C27B0";
-                                        case "Documentary": return "#607D8B";
-                                        case "Drama": return "#FF9800";
-                                        case "Family": return "#795548";
-                                        case "Fantasy": return "#9E9E9E";
-                                        case "History": return "#673AB7";
-                                        case "Horror": return "#E91E63";
-                                        case "Music": return "#FFEB3B";
-                                        case "Mystery": return "#3F51B5";
-                                        case "Romance": return "#FF4081";
-                                        case "Science Fiction": return "#00BCD4";
-                                        case "TV Movie": return "#8BC34A";
-                                        case "Thriller": return "#2196F3";
-                                        case "War": return "#FF5722";
-                                        case "Western": return "#795548";
-                                        default: return "lightgray"; // Default color
+                                        case "Action": return "#E57373";
+                                        case "Adventure": return "#81C784";
+                                        case "Animation": return "#64B5F6";
+                                        case "Comedy": return "#FFD54F";
+                                        case "Crime": return "#BA68C8";
+                                        case "Documentary": return "#90A4AE";
+                                        case "Drama": return "#FFB74D";
+                                        case "Family": return "#A1887F";  
+                                        case "Fantasy": return "#B0BEC5"; 
+                                        case "History": return "#9575CD";  
+                                        case "Horror": return "#EC407A"; 
+                                        case "Music": return "#FFF176"; 
+                                        case "Mystery": return "#7986CB"; 
+                                        case "Romance": return "#F48FB1"; 
+                                        case "Science Fiction": return "#80DEEA";
+                                        case "TV Movie": return "#C5E1A5";
+                                        case "Thriller": return "#64B5F6";  
+                                        case "War": return "#FF8A65";
+                                        case "Western": return "#BCAAA4";
+                                        default: return "lightgray";
                                     }
                                 }
                             }
@@ -171,8 +171,14 @@
                                 </div>
                             }
                         </div>
-                        <h4 style="display: inline-block; margin-right: 10px;">Runtime:</h4>
-                        <p style="display: inline-block;">@Model.FormattedRunTime</p>
+                        <div>
+                            <h4 style="display: inline-block; margin-right: 10px;">Runtime:</h4>
+                            <p style="display: inline-block;">@Model.FormattedRunTime</p>
+                        </div>
+                        <div>
+                            <h4 style="display: inline-block; margin-right: 10px;">Pg-Rating:</h4>
+                            <p style="display: inline-block;">@Model.PgRating</p>
+                        </div>
                     </div>
                 </div>
             </div>
