@@ -212,14 +212,14 @@
                 }
                 else
                 {
-                    <partial name="_Schedules" model="Model"/>
+                    @Html.PartialAsync("_Schedules")
                 }
             </div>
 
             <div class="col-md-6" style="margin-top: 30px;">
                 @if (!string.IsNullOrEmpty(Model.YoutubeKey))
                 {
-                    <partial name="_Schedules" model="Model" />
+                    @Html.PartialAsync("_Schedules")
                 }
             </div>
         </div>
