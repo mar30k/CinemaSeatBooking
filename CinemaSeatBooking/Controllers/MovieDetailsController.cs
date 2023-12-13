@@ -47,15 +47,18 @@ namespace CinemaSeatBooking.Controllers
 
                     // Extract the key of the first trailer
                     string? trailerKey = null;
-                    foreach (var result in videosResponseObj.results)
+                    if(videosResponseObj != null)
                     {
-                        if (result.type == "Trailer" && result.site == "YouTube")
+                        foreach (var result in videosResponseObj.results)
                         {
-                            trailerKey = result.key.ToString();
-                            break;
+                            if (result.type == "Trailer" && result.site == "YouTube")
+                            {
+                                trailerKey = result.key.ToString();
+                                break;
+                            }
                         }
-                    }
 
+                    }
                     // Construct the API URL for movie details
                     string detailsApiUrl = $"{baseUrl}{movieId}?api_key={apiKey}&append_to_response=release_dates";
 
