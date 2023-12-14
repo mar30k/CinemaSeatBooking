@@ -163,7 +163,74 @@
             </div>
             <div class="col-lg col-md-2 mt-3 mr-5" style="margin-right: 50px;">
                 <div id="selected-items-container">
-                    Cart
+                    <div class="header" style="display: flex; justify-content: space-between; padding: 5px;">
+                        <span style="flex: 2 1 0%;">Description</span>
+                        <span style="flex: 1 1 0%;">Qty</span>
+                        <span style="flex: 1 1 0%;">Price</span>
+                        <span style="text-align: right;">Amount</span>
+                    </div>
+                </div>
+                <div class="Details" style="display: flex; flex-wrap: wrap; justify-content: space-between; padding: 5px; margin-bottom: 5px;">
+                    @if (Model is not null)
+                    {
+                        <div style="flex: 0 0 100%; margin: 5px; display: flex; justify-content: space-between;">
+                            <span style="flex: 2 1 0%; text-align: left; margin-right: auto;">Movie</span>
+                            <span style="text-align: right;margin-right: 10px">@Model.MovieName</span>
+                        </div>
+                        <div style="flex: 0 0 100%; margin: 5px; display: flex; justify-content: space-between;">
+                            <span style="flex: 2 1 0%; text-align: left; margin-right: auto;">Schedule Date</span>
+                            @if (Model.ScheduleDate is not null)
+                            {
+                                <span style="text-align: right;margin-right: 10px">@GetFormattedDateWithDayOfWeek(@Model.ScheduleDate)</span>
+                            }
+                        </div>
+                        <div style="flex: 0 0 100%; margin: 5px; display: flex; justify-content: space-between;">
+                            <span style="flex: 2 1 0%; text-align: left; margin-right: auto;">Schedule Time</span>
+                            @if (Model.ScheduleTime is not null)
+                            {
+                                <span style="text-align: right;margin-right: 10px">@Model.ScheduleTime (@GetEthiopianTime(@Model.ScheduleTime) LT)</span>
+                            }
+                        </div>
+                        <div style="flex: 0 0 100%; margin: 5px; display: flex; justify-content: space-between;">
+                            <span style="flex: 2 1 0%; text-align: left; margin-right: auto;">Hall</span>
+                            <span style="text-align: right;margin-right: 10px">@Model.HallName</span>
+                        </div>
+                        <div style="flex: 0 0 100%; margin: 5px; display: flex; justify-content: space-between;">
+                            <span style="flex: 2 1 0%; text-align: left; margin-right: auto;">Space Type</span>
+                            <span style="text-align: right; margin-right: 10px">@Model.SpaceType</span>
+                        </div>
+                        <div style="flex: 0 0 100%; margin: 5px; display: flex; justify-content: space-between;">
+                            <span style="flex: 2 1 0%; text-align: left; margin-right: auto;">Dimension</span>
+                            <span style="text-align: right; margin-right: 10px">@Model.Dimension</span>
+                        </div>
+                    }
+                    @functions {
+                        public string GetFormattedDateWithDayOfWeek(string date)
+                        {
+                            DateTime parsedDate;
+                            if (DateTime.TryParse(date, out parsedDate))
+                            {
+                                string dayOfWeek = parsedDate.ToString("ddd"); // Get abbreviated day of the week
+                                string formattedDate = parsedDate.ToString("dd-MM-yyyy"); // "dd-MM-yyyy" gives the desired format
+                                return $"{dayOfWeek} {formattedDate}";
+                            }
+
+                            return string.Empty;
+                        }
+
+                        public string GetEthiopianTime(string utcTimeString)
+                        {
+                            if (DateTime.TryParse(utcTimeString, out DateTime utcTime))
+                            {
+                                // Convert UTC time to Ethiopia time
+                                DateTime ethiopianTime = utcTime.AddHours(6);
+
+                                return ethiopianTime.ToString("h.mm tt");
+                            }
+
+                            return "Invalid time format";
+                        }
+                    }
                 </div>
             </div>
         </div>
@@ -329,8 +396,15 @@
 
         function renderSelectedItems() {
 
-            selectedItemsContainer.innerHTML = 'Cart';
-
+            var newContent = `
+                        <div class="header mb-3" style="display: flex; justify-content: space-between; padding: 5px;">
+                            <span style="flex: 2 1 0%;">Description</span>
+                            <span style="flex: 1 1 0%;">Qty</span>
+                            <span style="flex: 1 1 0%;">Price</span>
+                            <span style="text-align: right;">Amount</span>
+                        </div>
+                    `;
+            selectedItemsContainer.innerHTML = newContent;
             let totalPrice = 0;
             let totalCount = 0;
 

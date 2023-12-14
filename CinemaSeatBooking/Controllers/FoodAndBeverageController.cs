@@ -19,7 +19,7 @@ namespace CinemaSeatBooking.Controllers
         }
         [HttpPost]
         public IActionResult Products([FromForm] string movieScheduleCode, [FromForm] string companyTinNumber, [FromForm] string companyName, [FromForm] string movieName,
-            [FromForm] string hallName, [FromForm] string utcTime, [FromForm] string selectedDate, [FromForm] decimal price, [FromForm] string dimension, [FromForm] string spaceType)
+                    [FromForm] string hallName, [FromForm] string utcTime, [FromForm] string selectedDate, [FromForm] decimal price, [FromForm] string dimension, [FromForm] string spaceType)
         {
             // Convert the selectedSeats string to a list or array as needed
             return RedirectToAction("ProductsView", new
@@ -38,7 +38,7 @@ namespace CinemaSeatBooking.Controllers
 
         }
 
-        public async Task<IActionResult> ProductsView(string companyTinNumber, string movieScheduleCode, string companyName, string hallName, 
+        public async Task<IActionResult> ProductsView(string companyTinNumber, string movieScheduleCode, string companyName, string hallName,
             string utcTime, string selectedDate, string movieName, decimal price, string dimension, string spaceType)
         {
             HttpResponseMessage response = await _httpClient.GetAsync($"Product/GetProducts?orgTin={companyTinNumber}&type=Restaurant&consignee=0912141914&platform=Web&longitude=0");
