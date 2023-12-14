@@ -1,4 +1,6 @@
 ﻿@model ProductsViewModel
+@using Microsoft.AspNetCore.Http
+@using Newtonsoft.Json
 @{
     ViewData["Title"] = "Food And Beverage";
 }
@@ -41,10 +43,10 @@
         }
 
         #selected-items-container {
-        margin-top: 20px;
-        border: 1px solid #ddd;
-        padding: 10px;
-        border-radius: 5px;
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
         }
 
         .Details {
@@ -54,12 +56,19 @@
             border-radius: 5px;
         }
 
+        .Movie{
+            margin-bottom: 5px;
+            padding: 5px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
         .selected-item {
-        margin-bottom: 5px;
-        padding: 5px;
-        background-color: #f0f0f0;
-        border: 1px solid #ccc;
-        border-radius: 3px;
+            margin-bottom: 5px;
+            padding: 5px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 3px;
         }
 
         .total-price {
@@ -163,12 +172,39 @@
             </div>
             <div class="col-lg col-md-2 mt-3 mr-5" style="margin-right: 50px;">
                 <div id="selected-items-container">
-                    <div class="header" style="display: flex; justify-content: space-between; padding: 5px;">
+                    <div class="header" style="display: flex; justify-content: space-between; padding: 5px; background-color: black; color: white; margin-bottom: 10px;">
                         <span style="flex: 2 1 0%;">Description</span>
                         <span style="flex: 1 1 0%;">Qty</span>
                         <span style="flex: 1 1 0%;">Price</span>
-                        <span style="text-align: right;">Amount</span>
+                        <span style="flex: 1 1 0%; text-align: right;">Amounts</span>
                     </div>
+                    <script>
+                        $(document).ready(function () {
+                            var selectedSeatNamesJson = sessionStorage.getItem('selectedSeatNames');
+                            var selectedSeatNamesArray = selectedSeatNamesJson ? JSON.parse(selectedSeatNamesJson) : [];
+                            var numberOfElements = selectedSeatNamesArray.length;
+
+                            // Update the content dynamically on the client side
+                            var numberOfElementsSpan = document.getElementById('numberOfElements');
+                            var totalPrice = document.getElementById('totalPrice');
+                            if (numberOfElementsSpan) {
+                                numberOfElementsSpan.innerText = numberOfElements;
+                            }
+                            if (totalPrice) {
+                                var totalPriceValue = @Model.Price * numberOfElements;
+                                totalPrice.innerText = totalPriceValue.toFixed(1) + '$' ;
+                            }
+                        });
+                    </script>
+
+
+                    <div class="Movie" style="display: flex; justify-content: space-between; padding: 5px">
+                        <span style="flex: 2 1 0%;">@Model.MovieName [Movie]</span>
+                        <span style="flex: 1 1 0%" id="numberOfElements"></span>
+                        <span style="flex: 1 1 0%">@Model.Price $</span>
+                        <span style="flex: 1 1 0%; text-align: right;" id="totalPrice"></span>
+                    </div>
+
                 </div>
                 <div class="Details" style="display: flex; flex-wrap: wrap; justify-content: space-between; padding: 5px; margin-bottom: 5px;">
                     @if (Model is not null)
@@ -298,7 +334,7 @@
                 if (updatedRemainingTime <= 0) {
                     clearInterval(countdownInterval);
                     sessionStorage.clear();
-                    location.reload();
+                    window.location.href = '@Url.Action("Index","Home")';
                 }
                 sessionStorage.setItem("remainingTime", updatedRemainingTime);
             }, 1000);
@@ -395,16 +431,29 @@
         }
 
         function renderSelectedItems() {
+            var selectedSeatNamesJson = sessionStorage.getItem('selectedSeatNames');
+            var selectedSeatNamesArray = selectedSeatNamesJson ? JSON.parse(selectedSeatNamesJson) : [];
+            var numberOfElements = selectedSeatNamesArray.length;
+            var movieName = '@Model.MovieName';
+            var moviePrice = '@Model.Price';
+            var totalPriceValue = moviePrice * numberOfElements;
 
             var newContent = `
-                        <div class="header mb-3" style="display: flex; justify-content: space-between; padding: 5px;">
-                            <span style="flex: 2 1 0%;">Description</span>
-                            <span style="flex: 1 1 0%;">Qty</span>
-                            <span style="flex: 1 1 0%;">Price</span>
-                            <span style="text-align: right;">Amount</span>
-                        </div>
-                    `;
+                    <div class="header mb-3" style="display: flex; justify-content: space-between; padding: 5px; background-color: black; color: white;">
+                                    <span style="flex: 2 1 0%;">Description</span>
+                                    <span style="flex: 1 1 0%;">Qty</span>
+                                    <span style="flex: 1 1 0%;">Price</span>
+                                    <span style="flex: 1 1 0%;text-align: right;">Amount</span>
+                                </div>
+            <div class="Movie" style="display: flex; justify-content: space-between; padding: 5px">
+                <span style="flex: 2 1 0%;">${movieName} [Movie]</span>
+                <span style="flex: 1 1 0%">${numberOfElements}</span>
+                <span style="flex: 1 1 0%">${moviePrice} $</span>
+                <span style="flex: 1 1 0%; text-align: right;">${totalPriceValue.toFixed(1)} $</span>
+            </div>
+        `;
             selectedItemsContainer.innerHTML = newContent;
+
             let totalPrice = 0;
             let totalCount = 0;
 
@@ -445,43 +494,6 @@
                 totalPrice += item.price;
                 totalCount += item.quantity;
             });
-
-
-            var totalDiv = document.createElement('div');
-            totalDiv.className = 'total-price';
-
-            if (selectedItems.length > 0) {
-                totalDiv.style.display = 'flex';
-                totalDiv.style.justifyContent = 'space-between';
-                totalDiv.style.padding = '5px';
-                totalDiv.style.marginTop = '15px';
-
-                var totalPrcieSpan = document.createElement('span');
-                var totalCountSpan = document.createElement('span');
-                var totalFree = document.createElement('span');
-                var totalValueSpan = document.createElement('span');
-
-                totalPrcieSpan.textContent = 'Total Price';
-                totalPrcieSpan.style.flex = '2';
-
-                totalFree.style.flex = '1';
-
-                totalCountSpan.textContent = `${totalCount}`;
-                totalCountSpan.style.flex = '1';
-
-                totalValueSpan.textContent = `${totalPrice.toFixed(2)} $`;
-                totalValueSpan.style.flex = '1';
-                totalValueSpan.style.textAlign = 'right';
-
-                totalDiv.appendChild(totalPrcieSpan);
-                totalDiv.appendChild(totalCountSpan);
-                totalDiv.appendChild(totalFree);
-                totalDiv.appendChild(totalValueSpan);
-            } else {
-                totalDiv.style.display = 'none';
-            }
-
-            selectedItemsContainer.appendChild(totalDiv);
         }
     </script>
 </body>
