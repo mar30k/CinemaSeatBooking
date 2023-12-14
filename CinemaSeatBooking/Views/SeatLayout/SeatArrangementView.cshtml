@@ -157,7 +157,7 @@
                         resetBooking();
                         alert("Booking time expired. Please restart the booking process.");
                         sessionStorage.clear(); // Clear session storage
-                        location.reload();
+                        window.location.href = '@Url.Action("Index", "Home")';
                     }
                 }, 1000);
             }
@@ -351,21 +351,33 @@
                 var selectedSeats = retrieveSelectedSeatsFromStorage();
                 var companyTinNumber = "@Model.CompanyTinNumber";
                 var movieScheduleCode = "@Model.MovieScheduleCode";
-                var movieName = "@Model.CompanyName";
+                var movieName = "@Model.MovieName";
+                var companyName = "@Model.CompanyName";
+                var utcTime = "@Model.UtcTime";
+                var selectedDate = "@Model.SelectedDate";
+                var hallName = "@Model.HallName";
+                var price = "@Model.Price";
+                var dimension = "@Model.Dimension";
+                var spaceType = "@Model.SpaceType";
                  
                 var remainingTime = countdown ?? 0;
 
                 sessionStorage.setItem('remainingTime', remainingTime);
-                if (remainingTime === 0) {
-                    sessionStorage.setItem('countdownStarted', false);
-                } else {
+                if (remainingTime != 0) {
                     sessionStorage.setItem('countdownStarted', true);
-                }
-
+                } 
                 var form = $('<form action="/FoodAndBeverage/Products" method="post"></form>');
 
                 form.append('<input type="hidden" name="companyTinNumber" value="' + companyTinNumber + '" />');
-                form.append('<input type="hidden" name="companyTinNumber" value="' + movieScheduleCode + '" />');
+                form.append('<input type="hidden" name="movieScheduleCode" value="' + movieScheduleCode + '" />');
+                form.append('<input type="hidden" name="movieName" value="' + movieName + '" />');
+                form.append('<input type="hidden" name="companyName" value="' + companyName + '" />');
+                form.append('<input type="hidden" name="hallName" value="' + hallName + '" />');
+                form.append('<input type="hidden" name="utcTime" value="' + utcTime + '" />');
+                form.append('<input type="hidden" name="selectedDate" value="' + selectedDate + '" />');
+                form.append('<input type="hidden" name="price" value="' + price + '" />');
+                form.append('<input type="hidden" name="dimension" value="' + dimension + '" />');
+                form.append('<input type="hidden" name="spaceType" value="' + spaceType + '" />');
 
                 $('body').append(form);
 
@@ -429,7 +441,10 @@
             <h4 style="color: #333; margin-bottom: 10px;">@Model.CompanyName</h4>
                 <div style="text-align: left;">
                     <p style="margin: 0; color: #555; font-size: 14px;">
-                    <strong>Hall Name:</strong> @Model.HallName
+                    <strong>Movie:</strong> @Model.MovieName
+                    </p>
+                    <p style="margin: 0; color: #555; font-size: 14px;">
+                        <strong>Hall Name:</strong> @Model.HallName
                     </p>
                     <p style="margin: 0; color: #555; font-size: 14px;">
                     <strong>Time:</strong> @Model.UtcTime (@GetEthiopianTime(Model.UtcTime) Local)

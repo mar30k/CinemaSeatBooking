@@ -43,7 +43,8 @@
                     }
                     else
                     {
-                        <button class="btn btn-success " onclick="onScheduleButtonClick('@schedule.SpaceCode', '@Model.CompanyTinNumber.ToString()','@Model.CompanyName',
+                        var spaceType = "Regular";
+                        <button class="btn btn-success " onclick="onScheduleButtonClick('@schedule.SpaceCode', '@Model.CompanyTinNumber.ToString()','@Model.CompanyName','@Model.MovieName','@schedule.Dimension','@spaceType',
                                             '@Model.SelectedDate.ToString()','@schedule.Code','@schedule.NPrice','@schedule.HallName','@utcTime.ToString("h.mm tt")')" type="button">
                             Book Now <br> @schedule.NPrice ETB
                         </button>
@@ -59,7 +60,8 @@
                         }
                         else
                         {
-                            <button class="btn btn-warning" onclick="onScheduleButtonClick('@schedule.SpaceCode', '@Model.CompanyTinNumber.ToString()','@Model.CompanyName',
+                            var spaceType = "VIP";
+                            <button class="btn btn-warning" onclick="onScheduleButtonClick('@schedule.SpaceCode', '@Model.CompanyTinNumber.ToString()','@Model.CompanyName','@Model.MovieName','@schedule.Dimension','@spaceType',
                                             '@Model.SelectedDate.ToString()','@schedule.Code','@schedule.NPrice','@schedule.HallName','@utcTime.ToString("h.mm tt")')" type="button">
                                 Book Vip <br> @schedule.VIP.VPrice ETB
                             </button>

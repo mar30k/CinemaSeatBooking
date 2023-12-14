@@ -19,7 +19,7 @@ public class SeatLayoutController : Controller
         };
     }
     [HttpPost]
-    public IActionResult SeatArrangement(string spacecode, string companyTinNumber, string companyName, string selectedDate, string code, decimal price, string hallName, string utcTime)
+    public IActionResult SeatArrangement(string spacecode, string companyTinNumber, string companyName, string movieName, string dimension, string spaceType, string selectedDate, string code, decimal price, string hallName, string utcTime)
     {
         return RedirectToAction("SeatArrangementView", new
         {
@@ -31,11 +31,14 @@ public class SeatLayoutController : Controller
             price,
             utcTime,
             hallName,
+            movieName,
+            dimension,
+            spaceType,
         });
     }
 
     [HttpGet]
-    public async Task<IActionResult> SeatArrangementView(string spacecode, string companyTinNumber, string companyName, string selectedDate, string code, decimal price, string hallName, string utcTime)
+    public async Task<IActionResult> SeatArrangementView(string spacecode, string companyTinNumber, string companyName, string movieName, string dimension ,string spaceType, string selectedDate, string code, decimal price, string hallName, string utcTime)
 
     {
         HttpResponseMessage response = await _httpClient.GetAsync($"cinema/getCinemaSeatArrangment?orgTin={companyTinNumber}&spaceCode={spacecode}");
@@ -58,7 +61,10 @@ public class SeatLayoutController : Controller
                 var bookedSeats = JsonConvert.DeserializeObject<List<string>>(bookedSeatsData);
 
                 // Update the SeatLayout model with the booked seats information
-                seatArrangement.BookedSeats ??= bookedSeats;
+                if (seatArrangement is not null)
+                {
+                    seatArrangement.BookedSeats ??= bookedSeats;
+                }
             }
             else
             {
@@ -72,8 +78,10 @@ public class SeatLayoutController : Controller
                 string soldSeatData = await soldseatsResponse.Content.ReadAsStringAsync();
 
                 var soldSeats = JsonConvert.DeserializeObject<List<string>>(soldSeatData);
-
-                seatArrangement.SoldSeats ??= soldSeats;
+                if (seatArrangement is not null)
+                {
+                    seatArrangement.SoldSeats ??= soldSeats;
+                }
             }
             else
             {
@@ -86,9 +94,10 @@ public class SeatLayoutController : Controller
             {
                 string availableSeatsData = await availableSeatsResponse.Content.ReadAsStringAsync();
                 var availableSeats = JsonConvert.DeserializeObject<List<string>>(availableSeatsData);
-
-                seatArrangement.AvailableSeats ??= availableSeats;
-
+                if (seatArrangement is not null)
+                {
+                    seatArrangement.AvailableSeats ??= availableSeats;
+                }
                 var anonymousObject = new
                 {
                     schedule = code,
@@ -112,16 +121,19 @@ public class SeatLayoutController : Controller
                     return View("Error");
                 }
             }
-
-            seatArrangement.CompanyTinNumber = companyTinNumber;
-            seatArrangement.SpaceCode = spacecode;
-            seatArrangement.MovieScheduleCode = code;
-            seatArrangement.Price = price;
-            seatArrangement.SelectedDate = selectedDate;
-            seatArrangement.HallName = hallName;
-            seatArrangement.UtcTime = utcTime;
-            seatArrangement.CompanyName = companyName;
-
+            if (seatArrangement is not null) {
+                seatArrangement.CompanyTinNumber = companyTinNumber;
+                seatArrangement.SpaceCode = spacecode;
+                seatArrangement.MovieScheduleCode = code;
+                seatArrangement.Price = price;
+                seatArrangement.SelectedDate = selectedDate;
+                seatArrangement.HallName = hallName;
+                seatArrangement.UtcTime = utcTime;
+                seatArrangement.CompanyName = companyName;
+                seatArrangement.MovieName = movieName;
+                seatArrangement.Dimension = dimension;
+                seatArrangement.SpaceType = spaceType;
+            }
             // Pass the updated SeatLayout instance to the view
             return View(seatArrangement);
         }
@@ -134,28 +146,27 @@ public class SeatLayoutController : Controller
     {
         try
         {
-            // Reuse the logic from SeatArrangementView action to fetch seat information
             HttpResponseMessage response = await _httpClient.GetAsync($"cinema/getCinemaSeatArrangment?orgTin={companyTinNumber}&spaceCode={spacecode}");
 
             if (response.IsSuccessStatusCode)
             {
                 string responseData = await response.Content.ReadAsStringAsync();
 
-                // Deserialize into a single SeatLayout instance
                 var updatedSeatModel = JsonConvert.DeserializeObject<SeatLayout>(responseData);
 
-                // Make a second API call to get booked seats
                 HttpResponseMessage bookedSeatsResponse = await _httpClient.GetAsync($"cinema/GetBookedSeats?orgTin={companyTinNumber}&scheduleCode={code}&spaceCode={spacecode}");
 
                 if (bookedSeatsResponse.IsSuccessStatusCode)
                 {
                     string bookedSeatsData = await bookedSeatsResponse.Content.ReadAsStringAsync();
                     var bookedSeats = JsonConvert.DeserializeObject<List<string>>(bookedSeatsData);
-                    updatedSeatModel.BookedSeats ??= bookedSeats;
+                    if (updatedSeatModel is not null)
+                    {
+                        updatedSeatModel.BookedSeats ??= bookedSeats;
+                    }
                 }
                 else
                 {
-                    // Handle the case when the second API call fails
                     return PartialView("_SeatInfoPartialView", null);
                 }
 
@@ -164,11 +175,13 @@ public class SeatLayoutController : Controller
                 {
                     string soldSeatData = await soldseatsResponse.Content.ReadAsStringAsync();
                     var soldSeats = JsonConvert.DeserializeObject<List<string>>(soldSeatData);
-                    updatedSeatModel.SoldSeats ??= soldSeats;
+                    if (updatedSeatModel is not null)
+                    {
+                        updatedSeatModel.SoldSeats ??= soldSeats;
+                    }
                 }
                 else
                 {
-                    // Handle the case where GetSoldSeats API fails 
                     return PartialView("_SeatInfoPartialView", null);
                 }
 
@@ -177,8 +190,10 @@ public class SeatLayoutController : Controller
                 {
                     string availableSeatsData = await availableSeatsResponse.Content.ReadAsStringAsync();
                     var availableSeats = JsonConvert.DeserializeObject<List<string>>(availableSeatsData);
-                    updatedSeatModel.AvailableSeats ??= availableSeats;
-
+                    if (updatedSeatModel is not null)
+                    {
+                        updatedSeatModel.AvailableSeats ??= availableSeats;
+                    }
                     var anonymousObject = new
                     {
                         schedule = code,
@@ -201,19 +216,15 @@ public class SeatLayoutController : Controller
                         return PartialView("_SeatInfoPartialView", null);
                     }
                 }
-
-                // Pass the updated SeatLayout instance to the partial view
                 return View("_SeatInfoPartialView", updatedSeatModel);
             }
             else
             {
-                // Handle the case when the first API call fails
                 return PartialView("_SeatInfoPartialView", null);
             }
         }
         catch (Exception)
         {
-            // Handle general exceptions
             return PartialView("_SeatInfoPartialView", null);
         }
     }
