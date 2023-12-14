@@ -24,15 +24,17 @@
             outline: none !important;
             box-shadow: none !important;
         }
+
         .container-xl {
             max-width: 100%;
             overflow-x: auto;
         }
-            .buttons:hover{
-                background-color: green;
-                color: white;
-                cursor: pointer;
-            }
+
+        .buttons:hover {
+            background-color: green;
+            color: white;
+            cursor: pointer;
+        }
 
         .buttons {
             display: flex;
@@ -218,9 +220,9 @@
                     type: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify({
-                        schedule: movieScheduleCode, 
-                        allSeats: selectedSeats,  
-                        orgTin: companyTinNumber  
+                        schedule: movieScheduleCode,
+                        allSeats: selectedSeats,
+                        orgTin: companyTinNumber
                     }),
                     success: function (response) {
                         // Handle success
@@ -239,7 +241,7 @@
                 isBookingStarted = false; // Reset booking flag
             }
 
-            
+
             function toggleSeatSelection(seatCode, isDisabled) {
                 var index = selectedSeats.indexOf(seatCode);
                 var companyTinNumber = "@Model.CompanyTinNumber";
@@ -359,13 +361,13 @@
                 var price = "@Model.Price";
                 var dimension = "@Model.Dimension";
                 var spaceType = "@Model.SpaceType";
-                 
+
                 var remainingTime = countdown ?? 0;
 
                 sessionStorage.setItem('remainingTime', remainingTime);
                 if (remainingTime != 0) {
                     sessionStorage.setItem('countdownStarted', true);
-                } 
+                }
                 var form = $('<form action="/FoodAndBeverage/Products" method="post"></form>');
 
                 form.append('<input type="hidden" name="companyTinNumber" value="' + companyTinNumber + '" />');
@@ -414,7 +416,7 @@
 
     </script>
 </head>
-    <body>
+<body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
@@ -437,58 +439,58 @@
     <div id="seatLimitAlert" class="alert alert-danger fixed-bottom mb-3" role="alert" style="display: none; position: fixed; bottom: 20px; left: 20px; width: 300px;">
         You can't select more than 3 seats
     </div>
-        <div style="font-family: Arial, sans-serif; max-width: 280px; margin: 0 auto; border: 1px solid #ccc; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); text-align: left; ">
-            <h4 style="color: #333; margin-bottom: 10px;">@Model.CompanyName</h4>
-                <div style="text-align: left;">
-                    <p style="margin: 0; color: #555; font-size: 14px;">
-                    <strong>Movie:</strong> @Model.MovieName
-                    </p>
-                    <p style="margin: 0; color: #555; font-size: 14px;">
-                        <strong>Hall Name:</strong> @Model.HallName
-                    </p>
-                    <p style="margin: 0; color: #555; font-size: 14px;">
-                    <strong>Time:</strong> @Model.UtcTime (@GetEthiopianTime(Model.UtcTime) Local)
-                    </p>
-                    <p style="margin: 0; color: #555; font-size: 14px;">
-                    <strong>Date:</strong> @GetFormattedDateWithDayOfWeek(Model.SelectedDate) 
-                    </p>
-                </div>
+    <div style="font-family: Arial, sans-serif; max-width: 280px; margin: 0 auto; border: 1px solid #ccc; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); text-align: left; ">
+        <h4 style="color: #333; margin-bottom: 10px;">@Model.CompanyName</h4>
+        <div style="text-align: left;">
+            <p style="margin: 0; color: #555; font-size: 14px;">
+                <strong>Movie:</strong> @Model.MovieName
+            </p>
+            <p style="margin: 0; color: #555; font-size: 14px;">
+                <strong>Hall Name:</strong> @Model.HallName
+            </p>
+            <p style="margin: 0; color: #555; font-size: 14px;">
+                <strong>Time:</strong> @Model.UtcTime (@GetEthiopianTime(Model.UtcTime) Local)
+            </p>
+            <p style="margin: 0; color: #555; font-size: 14px;">
+                <strong>Date:</strong> @GetFormattedDateWithDayOfWeek(Model.SelectedDate)
+            </p>
         </div>
-        @functions {
-            public string GetFormattedDateWithDayOfWeek(string date)
+    </div>
+    @functions {
+        public string GetFormattedDateWithDayOfWeek(string date)
+        {
+            DateTime parsedDate;
+            if (DateTime.TryParse(date, out parsedDate))
             {
-                DateTime parsedDate;
-                if (DateTime.TryParse(date, out parsedDate))
-                {
-                    string dayOfWeek = parsedDate.ToString("ddd"); // Get abbreviated day of the week
-                    string formattedDate = parsedDate.ToString("dd-MM-yyyy"); // "dd-MM-yyyy" gives the desired format
+                string dayOfWeek = parsedDate.ToString("ddd"); // Get abbreviated day of the week
+                string formattedDate = parsedDate.ToString("dd-MM-yyyy"); // "dd-MM-yyyy" gives the desired format
 
-                    return $"{dayOfWeek} {formattedDate}";
-                }
-
-                return string.Empty;
+                return $"{dayOfWeek} {formattedDate}";
             }
 
-            public string GetEthiopianTime(string utcTimeString)
-            {
-                if (DateTime.TryParse(utcTimeString, out DateTime utcTime))
-                {
-                    // Convert UTC time to Ethiopia time
-                    DateTime ethiopianTime = utcTime.AddHours(6);
-
-                    return ethiopianTime.ToString("h.mm tt");
-                }
-
-                return "Invalid time format";
-            }
+            return string.Empty;
         }
-        <div class="container-xl">
-            <div id="seatInfoContainer">
-                <partial name="_SeatInfoPartialView" />
-            </div>
-            <div style="text-align: center; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);" id="priceContainer">
-                <button id="skipButton" class="btn btn-outline-primary">Skip</button>
-            </div>
+
+        public string GetEthiopianTime(string utcTimeString)
+        {
+            if (DateTime.TryParse(utcTimeString, out DateTime utcTime))
+            {
+                // Convert UTC time to Ethiopia time
+                DateTime ethiopianTime = utcTime.AddHours(6);
+
+                return ethiopianTime.ToString("h.mm tt");
+            }
+
+            return "Invalid time format";
+        }
+    }
+    <div class="container-xl">
+        <div id="seatInfoContainer">
+            <partial name="_SeatInfoPartialView" />
         </div>
-    </body>
+        <div style="text-align: center; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);" id="priceContainer">
+            <button id="skipButton" class="btn btn-outline-primary">Skip</button>
+        </div>
+    </div>
+</body>
 </html>

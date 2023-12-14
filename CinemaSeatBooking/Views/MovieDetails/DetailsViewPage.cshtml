@@ -39,6 +39,7 @@
                 background: url('@Model.BackdropPath') center/cover no-repeat; /* Set backdrop as background */
                 filter: blur(2px); /* Add a 5px blur effect to the background image */
             }
+
         .info-container {
             background-color: rgba(255, 255, 255, 0.4);
             padding: 20px;
@@ -69,9 +70,9 @@
             color: white;
         }
 
-            .companyName{
-                color: black;
-                font-size: 40px;
+        .companyName {
+            color: black;
+            font-size: 40px;
         }
         /* Add this CSS to your stylesheet */
         .btn:focus,
@@ -79,6 +80,7 @@
             outline: none !important;
             box-shadow: none !important;
         }
+
         .cast-section {
             overflow-x: auto; /* Enable horizontal scrolling */
             white-space: nowrap; /* Prevent line breaks */
@@ -92,7 +94,6 @@
             margin: 0 10px; /* Adjust margin for spacing */
             max-width: 180px; /* Set the maximum width of the cast card */
             text-align: center;
-            
         }
 
             .cast-card img {
@@ -137,28 +138,28 @@
                                         case "Crime": return "#BA68C8";
                                         case "Documentary": return "#90A4AE";
                                         case "Drama": return "#FFB74D";
-                                        case "Family": return "#A1887F";  
-                                        case "Fantasy": return "#B0BEC5"; 
-                                        case "History": return "#9575CD";  
-                                        case "Horror": return "#EC407A"; 
-                                        case "Music": return "#FFF176"; 
-                                        case "Mystery": return "#7986CB"; 
-                                        case "Romance": return "#F48FB1"; 
+                                        case "Family": return "#A1887F";
+                                        case "Fantasy": return "#B0BEC5";
+                                        case "History": return "#9575CD";
+                                        case "Horror": return "#EC407A";
+                                        case "Music": return "#FFF176";
+                                        case "Mystery": return "#7986CB";
+                                        case "Romance": return "#F48FB1";
                                         case "Science Fiction": return "#80DEEA";
                                         case "TV Movie": return "#C5E1A5";
-                                        case "Thriller": return "#64B5F6";  
+                                        case "Thriller": return "#64B5F6";
                                         case "War": return "#FF8A65";
                                         case "Western": return "#BCAAA4";
                                         default: return "lightgray";
                                     }
                                 }
                             }
-                            @if(Model.Genres is not null)
+                            @if (Model.Genres is not null)
                             {
                                 <h4>Genres</h4>
                                 @foreach (var genre in Model.Genres)
                                 {
-                                    if(genre.Name is not null)
+                                    if (genre.Name is not null)
                                     {
                                         <div style="display: inline-block; margin-right: 15px; padding: 5px; background-color:@GetGenreColor(genre.Name); color:white; border-radius:7px;">@genre.Name</div>
                                     }
@@ -166,7 +167,8 @@
                             }
                         </div>
                         <div>
-                            @if(Model.GenreNames is not null){
+                            @if (Model.GenreNames is not null)
+                            {
                                 @foreach (var genres in Model.GenreNames)
                                 {
                                     <div class="genres">
@@ -236,7 +238,7 @@
     </div>
 
     <script>
-        function onScheduleButtonClick(spacecode, companyTinNumber, companyName, movieName, dimension, spaceType ,selectedDate, code, price, hallName, utcTime) {
+        function onScheduleButtonClick(spacecode, companyTinNumber, companyName, movieName, dimension, spaceType, selectedDate, code, price, hallName, utcTime) {
 
             var form = $('<form action="/SeatLayout/SeatArrangement" method="post">' +
                 '<input type="hidden" name="spacecode" value="' + spacecode + '" />' +
@@ -259,7 +261,7 @@
         }
     </script>
 
-    
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

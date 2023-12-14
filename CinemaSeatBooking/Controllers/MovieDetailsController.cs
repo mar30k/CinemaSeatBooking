@@ -28,7 +28,7 @@ namespace CinemaSeatBooking.Controllers
         }
 
         public async Task<IActionResult> DetailsViewPage(string selectedDate, string movieCode, string companyName, string overview,
-    string posterUrl, string movieName, int movieId, string backdropPath )
+    string posterUrl, string movieName, int movieId, string backdropPath)
         {
             try
             {
@@ -47,7 +47,7 @@ namespace CinemaSeatBooking.Controllers
 
                     // Extract the key of the first trailer
                     string? trailerKey = null;
-                    if(videosResponseObj != null)
+                    if (videosResponseObj != null)
                     {
                         foreach (var result in videosResponseObj.results)
                         {
@@ -119,7 +119,7 @@ namespace CinemaSeatBooking.Controllers
                                 }
                             }
                         }
-                        
+
 
                         string productsApiUrl = $"https://api-hulubeje.cnetcommerce.com/api/Cinema/GetProductsForFilterAndPreview?industryType=LKUP000120765&date={selectedDate:yyyy-MM-dd}";
                         HttpResponseMessage productsResponse = await client.GetAsync(productsApiUrl);

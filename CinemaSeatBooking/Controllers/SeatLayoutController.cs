@@ -38,7 +38,7 @@ public class SeatLayoutController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> SeatArrangementView(string spacecode, string companyTinNumber, string companyName, string movieName, string dimension ,string spaceType, string selectedDate, string code, decimal price, string hallName, string utcTime)
+    public async Task<IActionResult> SeatArrangementView(string spacecode, string companyTinNumber, string companyName, string movieName, string dimension, string spaceType, string selectedDate, string code, decimal price, string hallName, string utcTime)
 
     {
         HttpResponseMessage response = await _httpClient.GetAsync($"cinema/getCinemaSeatArrangment?orgTin={companyTinNumber}&spaceCode={spacecode}");
@@ -121,7 +121,8 @@ public class SeatLayoutController : Controller
                     return View("Error");
                 }
             }
-            if (seatArrangement is not null) {
+            if (seatArrangement is not null)
+            {
                 seatArrangement.CompanyTinNumber = companyTinNumber;
                 seatArrangement.SpaceCode = spacecode;
                 seatArrangement.MovieScheduleCode = code;
@@ -142,7 +143,7 @@ public class SeatLayoutController : Controller
         return View("Error");
     }
 
-    public async Task<IActionResult> GetUpdatedSeatInfo( string spacecode, string companyTinNumber, string code)
+    public async Task<IActionResult> GetUpdatedSeatInfo(string spacecode, string companyTinNumber, string code)
     {
         try
         {

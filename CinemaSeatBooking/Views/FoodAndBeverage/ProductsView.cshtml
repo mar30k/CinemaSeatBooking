@@ -14,68 +14,71 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <style>
         .custom-container {
-        padding-left: 35px;
-        padding-right: 35px;
+            padding-left: 35px;
+            padding-right: 35px;
         }
 
         .btn:focus,
         .btn:active {
-        outline: none !important;
-        box-shadow: none !important;
+            outline: none !important;
+            box-shadow: none !important;
         }
+
         .card-img-top {
-        height: 230px;
-        width: 100%;
+            height: 230px;
+            width: 100%;
         }
 
         .btn-circle {
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0;
-        font-size: 14px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            font-size: 14px;
         }
 
         #selected-items-container {
-        margin-top: 20px;
-        border: 1px solid #ddd;
-        padding: 10px;
-        border-radius: 5px;
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
         }
 
-        .Details{
-        margin-top: 20px;
-        border: 1px solid #f2e4;
-        padding: 10px;
-        border-radius: 5px;
+        .Details {
+            margin-top: 20px;
+            border: 1px solid #f2e4;
+            padding: 10px;
+            border-radius: 5px;
         }
+
         .selected-item {
-        margin-bottom: 5px;
-        padding: 5px;
-        background-color: #f0f0f0;
-        border: 1px solid #ccc;
-        border-radius: 3px;
+            margin-bottom: 5px;
+            padding: 5px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 3px;
         }
 
-        .total-price{
-        margin-bottom: 5px;
-        padding: 5px;
-        background-color: #c2e3f1;
-        border: 1px solid #ccc;
-        border-radius: 3px;
+        .total-price {
+            margin-bottom: 5px;
+            padding: 5px;
+            background-color: #c2e3f1;
+            border: 1px solid #ccc;
+            border-radius: 3px;
         }
+
         .btn-outline-primary {
-        color: #28a745; /* Green color */
-        border-color: #28a745;
+            color: #28a745; /* Green color */
+            border-color: #28a745;
         }
 
-        .btn-outline-primary:hover {
-        background-color: #28a745; /* Green color on hover */
-        color: #fff; /* Text color on hover */
-        }
+            .btn-outline-primary:hover {
+                background-color: #28a745; /* Green color on hover */
+                color: #fff; /* Text color on hover */
+            }
     </style>
 </head>
 <body>
@@ -144,7 +147,7 @@
                                         @if (i < categoryProducts.Count - 1)
                                         {
                                             <div class="col-12">
-                                                <hr/>
+                                                <hr />
                                             </div>
                                         }
                                     }
@@ -169,7 +172,7 @@
                 </div>
                 <div class="Details" style="display: flex; flex-wrap: wrap; justify-content: space-between; padding: 5px; margin-bottom: 5px;">
                     @if (Model is not null)
-                            {
+                    {
                         <div style="flex: 0 0 100%; margin: 5px; display: flex; justify-content: space-between;">
                             <span style="flex: 2 1 0%; text-align: left; margin-right: auto;">Movie</span>
                             <span style="text-align: right;margin-right: 10px">@Model.MovieName</span>
@@ -233,7 +236,7 @@
             </div>
         </div>
     </div>
-    
+
     <script>
         var storedRemainingTime = sessionStorage.getItem('remainingTime');
         var countdownStarted = sessionStorage.getItem('countdownStarted') === 'true';
@@ -252,7 +255,7 @@
 
         var secondsAdded = sessionStorage.getItem('secondsAdded');
 
-        console.log("at the start secondsAdded "+ secondsAdded)
+        console.log("at the start secondsAdded " + secondsAdded)
         var companyTin = "@Model.CompanyTinNumber";
         var movieScheduleCode = "@Model.MovieScheduleCode";
 
@@ -282,7 +285,7 @@
                     }
                 });
             }
-            else{
+            else {
                 console.log("already extended cache time");
             }
         }
@@ -305,7 +308,7 @@
         }
 
         $(document).ready(function () {
-             if (updatedRemainingTime > 0) {
+            if (updatedRemainingTime > 0) {
                 startCountdownTimer(updatedRemainingTime);
             }
 
@@ -349,7 +352,7 @@
         function incrementValue(button) {
             // Find the associated quantity element
             var quantityElement = button.parentElement.querySelector('.quantity');
-            let currentValue = parseInt(quantityElement.textContent, 10);  
+            let currentValue = parseInt(quantityElement.textContent, 10);
             quantityElement.textContent = currentValue + 1;
             updateCardDisplay(quantityElement);
         }
@@ -357,7 +360,7 @@
         function decrementValue(button) {
             // Find the associated quantity element
             var quantityElement = button.parentElement.querySelector('.quantity');
-            let currentValue = parseInt(quantityElement.textContent, 10) || 0; 
+            let currentValue = parseInt(quantityElement.textContent, 10) || 0;
             if (currentValue > 0) {
                 quantityElement.textContent = currentValue - 1;
                 updateCardDisplay(quantityElement);
@@ -395,13 +398,13 @@
         function renderSelectedItems() {
 
             var newContent = `
-                <div class="header mb-3" style="display: flex; justify-content: space-between; padding: 5px;">
-                    <span style="flex: 2 1 0%;">Description</span>
-                    <span style="flex: 1 1 0%;">Qty</span>
-                    <span style="flex: 1 1 0%;">Price</span>
-                    <span style="text-align: right;">Amount</span>
-                </div>
-            `;
+                        <div class="header mb-3" style="display: flex; justify-content: space-between; padding: 5px;">
+                            <span style="flex: 2 1 0%;">Description</span>
+                            <span style="flex: 1 1 0%;">Qty</span>
+                            <span style="flex: 1 1 0%;">Price</span>
+                            <span style="text-align: right;">Amount</span>
+                        </div>
+                    `;
             selectedItemsContainer.innerHTML = newContent;
             let totalPrice = 0;
             let totalCount = 0;
@@ -444,7 +447,7 @@
                 totalCount += item.quantity;
             });
 
-            
+
             var totalDiv = document.createElement('div');
             totalDiv.className = 'total-price';
 
@@ -482,5 +485,5 @@
             selectedItemsContainer.appendChild(totalDiv);
         }
     </script>
-    </body>
+</body>
 </html>
