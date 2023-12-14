@@ -19,9 +19,8 @@
                         @foreach (var companyName in companyNames)
                         {
                             var sanitizedOverview = HttpUtility.JavaScriptStringEncode(movie.Overview);
-
-                            <button class="button" onclick="onCompanyButtonClick('@movie.MovieCode', '@companyName', '@sanitizedOverview', '@movie.PosterUrl','@movie.MovieName','@movie.MovieId', '@movie.BackdropPath')">
-                                @companyName
+                            <button class="button" onclick="onCompanyButtonClick('@movie.MovieCode', '@companyName', '@sanitizedOverview', '@movie.ArticleCode', '@movie.PosterUrl', '@movie.MovieName', '@movie.MovieId', '@movie.BackdropPath')">
+                                @companyName 
                             </button>
                         }
                     </div>
@@ -36,18 +35,20 @@
 </div>
 
 <script>
-    function onCompanyButtonClick(movieCode, companyName, overview, posterUrl, movieName, movieId, backdropPath) {
+    function onCompanyButtonClick(movieCode, companyName, overview, articleCode, posterUrl, movieName, movieId, backdropPath) {
         var selectedDate = document.getElementById("selectedDate").value;
 
         sessionStorage.setItem('selectedMovieName', movieName);
         sessionStorage.setItem('selectedCompanyName ', companyName);
         sessionStorage.setItem('selectedDate', selectedDate);
+        sessionStorage.setItem('articleCode', articleCode);
         // Create a form dynamically
         var form = $('<form action="/MovieDetails/Details" method="post">' +
             '<input type="hidden" name="selectedDate" value="' + selectedDate + '" />' +
             '<input type="hidden" name="movieCode" value="' + movieCode + '" />' +
             '<input type="hidden" name="companyName" value="' + companyName + '" />' +
             '<input type="hidden" name="overview" value="' + overview + '" />' +
+            '<input type="hidden" name="articleCode" value="' + articleCode + '" />' +
             '<input type="hidden" name="posterUrl" value="' + posterUrl + '" />' +
             '<input type="hidden" name="movieName" value="' + movieName + '" />' +
             '<input type="hidden" name="movieId" value="' + movieId + '" />' +
