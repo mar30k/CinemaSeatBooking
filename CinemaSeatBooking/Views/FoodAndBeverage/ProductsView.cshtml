@@ -4,7 +4,7 @@
 }
 <!DOCTYPE html>
 <html lang="en">
-    <head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewData["Title"]</title>
@@ -14,64 +14,71 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <style>
         .custom-container {
-            padding-left: 35px;
-            padding-right: 35px;
+        padding-left: 35px;
+        padding-right: 35px;
         }
 
         .btn:focus,
         .btn:active {
-            outline: none !important;
-            box-shadow: none !important;
+        outline: none !important;
+        box-shadow: none !important;
         }
         .card-img-top {
-            height: 230px;
-            width: 100%;
+        height: 230px;
+        width: 100%;
         }
 
         .btn-circle {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0;
-            font-size: 14px;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        font-size: 14px;
         }
 
         #selected-items-container {
-            margin-top: 20px;
-            border: 1px solid #ddd;
-            padding: 10px;
-            border-radius: 5px;
+        margin-top: 20px;
+        border: 1px solid #ddd;
+        padding: 10px;
+        border-radius: 5px;
+        }
+
+        .Details{
+        margin-top: 20px;
+        border: 1px solid #f2e4;
+        padding: 10px;
+        border-radius: 5px;
         }
         .selected-item {
-            margin-bottom: 5px;
-            padding: 5px;
-            background-color: #f0f0f0;
-            border: 1px solid #ccc;
-            border-radius: 3px;
+        margin-bottom: 5px;
+        padding: 5px;
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        border-radius: 3px;
         }
 
         .total-price{
-            margin-bottom: 5px;
-            padding: 5px;
-            background-color: #f0f0f0;
-            border: 1px solid #ccc;
-            border-radius: 3px;
+        margin-bottom: 5px;
+        padding: 5px;
+        background-color: #c2e3f1;
+        border: 1px solid #ccc;
+        border-radius: 3px;
         }
         .btn-outline-primary {
-            color: #28a745; /* Green color */
-            border-color: #28a745;
+        color: #28a745; /* Green color */
+        border-color: #28a745;
         }
 
-            .btn-outline-primary:hover {
-                background-color: #28a745; /* Green color on hover */
-                color: #fff; /* Text color on hover */
-            }
+        .btn-outline-primary:hover {
+        background-color: #28a745; /* Green color on hover */
+        color: #fff; /* Text color on hover */
+        }
     </style>
-    </head>
-    <body>
+</head>
+<body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
@@ -91,7 +98,7 @@
     </header>
     <div class="custom-container" style="position: relative; padding-right: 0; padding-left: 0">
         <div class="row">
-            <div class="col-9 ml-5 mb-3 mt-3 m-5 ">
+            <div class="col-9 ml-5 mb-3 mt-3 ">
                 @if (Model != null && Model.Products.Any())
                 {
                     <div class="container">
@@ -151,9 +158,77 @@
                     <p>No products available.</p>
                 }
             </div>
-            <div class="col-lg-2 col-md-2 ml-5 mt-3 mr-5">
+            <div class="col-lg col-md-2 mt-3 mr-5" style="margin-right: 50px;">
                 <div id="selected-items-container">
-                    Cart
+                    <div class="header" style="display: flex; justify-content: space-between; padding: 5px;">
+                        <span style="flex: 2 1 0%;">Description</span>
+                        <span style="flex: 1 1 0%;">Qty</span>
+                        <span style="flex: 1 1 0%;">Price</span>
+                        <span style="text-align: right;">Amount</span>
+                    </div>
+                </div>
+                <div class="Details" style="display: flex; flex-wrap: wrap; justify-content: space-between; padding: 5px; margin-bottom: 5px;">
+                    @if (Model is not null)
+                            {
+                        <div style="flex: 0 0 100%; margin: 5px; display: flex; justify-content: space-between;">
+                            <span style="flex: 2 1 0%; text-align: left; margin-right: auto;">Movie</span>
+                            <span style="text-align: right;margin-right: 10px">@Model.MovieName</span>
+                        </div>
+                        <div style="flex: 0 0 100%; margin: 5px; display: flex; justify-content: space-between;">
+                            <span style="flex: 2 1 0%; text-align: left; margin-right: auto;">Schedule Date</span>
+                            @if (Model.ScheduleDate is not null)
+                            {
+                                <span style="text-align: right;margin-right: 10px">@GetFormattedDateWithDayOfWeek(@Model.ScheduleDate)</span>
+                            }
+                        </div>
+                        <div style="flex: 0 0 100%; margin: 5px; display: flex; justify-content: space-between;">
+                            <span style="flex: 2 1 0%; text-align: left; margin-right: auto;">Schedule Time</span>
+                            @if (Model.ScheduleTime is not null)
+                            {
+                                <span style="text-align: right;margin-right: 10px">@Model.ScheduleTime (@GetEthiopianTime(@Model.ScheduleTime) LT)</span>
+                            }
+                        </div>
+                        <div style="flex: 0 0 100%; margin: 5px; display: flex; justify-content: space-between;">
+                            <span style="flex: 2 1 0%; text-align: left; margin-right: auto;">Hall</span>
+                            <span style="text-align: right;margin-right: 10px">@Model.HallName</span>
+                        </div>
+                        <div style="flex: 0 0 100%; margin: 5px; display: flex; justify-content: space-between;">
+                            <span style="flex: 2 1 0%; text-align: left; margin-right: auto;">Space Type</span>
+                            <span style="text-align: right; margin-right: 10px">@Model.SpaceType</span>
+                        </div>
+                        <div style="flex: 0 0 100%; margin: 5px; display: flex; justify-content: space-between;">
+                            <span style="flex: 2 1 0%; text-align: left; margin-right: auto;">Dimension</span>
+                            <span style="text-align: right; margin-right: 10px">@Model.Dimension</span>
+                        </div>
+                    }
+                    @functions {
+                        public string GetFormattedDateWithDayOfWeek(string date)
+                        {
+                            DateTime parsedDate;
+                            if (DateTime.TryParse(date, out parsedDate))
+                            {
+                                string dayOfWeek = parsedDate.ToString("ddd"); // Get abbreviated day of the week
+                                string formattedDate = parsedDate.ToString("dd-MM-yyyy"); // "dd-MM-yyyy" gives the desired format
+
+                                return $"{dayOfWeek} {formattedDate}";
+                            }
+
+                            return string.Empty;
+                        }
+
+                        public string GetEthiopianTime(string utcTimeString)
+                        {
+                            if (DateTime.TryParse(utcTimeString, out DateTime utcTime))
+                            {
+                                // Convert UTC time to Ethiopia time
+                                DateTime ethiopianTime = utcTime.AddHours(6);
+
+                                return ethiopianTime.ToString("h.mm tt");
+                            }
+
+                            return "Invalid time format";
+                        }
+                    }
                 </div>
             </div>
         </div>
@@ -319,44 +394,20 @@
 
         function renderSelectedItems() {
 
-            selectedItemsContainer.innerHTML = 'Cart';
-
+            var newContent = `
+                <div class="header mb-3" style="display: flex; justify-content: space-between; padding: 5px;">
+                    <span style="flex: 2 1 0%;">Description</span>
+                    <span style="flex: 1 1 0%;">Qty</span>
+                    <span style="flex: 1 1 0%;">Price</span>
+                    <span style="text-align: right;">Amount</span>
+                </div>
+            `;
+            selectedItemsContainer.innerHTML = newContent;
             let totalPrice = 0;
             let totalCount = 0;
-            var headerDiv = document.createElement('div');
-            headerDiv.className = 'headeer'
 
-            if (selectedItems.length > 0) {
-                headerDiv.style.display = 'flex';
-                headerDiv.style.justifyContent = 'space-between';
-                headerDiv.style.padding = '5px';
-
-                var nameHeaderSpan = document.createElement('span');
-                var quantityHeaderSpan = document.createElement('span');
-                var priceHeaderSpan = document.createElement('span');
-
-                nameHeaderSpan.textContent = 'Name';
-                nameHeaderSpan.style.flex = '2';
-
-                quantityHeaderSpan.textContent = 'Quantity';
-                quantityHeaderSpan.style.flex = '1';
-                quantityHeaderSpan.style.textAlign = 'center';
-
-                priceHeaderSpan.textContent = 'Price';
-                priceHeaderSpan.style.flex = '`1';
-                priceHeaderSpan.style.textAlign = 'right';
-                priceHeaderSpan.style.marginLeft = '15px';
-
-                headerDiv.appendChild(nameHeaderSpan);
-                headerDiv.appendChild(quantityHeaderSpan);
-                headerDiv.appendChild(priceHeaderSpan);
-            }
-            else {
-                headerDiv.style.display = 'none';
-            }
-
-            selectedItemsContainer.appendChild(headerDiv);
             selectedItems.forEach(item => {
+                item.unitPrice = item.quantity > 0 ? item.price / item.quantity : 0;
                 var itemDiv = document.createElement('div');
                 itemDiv.className = 'selected-item';
 
@@ -366,15 +417,17 @@
 
                 var nameSpan = document.createElement('span');
                 var quantitySpan = document.createElement('span');
+                var unitPriceSpan = document.createElement('span'); // New span for unit price
                 var priceSpan = document.createElement('span');
 
                 nameSpan.textContent = item.name;
                 nameSpan.style.flex = '2';
-                nameSpan.style.marginRight = '10px';
 
                 quantitySpan.textContent = item.quantity;
                 quantitySpan.style.flex = '1';
-                quantitySpan.style.textAlign = 'center';
+
+                unitPriceSpan.textContent = `${item.unitPrice.toFixed(2)} $`; // Display unit price
+                unitPriceSpan.style.flex = '1';
 
                 priceSpan.textContent = `${item.price.toFixed(2)} $`;
                 priceSpan.style.flex = '1';
@@ -382,6 +435,7 @@
 
                 itemDiv.appendChild(nameSpan);
                 itemDiv.appendChild(quantitySpan);
+                itemDiv.appendChild(unitPriceSpan); // Append the unit price span
                 itemDiv.appendChild(priceSpan);
 
                 selectedItemsContainer.appendChild(itemDiv);
@@ -398,18 +452,20 @@
                 totalDiv.style.display = 'flex';
                 totalDiv.style.justifyContent = 'space-between';
                 totalDiv.style.padding = '5px';
+                totalDiv.style.marginTop = '15px';
 
                 var totalPrcieSpan = document.createElement('span');
                 var totalCountSpan = document.createElement('span');
+                var totalFree = document.createElement('span');
                 var totalValueSpan = document.createElement('span');
 
                 totalPrcieSpan.textContent = 'Total Price';
                 totalPrcieSpan.style.flex = '2';
-                totalPrcieSpan.style.marginRight = '10px';
+
+                totalFree.style.flex = '1';
 
                 totalCountSpan.textContent = `${totalCount}`;
                 totalCountSpan.style.flex = '1';
-                totalCountSpan.style.textAlign = 'center';
 
                 totalValueSpan.textContent = `${totalPrice.toFixed(2)} $`;
                 totalValueSpan.style.flex = '1';
@@ -417,6 +473,7 @@
 
                 totalDiv.appendChild(totalPrcieSpan);
                 totalDiv.appendChild(totalCountSpan);
+                totalDiv.appendChild(totalFree);
                 totalDiv.appendChild(totalValueSpan);
             } else {
                 totalDiv.style.display = 'none';

@@ -18,18 +18,28 @@ namespace CinemaSeatBooking.Controllers
             };
         }
         [HttpPost]
-        public IActionResult Products([FromForm] string movieScheduleCode, [FromForm] string companyTinNumber)
+        public IActionResult Products([FromForm] string movieScheduleCode, [FromForm] string companyTinNumber, [FromForm] string companyName, [FromForm] string movieName,
+            [FromForm] string hallName, [FromForm] string utcTime, [FromForm] string selectedDate, [FromForm] decimal price, [FromForm] string dimension, [FromForm] string spaceType)
         {
             // Convert the selectedSeats string to a list or array as needed
             return RedirectToAction("ProductsView", new
             {
                 companyTinNumber,
                 movieScheduleCode,
+                companyName,
+                hallName,
+                utcTime,
+                selectedDate,
+                movieName,
+                price,
+                dimension,
+                spaceType,
             });
 
         }
 
-        public async Task<IActionResult> ProductsView(string companyTinNumber, string movieScheduleCode)
+        public async Task<IActionResult> ProductsView(string companyTinNumber, string movieScheduleCode, string companyName, string hallName, 
+            string utcTime, string selectedDate, string movieName, decimal price, string dimension, string spaceType)
         {
             HttpResponseMessage response = await _httpClient.GetAsync($"Product/GetProducts?orgTin={companyTinNumber}&type=Restaurant&consignee=0912141914&platform=Web&longitude=0");
 
@@ -44,6 +54,14 @@ namespace CinemaSeatBooking.Controllers
                     MovieScheduleCode = movieScheduleCode,
                     CompanyTinNumber = companyTinNumber,
                     Products = productsData,
+                    CompanyName = companyName,
+                    HallName = hallName,
+                    ScheduleTime = utcTime,
+                    ScheduleDate = selectedDate,
+                    MovieName = movieName,
+                    Price = price,
+                    Dimension = dimension,
+                    SpaceType = spaceType,
                 };
 
                 return View(viewModel);
