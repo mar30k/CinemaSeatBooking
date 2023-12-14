@@ -243,12 +243,11 @@
 
 
             function toggleSeatSelection(seatCode, isDisabled) {
+                var maxSeats = parseInt("@Model.MaxSeats", 10);
                 var index = selectedSeats.indexOf(seatCode);
                 var companyTinNumber = "@Model.CompanyTinNumber";
                 var movieScheduleCode = "@Model.MovieScheduleCode";
                 var consignee = "0912141914"; // Keep the consignee same, as you mentioned
-
-                var seatName = document.getElementById
 
                 var urlAdd = 'https://api-hulubeje.cnetcommerce.com/api/ManageSeatCache/SetCachedSeatsForSchedule' +
                     `?schedule=${movieScheduleCode}&seat=${seatCode}&consignee=${consignee}&orgTin=${companyTinNumber}`;
@@ -256,7 +255,7 @@
                 var urlRemove = 'https://api-hulubeje.cnetcommerce.com/api/ManageSeatCache/DeleteCachedSeatsForSchedule';
 
                 if (!isDisabled && index === -1) {
-                    if (selectedSeats.length < 3) {
+                    if (selectedSeats.length < maxSeats) {
                         selectedSeats.push(seatCode);
 
                         var seatNames = selectedSeats.map(function (code) {
@@ -438,7 +437,7 @@
         </nav>
     </header>
     <div id="seatLimitAlert" class="alert alert-danger fixed-bottom mb-3" role="alert" style="display: none; position: fixed; bottom: 20px; left: 20px; width: 300px;">
-        You can't select more than 3 seats
+        You can't select more than @Model.MaxSeats seats
     </div>
         <div style="font-family: Arial, sans-serif; max-width: 280px; margin: 0 auto; border: 1px solid #ccc; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); text-align: left; ">
             <h4 style="color: #333; margin-bottom: 10px;">@Model.CompanyName</h4>
@@ -447,15 +446,15 @@
                     <strong>Hall Name:</strong> @Model.HallName
                     </p>
                     <p style="margin: 0; color: #555; font-size: 14px;">
-                    <strong>Time:</strong> @Model.UtcTime (@GetEthiopianTime(Model.UtcTime) Local)
+                    <strong>Time:</strong> @Model.UtcTime (@GetEthiopianTime(Model?.UtcTime) Local)
                     </p>
                     <p style="margin: 0; color: #555; font-size: 14px;">
-                    <strong>Date:</strong> @GetFormattedDateWithDayOfWeek(Model.SelectedDate) 
+                    <strong>Date:</strong> @GetFormattedDateWithDayOfWeek(Model?.SelectedDate) 
                     </p>
                 </div>
         </div>
         @functions {
-            public string GetFormattedDateWithDayOfWeek(string date)
+            public string GetFormattedDateWithDayOfWeek(string? date)
             {
                 DateTime parsedDate;
                 if (DateTime.TryParse(date, out parsedDate))
@@ -469,7 +468,7 @@
             return string.Empty;
         }
 
-        public string GetEthiopianTime(string utcTimeString)
+        public string GetEthiopianTime(string? utcTimeString)
         {
             if (DateTime.TryParse(utcTimeString, out DateTime utcTime))
             {
