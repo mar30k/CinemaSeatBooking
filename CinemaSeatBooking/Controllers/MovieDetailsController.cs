@@ -11,7 +11,7 @@ namespace CinemaSeatBooking.Controllers
         private readonly string baseUrl = "https://api.themoviedb.org/3/movie/";
 
         [HttpPost]
-        public IActionResult Details(string selectedDate, string movieCode, string companyName, string overview,
+        public IActionResult Details(string selectedDate, string movieCode, string companyName, string overview,string articleCode,
              string posterUrl, string movieName, int movieId, string backdropPath)
         {
             return RedirectToAction("DetailsViewPage", new
@@ -20,6 +20,7 @@ namespace CinemaSeatBooking.Controllers
                 movieCode,
                 companyName,
                 overview,
+                articleCode,
                 posterUrl,
                 movieName,
                 movieId,
@@ -27,7 +28,7 @@ namespace CinemaSeatBooking.Controllers
             });
         }
 
-        public async Task<IActionResult> DetailsViewPage(string selectedDate, string movieCode, string companyName, string overview,
+        public async Task<IActionResult> DetailsViewPage(string selectedDate, string movieCode, string companyName, string overview, string articleCode,
     string posterUrl, string movieName, int movieId, string backdropPath)
         {
             try
@@ -77,6 +78,7 @@ namespace CinemaSeatBooking.Controllers
                             movieDetails.MovieCode = movieCode;
                             movieDetails.CompanyName = companyName;
                             movieDetails.Overview = overview;
+                            movieDetails.ArticleCode = articleCode;
                             movieDetails.PosterUrl = posterUrl;
                             movieDetails.MovieName = movieName;
                             movieDetails.BackdropPath = backdropPath;

@@ -6,6 +6,7 @@
         public string? CompanyTinNumber { get; set; }
         public string? CompanyName { get; set; }
         public string? MovieName { get; set; }
+        public string? ArticleCode { get; set; }
         public string? SelectedDate { get; set; }
         public string? HallName { get; set; }
         public string? UtcTime { get; set; }

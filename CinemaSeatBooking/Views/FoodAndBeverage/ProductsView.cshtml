@@ -43,40 +43,53 @@
         }
 
         #selected-items-container {
-            margin-top: 20px;
-            border: 1px solid #ddd;
-            padding: 10px;
-            border-radius: 5px;
+        margin-top: 20px;
+        border: 1px solid #ddd;
+        padding: 10px;
+        border-radius: 5px;
+        }
+
+        .taxCalculator{
+        margin-top: 20px;
+        border: 1px solid #ddd;
+        padding: 10px;
+        border-radius: 5px;
+        }
+
+        .dotted-line {
+        border-bottom: 1px dashed #000; /* Adjust the color and style as needed */
+        width: 100%;
+        margin-top: 5px; /* Adjust the spacing as needed */
         }
 
         .Details {
-            margin-top: 20px;
-            border: 1px solid #f2e4;
-            padding: 10px;
-            border-radius: 5px;
+        margin-top: 20px;
+        border: 1px solid #f2e4;
+        padding: 10px;
+        border-radius: 5px;
         }
 
         .Movie{
-            margin-bottom: 5px;
-            padding: 5px;
-            background-color: #f0f0f0;
-            border: 1px solid #ccc;
-            border-radius: 3px;
+        margin-bottom: 5px;
+        padding: 5px;
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        border-radius: 3px;
         }
         .selected-item {
-            margin-bottom: 5px;
-            padding: 5px;
-            background-color: #f0f0f0;
-            border: 1px solid #ccc;
-            border-radius: 3px;
+        margin-bottom: 5px;
+        padding: 5px;
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        border-radius: 3px;
         }
 
         .total-price {
-            margin-bottom: 5px;
-            padding: 5px;
-            background-color: #c2e3f1;
-            border: 1px solid #ccc;
-            border-radius: 3px;
+        margin-bottom: 5px;
+        padding: 5px;
+        background-color: #c2e3f1;
+        border: 1px solid #ccc;
+        border-radius: 3px;
         }
 
         .btn-outline-primary {
@@ -138,6 +151,7 @@
                                                         <div class="card-body" style="display: flex; flex-direction: column; align-items: center;">
                                                             <h6 class="card-title">@articleProduct.Name</h6>
                                                             <p class="card-text" style="margin: 0; text-align: center;">@articleProduct.Price Birr</p>
+                                                            <p class="article" style="display: none;">@articleProduct.Code</p>
 
                                                             <!-- Quantity Control Division (Initially Hidden) -->
                                                             <div class="quantity-control d-flex" style="margin-top: 5px; text-align: center; display: none !important;">
@@ -180,20 +194,20 @@
                     </div>
                     <script>
                         $(document).ready(function () {
-                            var selectedSeatNamesJson = sessionStorage.getItem('selectedSeatNames');
-                            var selectedSeatNamesArray = selectedSeatNamesJson ? JSON.parse(selectedSeatNamesJson) : [];
-                            var numberOfElements = selectedSeatNamesArray.length;
+                        var selectedSeatNamesJson = sessionStorage.getItem('selectedSeatNames');
+                        var selectedSeatNamesArray = selectedSeatNamesJson ? JSON.parse(selectedSeatNamesJson) : [];
+                        var numberOfElements = selectedSeatNamesArray.length;
 
-                            // Update the content dynamically on the client side
-                            var numberOfElementsSpan = document.getElementById('numberOfElements');
-                            var totalPrice = document.getElementById('totalPrice');
-                            if (numberOfElementsSpan) {
-                                numberOfElementsSpan.innerText = numberOfElements;
-                            }
-                            if (totalPrice) {
-                                var totalPriceValue = @Model.Price * numberOfElements;
-                                totalPrice.innerText = totalPriceValue.toFixed(1) + '$' ;
-                            }
+                        // Update the content dynamically on the client side
+                        var numberOfElementsSpan = document.getElementById('numberOfElements');
+                        var amount = document.getElementById('amount');
+                        if (numberOfElementsSpan) {
+                        numberOfElementsSpan.innerText = numberOfElements;
+                        }
+                        if (amount) {
+                        var totalAmount = @Model.Price * numberOfElements;
+                        amount.innerText = totalAmount.toFixed(1) + '$';
+                        }
                         });
                     </script>
 
@@ -202,9 +216,32 @@
                         <span style="flex: 2 1 0%;">@Model.MovieName [Movie]</span>
                         <span style="flex: 1 1 0%" id="numberOfElements"></span>
                         <span style="flex: 1 1 0%">@Model.Price $</span>
-                        <span style="flex: 1 1 0%; text-align: right;" id="totalPrice"></span>
+                        <span style="flex: 1 1 0%; text-align: right;" id="amount"></span>
                     </div>
 
+                </div>
+                <div class="taxCalculator" style="display: flex; flex-wrap: wrap; justify-content: space-between; padding: 5px; margin-bottom: 5px;">
+                    <div style="flex: 0 0 100%; margin: 5px; display: flex; justify-content: space-between;">
+                        <span style="flex: 2 1 0%; text-align: left; margin-right: auto;">ADDITIONAL CHARGE</span>
+                        <span style="text-align: right;margin-right: 10px">PlaceHolder</span>
+                    </div>
+                    <div style="flex: 0 0 100%; margin: 5px; display: flex; justify-content: space-between;">
+                        <span style="flex: 2 1 0%; text-align: left; margin-right: auto;">DISCOUNT</span>
+                        <span style="text-align: right;margin-right: 10px">PlaceHolder</span>
+                    </div>
+                    <div style="flex: 0 0 100%; margin: 5px; display: flex; justify-content: space-between;">
+                        <span style="flex: 2 1 0%; text-align: left; margin-right: auto;">SUBTOTAL</span>
+                        <span style="text-align: right;margin-right: 10px">PlaceHolder</span>
+                    </div>
+                    <div style="flex: 0 0 100%; margin: 5px; display: flex; justify-content: space-between;">
+                        <span style="flex: 2 1 0%; text-align: left; margin-right: auto;">TAX1</span>
+                        <span style="text-align: right; margin-right: 10px">PlaceHolder</span>
+                    </div>
+                    <div class="dotted-line"></div>
+                    <div style="flex: 0 0 100%; margin: 5px; display: flex; justify-content: space-between;">
+                        <span style="flex: 2 1 0%; text-align: left; margin-right: auto;"><strong>GRAND TOTAL</strong></span>
+                        <span style="text-align: right; margin-right: 10px">PlaceHolder</span>
+                    </div>
                 </div>
                 <div class="Details" style="display: flex; flex-wrap: wrap; justify-content: space-between; padding: 5px; margin-bottom: 5px;">
                     @if (Model is not null)
@@ -241,14 +278,14 @@
                         </div>
                     }
                     @functions {
-                        public string GetFormattedDateWithDayOfWeek(string date)
+                                        public string GetFormattedDateWithDayOfWeek(string date)
                         {
                             DateTime parsedDate;
                             if (DateTime.TryParse(date, out parsedDate))
                             {
-                                string dayOfWeek = parsedDate.ToString("ddd"); // Get abbreviated day of the week
-                                string formattedDate = parsedDate.ToString("dd-MM-yyyy"); // "dd-MM-yyyy" gives the desired format
-                                return $"{dayOfWeek} {formattedDate}";
+                        string dayOfWeek = parsedDate.ToString("ddd"); // Get abbreviated day of the week
+                        string formattedDate = parsedDate.ToString("dd-MM-yyyy"); // "dd-MM-yyyy" gives the desired format
+                        return $"{dayOfWeek} {formattedDate}";
                             }
 
                             return string.Empty;
@@ -259,9 +296,9 @@
                             if (DateTime.TryParse(utcTimeString, out DateTime utcTime))
                             {
                                 // Convert UTC time to Ethiopia time
-                                DateTime ethiopianTime = utcTime.AddHours(6);
+                        DateTime ethiopianTime = utcTime.AddHours(6);
 
-                                return ethiopianTime.ToString("h.mm tt");
+                        return ethiopianTime.ToString("h.mm tt");
                             }
 
                             return "Invalid time format";
@@ -271,6 +308,52 @@
             </div>
         </div>
     </div>
+
+
+
+
+
+    @{
+        int? numberOfElements = TempData["NumberOfElements"] as int?;
+        Console.WriteLine("numberOfElements:  " + numberOfElements);
+        var endpoint = "https://api-hulubeje.cnetcommerce.com/api/LineItemTaxCalculator/CalculateOtherFeesForCinema";
+        var movieName = Model.MovieName;
+        var price = Model.Price;
+        var movieScheduleCode = Model.MovieScheduleCode;
+        var companyTin = Model.CompanyTinNumber;
+        var articleCode = Model.ArticleCode;
+        var numberOfSeats = Model.NumberOfSeats;
+        var payload = new
+        {
+            Consignee = "0912141914",
+            OrgTin = companyTin,
+            IndustryType = "LKUP000120765",
+            Schedule = movieScheduleCode,
+            LineItems = new object[]
+        {
+
+            new
+                {
+                    articleName = "SOFT DRINK",
+                    articleCode = "1410-0001",
+                    price = 50,
+                    quantity = 1,
+                    lineItemNote = "",
+                    specialFlag = ""
+                },
+
+            new
+                {
+                    articleName = movieName,
+                    articleCode = articleCode ,
+                    price = price,
+                    quantity = numberOfSeats,
+                    lineItemNote = "",
+                    specialFlag = "@CNET_MOVIE_PRODUCT"
+                }
+            }
+        };
+    }
 
     <script>
         var storedRemainingTime = sessionStorage.getItem('remainingTime');
@@ -325,6 +408,37 @@
             }
         }
 
+        function bill() {
+            
+            var movieName = "@Model.MovieName";
+            var price = "@Model.Price";
+            var movieScheduleCode = "@Model.MovieScheduleCode";
+            var companyTin = "@Model.CompanyTinNumber";
+            var articleCode = "@Model.ArticleCode";
+            var numberOfSeats = "@Model.NumberOfSeats";
+            $.ajax({
+                url: '/FoodAndBeverage/CalculateBill',
+                type: 'POST',
+                data: {
+                    movieName: movieName,
+                    price: price,
+                    movieScheduleCode: movieScheduleCode,
+                    companyTin: companyTin,
+                    articleCode: articleCode,
+                    numberOfSeats: numberOfSeats,
+                    selectedItems: JSON.stringify(selectedItems) // Convert the array to a JSON string
+                },
+                traditional: true, // Serialize the data in traditional style
+                success: function (data) {
+                    $("#Bill").html(data);
+                },
+                error: function (error) {
+                    console.error('Error:', error);
+                }
+            });
+            console.log(selectedItems);
+        }
+
         function startCountdownTimer() {
             $('#UpdatedCountDownTimer').show();
             countdownInterval = setInterval(function () {
@@ -333,21 +447,22 @@
 
                 if (updatedRemainingTime <= 0) {
                     clearInterval(countdownInterval);
+                    alert("Booking time expired. Please restart the booking process.");
                     sessionStorage.clear();
                     window.location.href = '@Url.Action("Index","Home")';
                 }
                 sessionStorage.setItem("remainingTime", updatedRemainingTime);
             }, 1000);
 
-            sessionStorage.setItem('secondsAdded', 'true')
+            sessionStorage.setItem('secondsAdded', 'true');
         }
 
         $(document).ready(function () {
             if (updatedRemainingTime > 0) {
                 startCountdownTimer(updatedRemainingTime);
             }
-
             extendCachedSeats();
+            setTimeout(bill, 10000);
         });
 
         function formatTime(seconds) {
@@ -382,6 +497,7 @@
             quantityControl.style.display = quantityControl.style.display === 'flex' ? 'none' : 'flex';
 
             button.style.display = quantityControl.style.display === 'none' ? 'inline-block' : 'none';
+            console.log ("Add to cart")
         }
 
         function incrementValue(button) {
@@ -406,9 +522,11 @@
             var cardContainer = quantityElement.closest('.card-body');
             var cardTitle = cardContainer.querySelector('.card-title');
             var cardText = cardContainer.querySelector('.card-text');
+            var article = cardContainer.querySelector('.article');
 
             var itemName = cardTitle.textContent;
             var itemPrice = parseFloat(cardText.textContent);
+            var itemArticleCode = article.textContent;
 
             var quantity = parseInt(quantityElement.textContent, 10);
 
@@ -418,7 +536,7 @@
                 var existingItem = selectedItems.find(item => item.name === itemName);
 
                 if (!existingItem) {
-                    selectedItems.push({ name: itemName, quantity: quantity, price: itemPrice });
+                    selectedItems.push({ name: itemName, quantity: quantity, price: itemPrice, articleCode: itemArticleCode });
                 } else {
                     existingItem.quantity = quantity;
                     existingItem.price = itemPrice;
@@ -426,8 +544,8 @@
             } else {
                 selectedItems.splice(selectedItems.findIndex(item => item.name === itemName), 1);
             }
-
             renderSelectedItems();
+            console.log(selectedItems);
         }
 
         function renderSelectedItems() {
@@ -436,7 +554,7 @@
             var numberOfElements = selectedSeatNamesArray.length;
             var movieName = '@Model.MovieName';
             var moviePrice = '@Model.Price';
-            var totalPriceValue = moviePrice * numberOfElements;
+            var totalAmount = moviePrice * numberOfElements;
 
             var newContent = `
                     <div class="header mb-3" style="display: flex; justify-content: space-between; padding: 5px; background-color: black; color: white;">
@@ -449,7 +567,7 @@
                 <span style="flex: 2 1 0%;">${movieName} [Movie]</span>
                 <span style="flex: 1 1 0%">${numberOfElements}</span>
                 <span style="flex: 1 1 0%">${moviePrice} $</span>
-                <span style="flex: 1 1 0%; text-align: right;">${totalPriceValue.toFixed(1)} $</span>
+                <span style="flex: 1 1 0%; text-align: right;">${totalAmount.toFixed(1)} $</span>
             </div>
         `;
             selectedItemsContainer.innerHTML = newContent;

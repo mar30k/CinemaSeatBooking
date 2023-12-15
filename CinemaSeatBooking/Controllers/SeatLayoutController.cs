@@ -19,7 +19,7 @@ public class SeatLayoutController : Controller
         };
     }
     [HttpPost]
-    public IActionResult SeatArrangement(string spacecode, string companyTinNumber, string companyName, string movieName, string dimension, string spaceType, string selectedDate, string code, decimal price, string hallName, string utcTime)
+    public IActionResult SeatArrangement(string spacecode, string companyTinNumber, string companyName, string movieName, string movieCode, string dimension, string spaceType, string selectedDate, string code, decimal price, string hallName, string utcTime)
     {
         return RedirectToAction("SeatArrangementView", new
         {
@@ -34,11 +34,12 @@ public class SeatLayoutController : Controller
             movieName,
             dimension,
             spaceType,
+            movieCode,
         });
     }
 
     [HttpGet]
-    public async Task<IActionResult> SeatArrangementView(string spacecode, string companyTinNumber, string companyName, string movieName, string dimension, string spaceType, string selectedDate, string code, decimal price, string hallName, string utcTime)
+    public async Task<IActionResult> SeatArrangementView(string spacecode, string companyTinNumber, string companyName, string movieName, string movieCode, string dimension, string spaceType, string selectedDate, string code, decimal price, string hallName, string utcTime)
 
     {
         HttpResponseMessage response = await _httpClient.GetAsync($"cinema/getCinemaSeatArrangment?orgTin={companyTinNumber}&spaceCode={spacecode}");
@@ -102,7 +103,7 @@ public class SeatLayoutController : Controller
                 {
                     schedule = code,
                     allSeats = seatArrangement.AvailableSeats,
-                    orgTin = companyTinNumber
+                    orgTin = companyTinNumber,
                 };
 
                 string jsonBody = JsonConvert.SerializeObject(anonymousObject);
@@ -134,6 +135,7 @@ public class SeatLayoutController : Controller
                 seatArrangement.MovieName = movieName;
                 seatArrangement.Dimension = dimension;
                 seatArrangement.SpaceType = spaceType;
+                seatArrangement.ArticleCode = movieCode;
             }
             // Pass the updated SeatLayout instance to the view
             return View(seatArrangement);

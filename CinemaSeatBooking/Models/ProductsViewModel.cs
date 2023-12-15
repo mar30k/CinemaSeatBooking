@@ -4,6 +4,7 @@
     {
         public List<Product>? Products { get; set; }
         public string? MovieScheduleCode { get; set; }
+        public string? ArticleCode { get; set; }
         public string? CompanyTinNumber { get; set; }
         public string? CompanyName { get; set; }
         public string? SpaceType { get; set; }
@@ -12,7 +13,9 @@
         public string? ScheduleTime { get; set; }
         public string? HallName { get; set; }
         public string? Dimension { get; set; }
+        public string? NumberOfSeats { get; set; }
         public decimal Price { get; set; }
+
     }
 
 }

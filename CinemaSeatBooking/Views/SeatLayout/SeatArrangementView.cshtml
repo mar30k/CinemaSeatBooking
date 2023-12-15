@@ -110,9 +110,9 @@
             }, 10000); // Update every 10000 milliseconds (10 seconds)
 
             function updateSeatInfo() {
-                var companyTinNumber = "@Model.CompanyTinNumber"; // Replace with the actual property in your model
-                var code = "@Model.MovieScheduleCode"; // Replace with the actual property in your model
-                var spacecode = "@Model.SpaceCode"; // Replace with the actual property in your model
+                var companyTinNumber = "@Model.CompanyTinNumber"; 
+                var code = "@Model.MovieScheduleCode";
+                var spacecode = "@Model.SpaceCode"; 
                 // Use AJAX to fetch updated seat information
                 $.get("/SeatLayout/GetUpdatedSeatInfo", { companyTinNumber: companyTinNumber, code: code, spacecode: spacecode }, function (data) {
                     // Update the seat information container with the fetched partial view or JSON data
@@ -346,12 +346,13 @@
                 var storedSelectedSeats = sessionStorage.getItem('selectedSeats');
                 return storedSelectedSeats ? JSON.parse(storedSelectedSeats) : [];
             }
-            // Function to update the UI based on selected seats
+
             $('#skipButton').click(function () {
                 // Get selected seats from session storage
                 var selectedSeats = retrieveSelectedSeatsFromStorage();
                 var companyTinNumber = "@Model.CompanyTinNumber";
                 var movieScheduleCode = "@Model.MovieScheduleCode";
+                var articleCode = "@Model.ArticleCode";
                 var movieName = "@Model.MovieName";
                 var companyName = "@Model.CompanyName";
                 var utcTime = "@Model.UtcTime";
@@ -362,6 +363,11 @@
                 var spaceType = "@Model.SpaceType";
 
                 var remainingTime = countdown ?? 0;
+
+                var selectedSeatNamesJson = sessionStorage.getItem('selectedSeatNames');
+                var selectedSeatNamesArray = selectedSeatNamesJson ? JSON.parse(selectedSeatNamesJson) : [];
+                var numberOfElements = selectedSeatNamesArray.length;
+                console.log("numberOfElements: " + numberOfElements);
 
                 sessionStorage.setItem('remainingTime', remainingTime);
                 if (remainingTime != 0) {
@@ -380,6 +386,8 @@
                 form.append('<input type="hidden" name="price" value="' + price + '" />');
                 form.append('<input type="hidden" name="dimension" value="' + dimension + '" />');
                 form.append('<input type="hidden" name="spaceType" value="' + spaceType + '" />');
+                form.append('<input type="hidden" name="articleCode" value="' + articleCode + '" />');
+                form.append('<input type="hidden" name="numberOfElements" value="' + numberOfElements + '" />');
 
                 $('body').append(form);
 
