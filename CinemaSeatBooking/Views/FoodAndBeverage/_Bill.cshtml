@@ -9,7 +9,7 @@
     <div style="display: flex; flex-wrap: wrap; justify-content: space-between; padding: 5px; margin-bottom: 5px;">
         @foreach (var lineItem in Model?.Bill?.LineItems ?? Enumerable.Empty<LineItem>())
         {
-            <div class="Movie" style="flex: 0 0 100%;  display: flex; justify-content: space-between;">
+            <div class="selected-item-partial" style="flex: 0 0 100%;  display: flex; justify-content: space-between;">
                 <span style="flex: 2 1 0%;">@lineItem.Name</span>
                 <span style="flex: 1 1 0%;">@lineItem.Quantity</span>
                 <span style="flex: 1 1 0%;">@lineItem.UnitPrice</span>
@@ -41,6 +41,6 @@
     <div class="dotted-line"></div>
     <div style="flex: 0 0 100%; margin: 5px; display: flex; justify-content: space-between;">
         <span style="flex: 2 1 0%; text-align: left; margin-right: auto;"><strong>GRAND TOTAL</strong></span>
-        <span style="text-align: right; margin-right: 10px">@Model?.Bill?.TotalAmount</span>
+        <span style="text-align: right; margin-right: 10px">Total Amount: @(Model?.Bill?.TotalAmount.ToString("F2") ?? "N/A")</span>
     </div>
 </div>

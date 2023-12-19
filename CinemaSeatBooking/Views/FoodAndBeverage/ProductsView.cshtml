@@ -1,41 +1,45 @@
 ﻿@model ProductsViewModel
 @using Microsoft.AspNetCore.Http
 @using Newtonsoft.Json
+@{
+    ViewBag.Title = "Products";
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="../css/styles.css" rel="stylesheet">
     <link rel="stylesheet" href="~/CinemaSeatBooking.styles.css" asp-append-version="true" />
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <style>
         .custom-container {
-        padding-left: 35px;
-        padding-right: 35px;
+            padding-left: 35px;
+            padding-right: 35px;
         }
 
         .btn:focus,
         .btn:active {
-        outline: none !important;
-        box-shadow: none !important;
+            outline: none !important;
+            box-shadow: none !important;
         }
 
         .card-img-top {
-        height: 230px;
-        width: 100%;
+            height: 230px;
+            width: 100%;
         }
 
         .btn-circle {
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0;
-        font-size: 14px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            font-size: 14px;
         }
         .selected-item-container-partial{
             margin-top: 20px;
@@ -43,64 +47,76 @@
             padding: 10px;
             border-radius: 5px;
         }
-        #selected-items-container {
-        margin-top: 20px;
-        border: 1px solid #ddd;
-        padding: 10px;
-        border-radius: 5px;
+
+        #selected-items-container,
+        #total-price-container {
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
         }
 
+            #total-price-container{
+            margin-top: 10px;
+            padding-top: 5px; 
+            }
         .taxCalculator{
-        margin-top: 20px;
-        border: 1px solid #ddd;
-        padding: 10px;
-        border-radius: 5px;
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
         }
 
         .dotted-line {
-        border-bottom: 1px dashed #000; /* Adjust the color and style as needed */
-        width: 100%;
-        margin-top: 5px; /* Adjust the spacing as needed */
+            border-bottom: 1px dashed #000; /* Adjust the color and style as needed */
+            width: 100%;
+            margin-top: 5px; /* Adjust the spacing as needed */
         }
 
         .Details {
-        margin-top: 20px;
-        border: 1px solid #f2e4;
-        padding: 10px;
-        border-radius: 5px;
+            margin-top: 20px;
+            border: 1px solid #f2e4;
+            padding: 10px;
+            border-radius: 5px;
         }
 
         .Movie{
-        margin-bottom: 5px;
-        padding: 5px;
-        background-color: #f0f0f0;
-        border: 1px solid #ccc;
-        border-radius: 3px;
+            margin-bottom: 5px;
+            padding: 5px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 3px;
         }
         .selected-item {
-        margin-bottom: 5px;
-        padding: 5px;
-        background-color: #f0f0f0;
-        border: 1px solid #ccc;
-        border-radius: 3px;
+            margin-bottom: 5px;
+            padding: 5px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 3px;
         }
-
+        .selected-item-partial{
+            margin-bottom: 5px;
+            padding: 5px;
+            background-color: #E5FFCC;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
         .total-price {
-        margin-bottom: 5px;
-        padding: 5px;
-        background-color: #c2e3f1;
-        border: 1px solid #ccc;
-        border-radius: 3px;
+            margin-bottom: 5px;
+            padding: 5px;
+            background-color: #c2e3f1;
+            border: 1px solid #ccc;
+            border-radius: 3px;
         }
 
         .btn-outline-primary {
-        color: #28a745; /* Green color */
-        border-color: #28a745;
+            color: #28a745; /* Green color */
+            border-color: #28a745;
         }
 
         .btn-outline-primary:hover {
-        background-color: #28a745; /* Green color on hover */
-        color: #fff; /* Text color on hover */
+            background-color: #28a745; /* Green color on hover */
+            color: #fff; /* Text color on hover */
         }
     </style>
 </head>
@@ -113,10 +129,10 @@
                         <h4 style="margin-top: 3px;">Food And Beverage</h4>
                     </div>
                     <div>
-                        <div style="text-align: center; display: inline-block; margin-right: 20px; margin-top: 3px;" id="priceContainer">
+                        @*<div style="text-align: center; display: inline-block; margin-right: 20px; margin-top: 3px;" id="priceContainer">
                             <button id="skipButton" class="btn btn-outline-primary">Skip</button>
-                        </div>
-                        <div id="UpdatedCountDownTimer" style="display:none; display: inline-block; margin-right: 20px; margin-top: 3px;"></div>
+                        </div> *@
+                        <div id="UpdatedCountDownTimer" style="display:none; display: inline-block; margin-right: 10px; margin-top: 3px;"></div>
                     </div>
                 </div>
             </div>
@@ -125,7 +141,7 @@
     <div class="custom-container" style="position: relative; padding-right: 0; padding-left: 0">
         <div class="row">
             <div class="col-9 ml-5 mb-3 mt-3 ">
-                @if (Model != null && Model.Products.Any())
+                @if (Model?.Products != null && Model.Products.Any())
                 {
                     <div class="container">
                         <div class="row">
@@ -182,7 +198,7 @@
                 }
                 else
                 {
-                    <p>No products available.</p>
+                    <p>No Products Available</p>
                 }
             </div>
             <div class="col-lg col-md-2 mt-3 mr-5" style="margin-right: 50px;">
@@ -210,8 +226,7 @@
                             numberOfSeats = 0;
                         }
 
-                        // Multiply Model.Price by numberOfSeats and assign to totalAmount
-                        decimal totalAmount = Model.Price * numberOfSeats;
+                        decimal totalAmount = Model != null ? Model.Price * numberOfSeats : 0;
                     }
 
                     <div class="Movie" style="display: flex; justify-content: space-between; padding: 5px">
@@ -221,12 +236,15 @@
                         <span style="flex: 1 1 0%; text-align: right;"> @totalAmount $</span>
                     </div>
                 </div>
+                <div id="total-price-container" style="display: none">
+
+                </div>
                 <script>
                     $(document).ready(function () {
                         var selectedSeatNamesJson = sessionStorage.getItem('selectedSeatNames');
                         var selectedSeatNamesArray = selectedSeatNamesJson ? JSON.parse(selectedSeatNamesJson) : [];
-                        var numberOfElements = selectedSeatNamesArray.length;
-
+                        console.log(selectedSeatNamesArray);
+                        var numberOfElements = @Model?.NumberOfSeats;
                         // Update the content dynamically on the client side
                         var numberOfElementsSpan = document.getElementById('numberOfElements');
                         var amount = document.getElementById('amount');
@@ -236,6 +254,10 @@
                         if (amount) {
                             var totalAmount = @Model?.Price * numberOfElements;
                             amount.innerText = totalAmount.toFixed(1) + '$';
+                        }
+                        var selectedSeatsSpan = document.getElementById('selectedSeatsSpan');
+                        if (selectedSeatsSpan) {
+                            selectedSeatsSpan.innerText = "[" +selectedSeatNamesArray.join(', ') + "]"; // Join array elements with a comma and space
                         }
                     });
                 </script>
@@ -272,6 +294,10 @@
                             <span style="flex: 2 1 0%; text-align: left; margin-right: auto;">Dimension</span>
                             <span style="text-align: right; margin-right: 10px">@Model.Dimension</span>
                         </div>
+                        <div style="flex: 0 0 100%; margin: 5px; display: flex; justify-content: space-between;">
+                            <span style="flex: 2 1 0%; text-align: left; margin-right: auto;">Seleceted Seats</span>
+                            <span id="selectedSeatsSpan" style="text-align: right; margin-right: 10px"></span>
+                        </div>
                     }
                 </div>
                     @functions {
@@ -301,7 +327,7 @@
                             return "Invalid time format";
                         }
                     }
-                <button id="showBillButton">Show Bill</button>
+                <button style="text-align: center" class="btn btn-sm btn-primary mt-2"id="showBillButton">Calculate Bill</button>
             </div>
         </div>
     </div>
@@ -324,8 +350,8 @@
         var secondsAdded = sessionStorage.getItem('secondsAdded');
 
         console.log("at the start secondsAdded " + secondsAdded)
-        var companyTin = "@Model.CompanyTinNumber";
-        var movieScheduleCode = "@Model.MovieScheduleCode";
+        var companyTin = "@Model?.CompanyTinNumber";
+        var movieScheduleCode = "@Model?.MovieScheduleCode";
 
         var selectedSeats = JSON.parse(sessionStorage.getItem('selectedSeats')) || [];
 
@@ -357,31 +383,30 @@
                 console.log("already extended cache time");
             }
         }
-        // Assuming you have a function to handle the button click, like bill()
-        document.getElementById('showBillButton').addEventListener('click', function () {
+        var showBillButton = document.getElementById('showBillButton');
+        showBillButton.addEventListener('click', function () {
             var billContainer = document.getElementById('BillContainer');
             var selectedItemsContainer = document.getElementById('selected-items-container');
+            var totalpricecontainer = document.getElementById('total-price-container');
 
+            // Toggle between showing BillContainer and selected-items-container
             if (billContainer.style.display === 'none') {
-                // If BillContainer is currently hidden, show it and hide selected-items-container
                 billContainer.style.display = 'block';
                 selectedItemsContainer.style.display = 'none';
+                totalpricecontainer.style.display = 'none';
                 bill();
-            } else {
-                // If BillContainer is currently visible, hide it and show selected-items-container
-                billContainer.style.display = 'none';
-                selectedItemsContainer.style.display = 'block';
-            }
+                showBillButton.style.display = 'none';
+            } 
         });
 
         function bill() {
             
-            var movieName = "@Model.MovieName";
-            var moviePrice = "@Model.Price";
-            var movieScheduleCode = "@Model.MovieScheduleCode";
-            var companyTin = "@Model.CompanyTinNumber";
-            var movieArticleCode = "@Model.ArticleCode";
-            var numberOfSeats = "@Model.NumberOfSeats";
+            var movieName = "@Model?.MovieName";
+            var moviePrice = "@Model?.Price";
+            var movieScheduleCode = "@Model?.MovieScheduleCode";
+            var companyTin = "@Model?.CompanyTinNumber";
+            var movieArticleCode = "@Model?.ArticleCode";
+            var numberOfSeats = "@Model?.NumberOfSeats";
             $.get("/FoodAndBeverage/CalculateBill", {
                 movieName: movieName,
                 moviePrice: moviePrice,
@@ -442,6 +467,7 @@
         });
 
         const selectedItemsContainer = document.getElementById('selected-items-container');
+        const totalpricecontainer = document.getElementById('total-price-container');
         const selectedItems = [];
 
         function showQuantityControl(button) {
@@ -458,20 +484,33 @@
         }
 
         function incrementValue(button) {
+            var billContainer = document.getElementById('BillContainer');
+            var selectedItemsContainer = document.getElementById('selected-items-container');
+            var showBillButton = document.getElementById('showBillButton');
             // Find the associated quantity element
             var quantityElement = button.parentElement.querySelector('.quantity');
             let currentValue = parseInt(quantityElement.textContent, 10);
             quantityElement.textContent = currentValue + 1;
             updateCardDisplay(quantityElement);
+            billContainer.style.display = 'none';
+            selectedItemsContainer.style.display = 'block';
+            showBillButton.style.display = 'block';
         }
 
         function decrementValue(button) {
+            var billContainer = document.getElementById('BillContainer');
+            var selectedItemsContainer = document.getElementById('selected-items-container');
             // Find the associated quantity element
             var quantityElement = button.parentElement.querySelector('.quantity');
             let currentValue = parseInt(quantityElement.textContent, 10) || 0;
             if (currentValue > 0) {
                 quantityElement.textContent = currentValue - 1;
                 updateCardDisplay(quantityElement);
+            }
+            billContainer.style.display = 'none';
+            selectedItemsContainer.style.display = 'block';
+            if (showBillButton.style.display === 'none') {
+                showBillButton.style.display = 'block';
             }
         }
 
@@ -507,9 +546,9 @@
         function renderSelectedItems() {
             var selectedSeatNamesJson = sessionStorage.getItem('selectedSeatNames');
             var selectedSeatNamesArray = selectedSeatNamesJson ? JSON.parse(selectedSeatNamesJson) : [];
-            var numberOfElements = selectedSeatNamesArray.length;
-            var movieName = '@Model.MovieName';
-            var moviePrice = '@Model.Price';
+            var numberOfElements = @Model?.NumberOfSeats;
+            var movieName = '@Model?.MovieName';
+            var moviePrice = '@Model?.Price';
             var totalAmount = moviePrice * numberOfElements;
 
             var newContent = `
@@ -527,11 +566,12 @@
             </div>
         `;
             selectedItemsContainer.innerHTML = newContent;
-            let totalPrice = 0;
-            let totalCount = 0;
-
+            var totalPrice = @Model?.NumberOfSeats === 0 ? 0 : @Model?.Price;
+            let totalCount = @Model?.NumberOfSeats;
+            totalpricecontainer.innerHTML = '';
             selectedItems.forEach(item => {
-                item.unitPrice = item.quantity > 0 ? item.price / item.quantity : 0;
+                // item.unit price is used for total amount and 
+                item.unitPrice = item.quantity > 0 ? item.price * item.quantity : 0;
                 var itemDiv = document.createElement('div');
                 itemDiv.className = 'selected-item';
 
@@ -550,10 +590,10 @@
                 quantitySpan.textContent = item.quantity;
                 quantitySpan.style.flex = '1';
 
-                unitPriceSpan.textContent = `${item.unitPrice.toFixed(2)} $`; // Display unit price
+                unitPriceSpan.textContent = `${item.price.toFixed(2)} $`; // Display unit price
                 unitPriceSpan.style.flex = '1';
 
-                priceSpan.textContent = `${item.price.toFixed(2)} $`;
+                priceSpan.textContent = `${item.unitPrice.toFixed(2)} $`;
                 priceSpan.style.flex = '1';
                 priceSpan.style.textAlign = 'right';
 
@@ -566,7 +606,45 @@
 
                 totalPrice += item.price;
                 totalCount += item.quantity;
+                console.log(totalAmount);
+                totalAmount += item.unitPrice;   //unit price is used for total amount for a specific item i.e item.price * item.quantity
             });
+            var totalDiv = document.createElement('div');
+            totalDiv.className = 'total-price';
+
+            if (selectedItems.length > 0) {
+                totalDiv.style.display = 'flex';
+                totalDiv.style.justifyContent = 'space-between';
+                totalDiv.style.padding = '5px';
+                totalDiv.style.marginTop = '15px';
+
+                var totalPrcieSpan = document.createElement('span');
+                var totalCountSpan = document.createElement('span');
+                var totalItemAmount = document.createElement('span');
+                var totalValueSpan = document.createElement('span');
+
+                totalPrcieSpan.textContent = 'Total Price';
+                totalPrcieSpan.style.flex = '2';
+
+                totalItemAmount.style.flex = '1';
+                totalItemAmount.textContent = `${totalAmount.toFixed(2)}$`;
+
+                totalCountSpan.textContent = `${totalCount}`;
+                totalCountSpan.style.flex = '1';
+
+                totalValueSpan.textContent = `${totalPrice.toFixed(2)} $`;
+                totalValueSpan.style.flex = '1';
+                totalItemAmount.style.textAlign = 'right';
+
+                totalDiv.appendChild(totalPrcieSpan);
+                totalDiv.appendChild(totalCountSpan);
+                totalDiv.appendChild(totalValueSpan);
+                totalDiv.appendChild(totalItemAmount);
+            } else {
+                totalDiv.style.display = 'none';
+            }
+            totalpricecontainer.style.display = 'block';
+            totalpricecontainer.appendChild(totalDiv);
         }
     </script>
 </body>
