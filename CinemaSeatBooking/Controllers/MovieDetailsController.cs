@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Globalization;
 
 namespace CinemaSeatBooking.Controllers
 {
@@ -162,13 +163,16 @@ namespace CinemaSeatBooking.Controllers
                                                 .FirstOrDefault(m => m.movieName == movieName); if (selectedMovie != null)
                                             {
                                                 // Extract schedules from the response
-                                                var schedules = JsonConvert.DeserializeObject<List<MovieSchedule>>(selectedMovie.movieSchedules.ToString());
+                                                List<MovieSchedule> schedules = JsonConvert.DeserializeObject<List<MovieSchedule>>(selectedMovie.movieSchedules.ToString());
                                                 var pgRating = selectedMovie.pgRating;
 
                                                 // Add schedules to the MovieModel
                                                 if (movieDetails is not null)
                                                 {
-                                                    movieDetails.Schedules = schedules;
+                                                    CultureInfo cultureInfo = CultureInfo.InvariantCulture;
+                                                    string format24Hours = "hh:mm:ss tt";
+
+                                                    movieDetails.Schedules = await Task.Run(()=>schedules.OrderBy(e=> DateTime.ParseExact(e.StartTime.ToString(), format24Hours, cultureInfo)).ToList());
                                                     movieDetails.PgRating = pgRating;
                                                 }
                                             }
