@@ -24,7 +24,14 @@
                             {
                                 DateTime ethiopianTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(utcTime, "Africa/Addis_Ababa");
                                 // Add a 6-hour offset to match Ethiopia's local time interpretation
-                                ethiopianTime = ethiopianTime.AddHours(6);
+                                if (ethiopianTime.ToString("tt").Equals("AM") )
+                                {
+                                    ethiopianTime = ethiopianTime.AddHours(6);
+                                }
+                                else
+                                {
+                                    ethiopianTime = ethiopianTime.AddHours(-6);
+                                }
 
                                 <p class="card-text" style="color: black; margin: 0;">@utcTime.ToString("h.mm tt")</p>
                                 <p class="card-text" style="color: black; margin: 0;">@ethiopianTime.ToString("h.mm tt") (Local)</p>
@@ -61,8 +68,8 @@
                         else
                         {
                             var spaceType = "VIP";
-                            <button class="btn btn-warning" onclick="onScheduleButtonClick('@schedule.SpaceCode', '@Model.CompanyTinNumber.ToString()','@Model.CompanyName','@Model.MovieName','@Model.MovieCode','@schedule.Dimension','@spaceType',
-                                            '@Model.SelectedDate.ToString()','@schedule.Code','@schedule.NPrice','@schedule.HallName','@utcTime.ToString("h.mm tt")')" type="button">
+                            <button class="btn btn-warning" onclick="onScheduleButtonClick('@schedule.VIP.SpaceCode', '@Model.CompanyTinNumber.ToString()','@Model.CompanyName','@Model.MovieName','@Model.MovieCode','@schedule.Dimension','@spaceType',
+                                            '@Model.SelectedDate.ToString()','@schedule.VIP.Code','@schedule.VIP.VPrice','@schedule.VIP.HallName','@utcTime.ToString("h.mm tt")')" type="button">
                                 Book Vip <br> @schedule.VIP.VPrice ETB
                             </button>
                         }
