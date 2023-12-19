@@ -175,7 +175,7 @@ namespace CinemaSeatBooking.Controllers
                                             else
                                             {
                                                 // Handle case where schedules for the selected movie are not found
-                                                return View("Error");
+                                                return View(null);
                                             }
                                         }
 
@@ -186,7 +186,7 @@ namespace CinemaSeatBooking.Controllers
                                 else
                                 {
                                     // Handle schedules API error
-                                    return View("Error");
+                                    return View(null);
                                 }
 
                                 // Return the MovieDetails view with the combined model
@@ -195,32 +195,32 @@ namespace CinemaSeatBooking.Controllers
                             else
                             {
                                 // Handle case where movie information is not found in the response
-                                return View("Error");
+                                return View(null);
                             }
 
                         }
                         else
                         {
                             // Handle products API error
-                            return View("Error");
+                            return View(null);
                         }
                     }
                     else
                     {
                         // Handle movie details API error
-                        return View("Error");
+                        return View(null);
                     }
                 }
                 else
                 {
                     // Handle videos API error
-                    return View("Error");
+                    return View(null);
                 }
             }
             catch (Exception)
             {
                 // Handle general exception
-                return View("Error");
+                return View(null);
             }
         }
     }

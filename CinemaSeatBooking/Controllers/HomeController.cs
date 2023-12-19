@@ -26,7 +26,7 @@ namespace CinemaSeatBooking.Controllers
 
             foreach (var movie in movies)
             {
-                var movieTitle = Uri.EscapeDataString(movie.MovieName);  
+                var movieTitle = Uri.EscapeDataString(movie.MovieName ?? string.Empty);
                 var apiUrl = $"{_tmdbApiBaseUrl}/search/movie?api_key={_tmdbApiKey}&query={movieTitle}";
 
                 using (var tmdbClient = new HttpClient())
@@ -37,7 +37,7 @@ namespace CinemaSeatBooking.Controllers
                         var tmdbData = await tmdbResponse.Content.ReadAsStringAsync();
                         var movieDetails = JsonConvert.DeserializeObject<MovieDetails>(tmdbData);
 
-                        if (movieDetails.results.Count > 0)
+                        if (movieDetails != null && movieDetails.results != null && movieDetails.results.Count > 0)
                         {
                             var result = movieDetails.results[0];
                             var posterUrl = "https://image.tmdb.org/t/p/w500" + result.poster_path;
@@ -79,12 +79,12 @@ namespace CinemaSeatBooking.Controllers
                 }
                 else
                 {
-                    return View("Error");
+                    return View(null);
                 }
             }
             catch (HttpRequestException)
             {
-                return View("Error");
+                return View(null);
             }
         }
 
@@ -114,13 +114,13 @@ namespace CinemaSeatBooking.Controllers
                 else
                 {
                     // If the request is not successful, return an error view
-                    return View("Error");
+                    return View(null);
                 }
             }
             catch (HttpRequestException)
             {
                 // If an exception occurs during the HTTP request, return an error view
-                return View("Error");
+                return View(null);
             }
         }
 
