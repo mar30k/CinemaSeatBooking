@@ -15,7 +15,7 @@
         public string? Dimension { get; set; }
         public string? NumberOfSeats { get; set; }
         public decimal Price { get; set; }
-        public Bill Bill { get; set; }
+        public Bill? Bill { get; set; }
 
     }
 
