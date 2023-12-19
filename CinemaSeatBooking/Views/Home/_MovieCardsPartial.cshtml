@@ -2,38 +2,71 @@
 @using System.Web
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<div class="row" id="movieCardsContainer">
-    @{
-        var groupedMovies = Model.GroupBy(m => m.MovieName);
-        var delay = 0.1; // Initial delay in seconds
+<style>
+    body {
+        margin: 0;
+        background-color: #f4f4f4;
+    }
 
-        @foreach (var group in groupedMovies)
-        {
-            var movie = group.First();
-            var companyNames = group.Select(m => m.CompanyName).ToList();
+    .message-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        padding: 20px;
+        border-radius: 8px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
 
-            <div class="col mb-2 mt-2 movie-card" style="animation-delay: @(delay)s;">
-                <div class="card position-relative">
-                    <img src="@movie.PosterUrl" alt="Poster Image" class="img-fluid">
-                    <div class="button-container">
-                        @foreach (var companyName in companyNames)
-                        {
-                            var sanitizedOverview = HttpUtility.JavaScriptStringEncode(movie.Overview);
-                            <button class="button" onclick="onCompanyButtonClick('@movie.MovieCode', '@companyName', '@sanitizedOverview', '@movie.ArticleCode', '@movie.PosterUrl', '@movie.MovieName', '@movie.MovieId', '@movie.BackdropPath')">
-                                @companyName 
-                            </button>
-                        }
-                    </div>
-                    <div class="card-title">
-                        @movie.MovieName (@movie.ReleaseYear)
+    no-movie {
+        font-size: 24px;
+        color: #f33333;
+        margin: 0;
+        font-weight: bold;
+    }
+</style>
+@if(Model is not null)
+{
+    <div class="row" id="movieCardsContainer">
+        @{
+            var groupedMovies = Model.GroupBy(m => m.MovieName);
+            var delay = 0.1; // Initial delay in seconds
+
+            @foreach (var group in groupedMovies)
+            {
+                var movie = group.First();
+                var companyNames = group.Select(m => m.CompanyName).ToList();
+
+                <div class="col mb-2 mt-2 movie-card" style="animation-delay: @(delay)s;">
+                    <div class="card position-relative">
+                        <img src="@movie.PosterUrl" alt="Poster Image" class="img-fluid">
+                        <div class="button-container">
+                            @foreach (var companyName in companyNames)
+                            {
+                                var sanitizedOverview = HttpUtility.JavaScriptStringEncode(movie.Overview);
+                                <button class="button" onclick="onCompanyButtonClick('@movie.MovieCode', '@companyName', '@sanitizedOverview', '@movie.ArticleCode', '@movie.PosterUrl', '@movie.MovieName', '@movie.MovieId', '@movie.BackdropPath')">
+                                    @companyName
+                                </button>
+                            }
+                        </div>
+                        <div class="card-title">
+                            @movie.MovieName (@movie.ReleaseYear)
+                        </div>
                     </div>
                 </div>
-            </div>
-            delay += 0.1;
+                delay += 0.1;
+            }
         }
-    }
-</div>
-
+    </div>
+}
+else
+{
+    <div class="message-container">
+        <p class="no-movie">There are no movies available on this day</p>
+    </div>
+}
 <script>
     function onCompanyButtonClick(movieCode, companyName, overview, articleCode, posterUrl, movieName, movieId, backdropPath) {
         var selectedDate = document.getElementById("selectedDate").value;

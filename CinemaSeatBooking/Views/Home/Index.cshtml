@@ -29,7 +29,7 @@
                 <div class="d-flex justify-content-between align-items-center w-100 ml-5">
                     <form asp-action="Index" method="post">
                         <div class="calendar">
-                            @Html.TextBox("selectedDate", DateTime.Now.ToString("yyyy-MM-dd"), new { @class = "form-control", @type = "date", @onchange = "this.form.submit()" })
+                            @Html.TextBox("selectedDate", DateTime.Now.ToString("yyyy-MM-dd"), new { @class = "form-control", @type = "date", @onchange = "this.form.submit()", /* @min = minDate */ })
                         </div>
                     </form>
                     <div class="Company Filter">
