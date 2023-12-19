@@ -102,7 +102,7 @@ public class SeatLayoutController : Controller
                 var anonymousObject = new
                 {
                     schedule = code,
-                    allSeats = seatArrangement.AvailableSeats,
+                    allSeats = seatArrangement?.AvailableSeats,
                     orgTin = companyTinNumber,
                 };
 
@@ -114,8 +114,10 @@ public class SeatLayoutController : Controller
                 {
                     string takenSeatsResponseData = await takenSeatsResponse.Content.ReadAsStringAsync();
                     var takenSeats = JsonConvert.DeserializeObject<List<string>>(takenSeatsResponseData);
-
-                    seatArrangement.TakenSeats ??= takenSeats;
+                    if (seatArrangement is not null)
+                    {
+                        seatArrangement.TakenSeats ??= takenSeats;
+                    }
                 }
                 else
                 {
@@ -200,7 +202,7 @@ public class SeatLayoutController : Controller
                     var anonymousObject = new
                     {
                         schedule = code,
-                        allSeats = updatedSeatModel.AvailableSeats,
+                        allSeats = updatedSeatModel?.AvailableSeats,
                         orgTin = companyTinNumber
                     };
 
@@ -212,14 +214,17 @@ public class SeatLayoutController : Controller
                     {
                         string takenSeatsResponseData = await takenSeatsResponse.Content.ReadAsStringAsync();
                         var takenSeats = JsonConvert.DeserializeObject<List<string>>(takenSeatsResponseData);
-                        updatedSeatModel.TakenSeats ??= takenSeats;
+                        if (updatedSeatModel is not null)
+                        {
+                            updatedSeatModel.TakenSeats ??= takenSeats;
+                        }
                     }
                     else
                     {
                         return PartialView("_SeatInfoPartialView", null);
                     }
                 }
-                return View("_SeatInfoPartialView", updatedSeatModel);
+                return PartialView("_SeatInfoPartialView", updatedSeatModel);
             }
             else
             {
