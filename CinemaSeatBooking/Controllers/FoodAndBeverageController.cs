@@ -47,35 +47,34 @@ namespace CinemaSeatBooking.Controllers
         {
             HttpResponseMessage response = await _httpClient.GetAsync($"Product/GetProducts?orgTin={companyTinNumber}&type=Restaurant&consignee=0912141914&platform=Web&longitude=0");
 
+            var viewModel = new ProductsViewModel
+            {
+                MovieScheduleCode = movieScheduleCode,
+                CompanyTinNumber = companyTinNumber,
+                CompanyName = companyName,
+                HallName = hallName,
+                ScheduleTime = utcTime,
+                ScheduleDate = selectedDate,
+                MovieName = movieName,
+                Price = price,
+                Dimension = dimension,
+                SpaceType = spaceType,
+                ArticleCode = articleCode,
+                NumberOfSeats = numberOfElements,
+            };
             if (response.IsSuccessStatusCode)
             {
                 string responseData = await response.Content.ReadAsStringAsync();
 
                 var productsData = JsonConvert.DeserializeObject<List<Product>>(responseData);
 
-                var viewModel = new ProductsViewModel
-                {
-                    MovieScheduleCode = movieScheduleCode,
-                    CompanyTinNumber = companyTinNumber,
-                    Products = productsData,
-                    CompanyName = companyName,
-                    HallName = hallName,
-                    ScheduleTime = utcTime,
-                    ScheduleDate = selectedDate,
-                    MovieName = movieName,
-                    Price = price,
-                    Dimension = dimension,
-                    SpaceType = spaceType,
-                    ArticleCode = articleCode,
-                    NumberOfSeats = numberOfElements,
-
-                };
-                TempData["NumberOfElements"] = numberOfElements;
+                viewModel.Products = productsData;
                 return View(viewModel);
             }
             else
             {
-                return View(null);
+
+                return View(viewModel);
             }
         }
 
@@ -83,16 +82,19 @@ namespace CinemaSeatBooking.Controllers
         {
             try
             {
-                List<SelectedItem> selectedItemsList = JsonConvert.DeserializeObject<List<SelectedItem>>(selectedItems);
+                List<SelectedItem> selectedItemsList = JsonConvert.DeserializeObject<List<SelectedItem>>(selectedItems)!;
 
                 var lineItems = new List<object>();
-                ProductsViewModel calculatedModel = new ProductsViewModel();
-                foreach (var selectedItem in selectedItemsList)
+                ProductsViewModel calculatedModel = new();
+                if (selectedItemsList != null)
                 {
-                    lineItems.Add(selectedItem);
+                    foreach (var selectedItem in selectedItemsList)
+                    {
+                        selectedItem.lineItemNote = "";
+                        selectedItem.specialFlag = "";
+                        lineItems.Add(selectedItem);
+                    }
                 }
-
-                // Add the movie-related line item
                 lineItems.Add(new
                 {
                     articleName = movieName,
@@ -129,26 +131,12 @@ namespace CinemaSeatBooking.Controllers
 
                 return PartialView("_Bill", calculatedModel);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                // Log the exception or handle it appropriately
+
                 return PartialView("_Bill", null);
             }
         }
-
-
-
-
-        public class SelectedItem
-        {
-            public string articleName { get; set; }
-            public int quantity { get; set; }
-            public string articleCode { get; set; }
-            public decimal price { get; set; }
-            public string lineItemNote { get; set; }
-            public string specialFlag { get; set; }
-        }
-
     }
 
 }
