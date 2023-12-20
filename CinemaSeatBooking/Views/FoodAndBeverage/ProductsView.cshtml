@@ -48,8 +48,8 @@
             border-radius: 5px;
         }
 
-        #selected-items-container,
-        #total-price-container {
+        #selected-items-container
+         {
             margin-top: 20px;
             border: 1px solid #ddd;
             padding: 10px;
@@ -243,21 +243,16 @@
                     $(document).ready(function () {
                         var selectedSeatNamesJson = sessionStorage.getItem('selectedSeatNames');
                         var selectedSeatNamesArray = selectedSeatNamesJson ? JSON.parse(selectedSeatNamesJson) : [];
-                        console.log(selectedSeatNamesArray);
-                        var numberOfElements = @Model?.NumberOfSeats;
-                        // Update the content dynamically on the client side
-                        var numberOfElementsSpan = document.getElementById('numberOfElements');
-                        var amount = document.getElementById('amount');
-                        if (numberOfElementsSpan) {
-                            numberOfElementsSpan.innerText = numberOfElements;
-                        }
-                        if (amount) {
-                            var totalAmount = @Model?.Price * numberOfElements;
-                            amount.innerText = totalAmount.toFixed(1) + '$';
-                        }
+                        var selectedSeatJson = sessionStorage.getItem('selectedSeats');
+                        var selectedSeatArray = selectedSeatJson ? JSON.parse(selectedSeatJson) : [];
+                        var numberOfSelectedSeats = selectedSeatArray.length;
                         var selectedSeatsSpan = document.getElementById('selectedSeatsSpan');
                         if (selectedSeatsSpan) {
-                            selectedSeatsSpan.innerText = "[" +selectedSeatNamesArray.join(', ') + "]"; // Join array elements with a comma and space
+                            if (numberOfSelectedSeats >= 1) {
+                                selectedSeatsSpan.innerText = "[ " + selectedSeatNamesArray.join(', ') + " ]"; // Join array elements with a comma and space
+                            } else {
+                                selectedSeatsSpan.innerText = "[]"; // Join array elements with a comma and space
+                            }
                         }
                     });
                 </script>
@@ -544,27 +539,25 @@
         }
 
         function renderSelectedItems() {
-            var selectedSeatNamesJson = sessionStorage.getItem('selectedSeatNames');
-            var selectedSeatNamesArray = selectedSeatNamesJson ? JSON.parse(selectedSeatNamesJson) : [];
-            var numberOfElements = @Model?.NumberOfSeats;
+            var numberOfElements = '@Model?.NumberOfSeats';
             var movieName = '@Model?.MovieName';
             var moviePrice = '@Model?.Price';
             var totalAmount = moviePrice * numberOfElements;
 
             var newContent = `
                     <div class="header mb-3" style="display: flex; justify-content: space-between; padding: 5px; background-color: black; color: white;">
-                                    <span style="flex: 2 1 0%;">Description</span>
-                                    <span style="flex: 1 1 0%;">Qty</span>
-                                    <span style="flex: 1 1 0%;">Price</span>
-                                    <span style="flex: 1 1 0%;text-align: right;">Amount</span>
-                                </div>
-            <div class="Movie" style="display: flex; justify-content: space-between; padding: 5px">
-                <span style="flex: 2 1 0%;">${movieName} [Movie]</span>
-                <span style="flex: 1 1 0%">${numberOfElements}</span>
-                <span style="flex: 1 1 0%">${moviePrice} $</span>
-                <span style="flex: 1 1 0%; text-align: right;">${totalAmount.toFixed(1)} $</span>
-            </div>
-        `;
+                        <span style="flex: 2 1 0%;">Description</span>
+                        <span style="flex: 1 1 0%;">Qty</span>
+                        <span style="flex: 1 1 0%;">Price</span>
+                        <span style="flex: 1 1 0%;text-align: right;">Amount</span>
+                    </div>
+                    <div class="Movie" style="display: flex; justify-content: space-between; padding: 5px">
+                        <span style="flex: 2 1 0%;">${movieName} [Movie]</span>
+                        <span style="flex: 1 1 0%">${numberOfElements}</span>
+                        <span style="flex: 1 1 0%">${moviePrice} $</span>
+                        <span style="flex: 1 1 0%; text-align: right;">${totalAmount.toFixed(1)} $</span>
+                    </div>
+                `;
             selectedItemsContainer.innerHTML = newContent;
             var totalPrice = @Model?.NumberOfSeats === 0 ? 0 : @Model?.Price;
             let totalCount = @Model?.NumberOfSeats;
@@ -574,7 +567,6 @@
                 item.unitPrice = item.quantity > 0 ? item.price * item.quantity : 0;
                 var itemDiv = document.createElement('div');
                 itemDiv.className = 'selected-item';
-
                 itemDiv.style.display = 'flex';
                 itemDiv.style.justifyContent = 'space-between';
                 itemDiv.style.padding = '5px';
@@ -616,7 +608,7 @@
                 totalDiv.style.display = 'flex';
                 totalDiv.style.justifyContent = 'space-between';
                 totalDiv.style.padding = '5px';
-                totalDiv.style.marginTop = '15px';
+                totalDiv.style.marginTop = '5px';
 
                 var totalPrcieSpan = document.createElement('span');
                 var totalCountSpan = document.createElement('span');
