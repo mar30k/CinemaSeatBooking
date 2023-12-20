@@ -369,9 +369,9 @@
 
                 var remainingTime = countdown ?? 0;
 
-                var selectedSeatNamesJson = sessionStorage.getItem('selectedSeatNames');
-                var selectedSeatNamesArray = selectedSeatNamesJson ? JSON.parse(selectedSeatNamesJson) : [];
-                var numberOfElements = selectedSeatNamesArray.length;
+                var selectedSeatsJson = sessionStorage.getItem('selectedSeats');
+                var selectedSeatsArray = selectedSeatsJson ? JSON.parse(selectedSeatsJson) : [];
+                var numberOfElements = selectedSeatsArray.length;
                 console.log("numberOfElements: " + numberOfElements);
 
                 sessionStorage.setItem('remainingTime', remainingTime);
@@ -499,7 +499,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>The selected seat will expire in 1 minute and you will get additional one miunute for every page you 
+                    <p>The selected seats will expire in 1 minute and you will get additional one miunute for every page you 
                         progress towards checkout.In total you will have approximately 3 minutes to complete purchase. </p>
                 </div>
                 <div class="modal-footer">
