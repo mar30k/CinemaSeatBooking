@@ -443,14 +443,26 @@
             <h4 style="color: #333; margin-bottom: 10px;">@Model.CompanyName</h4>
                 <div style="text-align: left;">
                     <p style="margin: 0; color: #555; font-size: 14px;">
-                    <strong>Hall Name:</strong> @Model.HallName
+                        <strong>Movie:</strong>&nbsp; @Model.MovieName
                     </p>
                     <p style="margin: 0; color: #555; font-size: 14px;">
-                    <strong>Time:</strong> @Model.UtcTime (@GetEthiopianTime(Model?.UtcTime) Local)
+                        <strong>Hall Name:</strong>&nbsp; @Model.HallName
                     </p>
                     <p style="margin: 0; color: #555; font-size: 14px;">
-                    <strong>Date:</strong> @GetFormattedDateWithDayOfWeek(Model?.SelectedDate) 
+                        <strong>Time:</strong>&nbsp; @Model.UtcTime (@GetEthiopianTime(Model?.UtcTime) Local)
                     </p>
+                    <p style="margin: 0; color: #555; font-size: 14px;">
+                        <strong>Date:</strong>&nbsp; @GetFormattedDateWithDayOfWeek(Model?.SelectedDate)
+                    </p>
+                    <p style="margin: 0; color: #555; font-size: 14px;">
+                        <strong>Dimension:</strong>&nbsp; <span style="background-color: blue; color:white; padding: 1px; border-radius: 3px;">@Model?.Dimension</span>
+                    </p>
+                    @* <p style="margin: 0; color: #555; font-size: 14px;">
+                        <strong>Dimension:</strong>&nbsp;
+                        <span style="background-color: @(Model?.Dimension == "2D" ? "blue" : "red"); color:white; padding: 1px;">
+                            @Model?.Dimension
+                        </span>
+                    </p> *@
                 </div>
         </div>
         @functions {

@@ -411,12 +411,10 @@
                 numberOfSeats: numberOfSeats,
                 selectedItems: JSON.stringify(selectedItems),
             }, function (data) {
-                console.log(data)
                 $("#BillContainer").html(data);
             });
             console.log("Bill called");
         }
-
         function startCountdownTimer() {
             $('#UpdatedCountDownTimer').show();
             countdownInterval = setInterval(function () {
